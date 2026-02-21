@@ -1,0 +1,238 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ========================================
+   EARTHY COLOR PALETTE
+   - Terracotta Red (#B2422F): Primary brand color, CTAs, accents
+   - Charcoal Grey (#333333): Text, dark elements, industrial feel
+   - Sandy Beige (#F5F5DC): Backgrounds, light elements, natural warmth
+   ======================================== */
+
+@layer base {
+  :root {
+    --font-inter: 'Inter', system-ui, sans-serif;
+    --font-roboto-slab: 'Roboto Slab', serif;
+    
+    /* Earthy Color Variables */
+    --color-terracotta: #B2422F;
+    --color-charcoal: #333333;
+    --color-sandy: #F5F5DC;
+  }
+  
+  /* Default sandy beige background with charcoal text for earthy aesthetic */
+  body {
+    @apply bg-sandy text-charcoal antialiased;
+    min-height: 100vh;
+  }
+  
+  /* Industrial, rugged headings with Roboto Slab */
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-display text-charcoal;
+    font-weight: 700;
+  }
+  
+  /* Smooth text rendering for better readability */
+  * {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+  
+  /* Enhanced focus styles for better keyboard navigation */
+  *:focus-visible {
+    outline: 3px solid #B2422F;
+    outline-offset: 2px;
+  }
+}
+
+/* ========================================
+   ACCESSIBILITY ENHANCEMENTS
+   ======================================== */
+
+/* Skip to content link for keyboard users */
+.skip-to-content {
+  @apply fixed top-0 left-0 bg-terracotta text-white px-6 py-3 rounded-br-lg font-bold z-[9999] transform -translate-y-full focus:translate-y-0 transition-transform duration-200;
+}
+
+/* Ensure focus is always visible on interactive elements */
+a:focus-visible,
+button:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible {
+  outline: 2px solid #B2422F;
+  outline-offset: 2px;
+}
+
+/* Improve contrast for text on sandy backgrounds */
+.text-accessible {
+  color: #1A1A1A; /* Darker charcoal for better contrast */
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+  body {
+    @apply bg-white text-black;
+  }
+  
+  .btn-primary {
+    @apply border-2 border-black;
+  }
+  
+  .text-gradient {
+    @apply bg-none text-black;
+  }
+}
+
+/* Reduced motion for users who prefer it */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  ::before,
+  ::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+@layer components {
+  /* Container with responsive padding */
+  .container-custom {
+    @apply container mx-auto px-4 sm:px-6 lg:px-8 max-w-7xl;
+  }
+  
+  /* Primary button with terracotta red - main CTAs */
+  .btn-primary {
+    @apply bg-terracotta hover:bg-terracotta-dark text-white font-semibold py-3 px-6 rounded-lg transition-all duration-200 shadow-brick hover:shadow-brick-lg;
+  }
+  
+  /* Secondary button with charcoal grey - alternative actions */
+  .btn-secondary {
+    @apply bg-charcoal hover:bg-charcoal-light text-sandy font-semibold py-3 px-6 rounded-lg transition-all duration-200;
+  }
+  
+  /* Outline button with terracotta border - ghost style */
+  .btn-outline {
+    @apply border-2 border-terracotta text-terracotta hover:bg-terracotta hover:text-white font-semibold py-3 px-6 rounded-lg transition-all duration-200;
+  }
+  
+  /* Card component with sandy border - content containers */
+  .card {
+    @apply bg-white rounded-lg shadow-brick p-6 border-2 border-sandy-600;
+  }
+  
+  /* Section heading with industrial typography */
+  .section-heading {
+    @apply text-4xl md:text-5xl font-bold text-charcoal mb-4 font-display;
+  }
+  
+  /* Section subheading with softer charcoal */
+  .section-subheading {
+    @apply text-lg text-charcoal-700 max-w-2xl;
+  }
+}
+
+@layer utilities {
+  /* Terracotta gradient text effect */
+  .text-gradient {
+    @apply bg-gradient-to-r from-terracotta to-terracotta-dark bg-clip-text text-transparent;
+  }
+  
+  /* Subtle brick pattern overlay using terracotta */
+  .brick-pattern {
+    background-image: 
+      linear-gradient(90deg, rgba(178, 66, 47, 0.05) 1px, transparent 1px),
+      linear-gradient(rgba(178, 66, 47, 0.05) 1px, transparent 1px);
+    background-size: 50px 50px;
+  }
+  
+  /* Sandy beige background utility */
+  .bg-earthy {
+    @apply bg-sandy;
+  }
+  
+  /* Full earthy section styling */
+  .section-earthy {
+    @apply bg-gradient-to-b from-sandy to-sandy-300 text-charcoal;
+  }
+  
+  /* Hide scrollbar utility for horizontal scroll sections */
+  .scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+  
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+/* Custom Scrollbar with Earthy Colors */
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+/* Sandy beige track */
+::-webkit-scrollbar-track {
+  background: #F5F5DC;
+}
+
+/* Terracotta red thumb */
+::-webkit-scrollbar-thumb {
+  background: #B2422F;
+  border-radius: 5px;
+}
+
+/* Darker terracotta on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: #8E3525;
+}
+
+/* Smooth scroll behavior */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Animation for page transitions */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.fade-in {
+  animation: fadeIn 0.5s ease-in;
+}
+
+/* Shimmer animation for skeleton loaders */
+@keyframes shimmer {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
+}
+
+.animate-shimmer {
+  animation: shimmer 2s ease-in-out infinite;
+}
+
+/* Pulse animation for loading states */
+@keyframes pulse-subtle {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.7;
+  }
+}
+
+.animate-pulse-subtle {
+  animation: pulse-subtle 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}

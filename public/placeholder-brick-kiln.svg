@@ -1,0 +1,74 @@
+<svg viewBox="0 0 1200 900" xmlns="http://www.w3.org/2000/svg">
+  <!-- Gradient background -->
+  <defs>
+    <linearGradient id="bgGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#6B4423;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#2C2C2C;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="skyGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#87CEEB;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#E0A855;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  
+  <!-- Sky -->
+  <rect width="1200" height="600" fill="url(#skyGradient)"/>
+  
+  <!-- Ground -->
+  <rect y="600" width="1200" height="300" fill="url(#bgGradient)"/>
+  
+  <!-- Brick kiln structure -->
+  <g>
+    <!-- Main kiln body -->
+    <rect x="400" y="350" width="400" height="300" fill="#8B5A2B" stroke="#654321" stroke-width="3" rx="10"/>
+    
+    <!-- Kiln dome -->
+    <path d="M 400 350 Q 400 250 600 200 Q 800 250 800 350" fill="#A0522D" stroke="#654321" stroke-width="3"/>
+    
+    <!-- Kiln entrance -->
+    <rect x="420" y="580" width="160" height="70" fill="#3C2415" stroke="#654321" stroke-width="2" rx="5"/>
+    
+    <!-- Chimney -->
+    <rect x="570" y="180" width="60" height="100" fill="#6B4423" stroke="#654321" stroke-width="2"/>
+    <rect x="575" y="170" width="50" height="25" fill="#8B5A2B" stroke="#654321" stroke-width="2"/>
+    
+    <!-- Smoke -->
+    <circle cx="600" cy="160" r="15" fill="#CCCCCC" opacity="0.6"/>
+    <circle cx="590" cy="140" r="12" fill="#DDDDDD" opacity="0.4"/>
+    <circle cx="610" cy="135" r="14" fill="#CCCCCC" opacity="0.5"/>
+    
+    <!-- Stacked bricks near kiln -->
+    <g stroke="#654321" stroke-width="1">
+      <!-- Stack 1 -->
+      <rect x="200" y="500" width="80" height="40" fill="#CD5C5C" />
+      <rect x="200" y="460" width="80" height="40" fill="#D2691E" />
+      <rect x="200" y="420" width="80" height="40" fill="#CD5C5C" />
+      
+      <!-- Stack 2 -->
+      <rect x="920" y="500" width="80" height="40" fill="#D2691E" />
+      <rect x="920" y="460" width="80" height="40" fill="#CD5C5C" />
+      <rect x="920" y="420" width="80" height="40" fill="#D2691E" />
+    </g>
+    
+    <!-- Workers (simplified) -->
+    <g fill="#333">
+      <!-- Worker 1 -->
+      <circle cx="250" cy="580" r="12" />
+      <rect x="245" y="595" width="10" height="35" />
+      <rect x="235" y="605" width="30" height="8" />
+      
+      <!-- Worker 2 -->
+      <circle cx="950" cy="570" r="12" />
+      <rect x="945" y="585" width="10" height="40" />
+      <rect x="935" y="595" width="30" height="8" />
+    </g>
+  </g>
+  
+  <!-- Decorative elements -->
+  <text x="600" y="750" font-size="40" font-weight="bold" text-anchor="middle" fill="#D2691E" opacity="0.3">
+    Brick Manufacturing
+  </text>
+  <text x="600" y="800" font-size="24" text-anchor="middle" fill="#8B7355" opacity="0.4">
+    Premium Clay Kiln Process
+  </text>
+</svg>

@@ -1,0 +1,35 @@
+<svg viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="brickGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#D2691E;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#8B4513;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  
+  <!-- Background -->
+  <rect width="512" height="512" fill="#F5DEB3" rx="100"/>
+  
+  <!-- Brick pattern -->
+  <g stroke="#654321" stroke-width="2" fill="url(#brickGrad)">
+    <!-- Row 1 -->
+    <rect x="60" y="100" width="80" height="50" />
+    <rect x="150" y="100" width="80" height="50" />
+    <rect x="240" y="100" width="80" height="50" />
+    <rect x="330" y="100" width="80" height="50" />
+    
+    <!-- Row 2 (offset) -->
+    <rect x="105" y="160" width="80" height="50" />
+    <rect x="195" y="160" width="80" height="50" />
+    <rect x="285" y="160" width="80" height="50" />
+    <rect x="375" y="160" width="80" height="50" />
+    
+    <!-- Row 3 -->
+    <rect x="60" y="220" width="80" height="50" />
+    <rect x="150" y="220" width="80" height="50" />
+    <rect x="240" y="220" width="80" height="50" />
+    <rect x="330" y="220" width="80" height="50" />
+  </g>
+  
+  <!-- Center circle highlight -->
+  <circle cx="256" cy="256" r="80" fill="none" stroke="#8B4513" stroke-width="3" opacity="0.5"/>
+</svg>
