@@ -103,7 +103,7 @@ export default function SmartOrderForm({ onSubmitSuccess }: { onSubmitSuccess?: 
   useEffect(() => {
     const fetchInventory = async () => {
       try {
-        const response = await fetch('http://localhost:5000/api/v1/inventory');
+        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/inventory`);
         if (!response.ok) return;
         const result = await response.json();
         if (result?.success) {

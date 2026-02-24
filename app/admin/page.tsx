@@ -149,7 +149,7 @@ export default function AdminDashboard() {
   const [modalType, setModalType] = useState<'create' | 'edit' | 'view' | null>(null);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
-  const apiBaseUrl = process.env.NEXT_PUBLIC_API_BASE_URL || 'http://localhost:5000/api/v1';
+  const apiBaseUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api/v1';
 
   // Authentication Check
   useEffect(() => {

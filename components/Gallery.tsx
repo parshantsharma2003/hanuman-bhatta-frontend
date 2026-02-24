@@ -71,7 +71,7 @@ export default function Gallery() {
   const scrollTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   const containerInViewRef = useRef(false);
 
-  const apiBaseUrl = process.env.NEXT_PUBLIC_API_BASE_URL || 'http://localhost:5000/api/v1';
+  const apiBaseUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api/v1';
 
   // Fetch gallery items from API
   const fetchGalleryItems = useCallback(async () => {

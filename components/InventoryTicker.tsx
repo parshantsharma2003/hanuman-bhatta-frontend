@@ -6,7 +6,7 @@ import { Package, Truck, TrendingUp, Clock } from 'lucide-react';
 
 export default function InventoryTicker() {
   const BRICKS_PER_TROLLEY = 3000;
-  const apiBaseUrl = process.env.NEXT_PUBLIC_API_BASE_URL || 'http://localhost:5000/api/v1';
+  const apiBaseUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api/v1';
 
   const [availableBricks, setAvailableBricks] = useState<number | null>(null);
   const [availableTrolleys, setAvailableTrolleys] = useState<number | null>(null);

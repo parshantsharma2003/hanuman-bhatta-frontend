@@ -64,7 +64,7 @@ const cardClass = 'bg-white border-2 border-sandy-300 rounded-2xl shadow-brick p
 const LOW_STOCK_THRESHOLD = 1000000;
 
 export default function AdminDashboard() {
-  const apiBaseUrl = process.env.NEXT_PUBLIC_API_BASE_URL || 'http://localhost:5000/api/v1';
+  const apiBaseUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api/v1';
 
   const [sessionChecked, setSessionChecked] = useState(false);
   const [adminUser, setAdminUser] = useState<AdminUser | null>(null);

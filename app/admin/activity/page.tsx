@@ -40,7 +40,7 @@ export default function AdminActivityPage() {
   const fetchLogs = async () => {
     try {
       setLoading(true);
-      const response = await fetch('http://localhost:5000/api/v1/admin/activity-logs?limit=100', {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/admin/activity-logs?limit=100`, {
         credentials: 'include',
       });
 
