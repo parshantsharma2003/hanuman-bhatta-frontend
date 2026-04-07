@@ -1,22 +1,14 @@
 'use client';
 
-import React, { useState, useEffect, useCallback, useRef } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import Image from 'next/image';
-import { ImageIcon, ZoomIn, Video as VideoIcon, Pause, Play } from 'lucide-react';
+import { AlertCircle, ImageIcon, ZoomIn, Video as VideoIcon, Pause, Play } from 'lucide-react';
 import GalleryModal from './GalleryModal';
 import GalleryImageCard from './GalleryImageCard';
 import GalleryVideoModal from './GalleryVideoModal';
-
-interface GalleryItem {
-  _id: string;
-  type: 'image' | 'video';
-  title?: string;
-  description?: string;
-  mediaUrl: string;
-  publicId: string;
-  createdAt: string;
-}
+import { useQuery } from '@tanstack/react-query';
+import { fetchGallery, GalleryItem, queryKeys } from '@/lib/api/queries';
 
 interface GalleryImage {
   id: string;
@@ -54,8 +46,6 @@ const itemVariants = {
 export default function Gallery() {
   const [selectedImage, setSelectedImage] = useState<GalleryImage | null>(null);
   const [selectedVideo, setSelectedVideo] = useState<GalleryImage | null>(null);
-  const [galleryItems, setGalleryItems] = useState<GalleryItem[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
   const [imageError, setImageError] = useState<{ [key: string]: boolean }>({});
   
   // Mobile-first auto-scroll state
@@ -71,31 +61,17 @@ export default function Gallery() {
   const scrollTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   const containerInViewRef = useRef(false);
 
-  const apiBaseUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api/v1';
-
-  // Fetch gallery items from API
-  const fetchGalleryItems = useCallback(async () => {
-    try {
-      const response = await fetch(`${apiBaseUrl}/gallery`);
-      if (response.ok) {
-        const data = await response.json();
-        setGalleryItems(data.data);
-      }
-    } catch (error) {
-      console.error('Failed to fetch gallery:', error);
-    } finally {
-      setIsLoading(false);
-    }
-  }, [apiBaseUrl]);
-
-  useEffect(() => {
-    fetchGalleryItems();
-
-    // Real-time updates using polling every 30 seconds
-    const pollInterval = setInterval(fetchGalleryItems, 30000);
-
-    return () => clearInterval(pollInterval);
-  }, [fetchGalleryItems]);
+  const {
+    data: galleryItems = [],
+    isLoading,
+    isError,
+    error,
+    refetch,
+  } = useQuery({
+    queryKey: queryKeys.gallery,
+    queryFn: fetchGallery,
+    refetchInterval: 30000,
+  });
 
   // Convert backend data to gallery format
   const galleryImages: GalleryImage[] = galleryItems.map((item) => ({
@@ -338,6 +314,20 @@ export default function Gallery() {
                   />
                 ))}
               </div>
+            </div>
+          ) : isError ? (
+            <div className="text-center py-16">
+              <AlertCircle className="w-16 h-16 text-red-400 mx-auto mb-4" />
+              <h3 className="text-xl font-semibold text-red-900 mb-2">Unable to Load Gallery</h3>
+              <p className="text-red-700 mb-4">
+                {error instanceof Error ? error.message : 'Unable to load gallery media'}
+              </p>
+              <button
+                onClick={() => refetch()}
+                className="inline-flex items-center gap-2 bg-red-600 hover:bg-red-700 text-white font-semibold px-6 py-3 rounded-lg transition-colors"
+              >
+                Try Again
+              </button>
             </div>
           ) : galleryImages.length === 0 ? (
             /* Empty State */

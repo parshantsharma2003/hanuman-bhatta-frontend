@@ -1,25 +1,13 @@
 'use client';
 
-import React, { useEffect, useState, useCallback } from 'react';
+import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Star, CheckCircle2, Package, ArrowRight, IndianRupee, AlertCircle } from 'lucide-react';
 import { SkeletonProduct } from './Skeleton';
 import { trackMetric } from '@/lib/analytics';
 import { useOrderModal } from '@/lib/orderModalContext';
-
-interface Product {
-  _id: string;
-  name: string;
-  slug: string;
-  description?: string;
-  type: string;
-  pricePer1000: number;
-  pricePerTrolley: number;
-  imageUrl?: string;
-  usageTags: string[];
-  qualityGrade: 'First' | 'Second' | 'Rora';
-  isActive: boolean;
-}
+import { useQuery } from '@tanstack/react-query';
+import { fetchProducts, Product, queryKeys } from '@/lib/api/queries';
 
 // Quality grade to visual styling mapping
 const GRADE_STYLES = {
@@ -71,65 +59,24 @@ const cardVariants = {
 
 export default function ProductCatalog() {
   const [pricingMode, setPricingMode] = useState<'thousand' | 'trolley'>('thousand');
-  const [products, setProducts] = useState<Product[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
   const { openModal } = useOrderModal();
 
-  const apiBaseUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api/v1';
+  const {
+    data: products = [],
+    isLoading,
+    isError,
+    error,
+    refetch,
+  } = useQuery({
+    queryKey: queryKeys.products,
+    queryFn: fetchProducts,
+    refetchInterval: 30000,
+  });
 
   const handleOrderClick = () => {
     trackMetric('order_click');
     openModal();
   };
-
-  const fetchProducts = useCallback(async () => {
-    try {
-      console.log('[ProductCatalog] Fetching from:', `${apiBaseUrl}/products`);
-      
-      const response = await fetch(`${apiBaseUrl}/products`, {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        cache: 'no-store',
-      });
-
-      console.log('[ProductCatalog] Response status:', response.status);
-      const result = await response.json();
-      console.log('[ProductCatalog] API Response:', result);
-
-      if (!response.ok || !result?.success) {
-        throw new Error(result?.message || 'Unable to load products');
-      }
-
-      const apiProducts: Product[] = result.data || [];
-      console.log('[ProductCatalog] Products count:', apiProducts.length);
-      console.log('[ProductCatalog] Products data:', apiProducts);
-      
-      setProducts(apiProducts);
-      setError(null);
-    } catch (err) {
-      setError(err instanceof Error ? err.message : 'Unable to load products');
-      console.error('[ProductCatalog] Error:', err);
-    } finally {
-      setIsLoading(false);
-    }
-  }, [apiBaseUrl]);
-
-  // Initial fetch
-  useEffect(() => {
-    fetchProducts();
-  }, [fetchProducts]);
-
-  // Real-time polling (30 seconds)
-  useEffect(() => {
-    const interval = setInterval(() => {
-      fetchProducts();
-    }, 30000);
-
-    return () => clearInterval(interval);
-  }, [fetchProducts]);
 
   return (
     <section
@@ -211,7 +158,7 @@ export default function ProductCatalog() {
             ))}
 
           {/* Error State */}
-          {!isLoading && error && (
+          {!isLoading && isError && (
             <motion.div
               initial={{ opacity: 0, scale: 0.9 }}
               animate={{ opacity: 1, scale: 1 }}
@@ -222,9 +169,11 @@ export default function ProductCatalog() {
                   <AlertCircle className="w-8 h-8 text-red-600" />
                 </div>
                 <h3 className="text-xl font-bold text-red-900 mb-2">Unable to Load Products</h3>
-                <p className="text-red-700 mb-4">{error}</p>
+                <p className="text-red-700 mb-4">
+                  {error instanceof Error ? error.message : 'Unable to load products'}
+                </p>
                 <button
-                  onClick={() => fetchProducts()}
+                  onClick={() => refetch()}
                   className="inline-flex items-center gap-2 bg-red-600 hover:bg-red-700 text-white font-semibold px-6 py-3 rounded-lg transition-colors"
                 >
                   Try Again
@@ -234,7 +183,7 @@ export default function ProductCatalog() {
           )}
 
           {/* Empty State */}
-          {!isLoading && !error && products.length === 0 && (
+          {!isLoading && !isError && products.length === 0 && (
             <motion.div
               initial={{ opacity: 0, scale: 0.9 }}
               animate={{ opacity: 1, scale: 1 }}
@@ -255,7 +204,7 @@ export default function ProductCatalog() {
           {/* Products Display */}
           <AnimatePresence mode="popLayout">
             {!isLoading &&
-              !error &&
+              !isError &&
               products.map((product) => (
                 <ProductCard
                   key={product._id}
@@ -269,7 +218,7 @@ export default function ProductCatalog() {
         </motion.div>
 
         {/* Bottom CTA */}
-        {!isLoading && !error && products.length > 0 && (
+        {!isLoading && !isError && products.length > 0 && (
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}

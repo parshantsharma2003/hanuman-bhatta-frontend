@@ -2,12 +2,13 @@
 
 import { useEffect, useMemo, useState } from 'react';
 import { useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
 import { AnimatePresence, motion } from 'framer-motion';
 import { AlertCircle, CheckCircle2, Loader2, TrendingUp } from 'lucide-react';
 import OrderStepIndicator from './OrderStepIndicator';
 import { submitSmartOrder, SmartOrderPayload, smartOrderSchema } from '@/lib/orderApi';
 import { trackMetric } from '@/lib/analytics';
+import { useQuery } from '@tanstack/react-query';
+import { fetchInventory, queryKeys } from '@/lib/api/queries';
 
 type FormValues = SmartOrderPayload;
 
@@ -26,27 +27,87 @@ const ESTIMATE_PER_BRICK: Record<FormValues['brickType'], { min: number; max: nu
 };
 
 const BRICKS_PER_TROLLEY = 3000;
+const FIELDS_BY_STEP: Record<number, (keyof FormValues)[]> = {
+  1: ['brickType', 'usagePurpose', 'quantityUnit', 'quantityValue'],
+  2: ['deliveryArea', 'distanceRange', 'requiredDeliveryDate', 'urgency'],
+  3: ['name', 'phoneNumber', 'email', 'whatsappNumber', 'isWhatsappSame'],
+};
+
+const STEP_SCHEMAS = {
+  1: smartOrderSchema.pick({
+    brickType: true,
+    usagePurpose: true,
+    quantityUnit: true,
+    quantityValue: true,
+  }),
+  2: smartOrderSchema.pick({
+    deliveryArea: true,
+    distanceRange: true,
+    requiredDeliveryDate: true,
+    urgency: true,
+  }),
+  3: smartOrderSchema.pick({
+    name: true,
+    phoneNumber: true,
+    email: true,
+    whatsappNumber: true,
+    isWhatsappSame: true,
+  }),
+} as const;
 
 interface InventoryInfo {
   totalBricks: number;
 }
 
+function setFormValidationErrors(
+  issues: Array<{ path: (string | number | symbol)[]; message: string }>,
+  setErrorFn: ReturnType<typeof useForm<FormValues>>['setError'],
+  visibleFields: (keyof FormValues)[]
+) {
+  issues.forEach((issue) => {
+    const fieldName = issue.path[0] as keyof FormValues | undefined;
+    if (fieldName && visibleFields.includes(fieldName)) {
+      setErrorFn(fieldName, {
+        type: 'manual',
+        message: issue.message,
+      });
+    }
+  });
+}
+
 export default function SmartOrderForm({ onSubmitSuccess }: { onSubmitSuccess?: () => void }) {
   const [step, setStep] = useState(1);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [inventory, setInventory] = useState<InventoryInfo | null>(null);
   const [toast, setToast] = useState<{ type: 'success' | 'error'; message: string } | null>(null);
+  const [attemptedSteps, setAttemptedSteps] = useState<Record<number, boolean>>({});
+
+  const {
+    data: inventoryData,
+    isError: isInventoryError,
+    error: inventoryError,
+  } = useQuery({
+    queryKey: queryKeys.inventory,
+    queryFn: fetchInventory,
+  });
+
+  const inventory: InventoryInfo | null = useMemo(
+    () =>
+      inventoryData
+        ? { totalBricks: Number(inventoryData.totalBricks || 0) }
+        : null,
+    [inventoryData]
+  );
 
   const {
     register,
-    handleSubmit,
     watch,
+    getValues,
     setValue,
-    formState: { errors },
-    trigger,
+    setError,
+    clearErrors,
+    formState: { errors, submitCount },
     reset,
   } = useForm<FormValues>({
-    resolver: zodResolver(smartOrderSchema),
     defaultValues: {
       brickType: 'Avval',
       usagePurpose: 'House',
@@ -63,10 +124,38 @@ export default function SmartOrderForm({ onSubmitSuccess }: { onSubmitSuccess?: 
       whatsappNumber: '',
       isWhatsappSame: true,
     },
-    mode: 'onChange',
+    mode: 'onSubmit',
+    reValidateMode: 'onChange',
+    shouldFocusError: true,
   });
 
   const values = watch();
+
+  const isStepValidationVisible = (stepNumber: number) => attemptedSteps[stepNumber] || submitCount > 0;
+
+  const shouldShowFieldError = (fieldName: keyof FormValues, stepNumber: number) => {
+    return Boolean(errors[fieldName]) && isStepValidationVisible(stepNumber);
+  };
+
+  const getFieldClass = (hasError: boolean) => {
+    const base = 'w-full px-4 py-3 rounded-lg border-2 focus:outline-none transition-all';
+    const normal = 'border-sandy-300 focus:border-terracotta focus:bg-white';
+    const error = 'border-red-500 bg-red-50 focus:border-red-600 focus:ring-2 focus:ring-red-300';
+    return `${base} ${hasError ? error : normal}`;
+  };
+
+  const registerField = <TFieldName extends keyof FormValues>(fieldName: TFieldName) => {
+    const fieldRegistration = register(fieldName);
+    return {
+      ...fieldRegistration,
+      onChange: (event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+        fieldRegistration.onChange(event);
+        if (errors[fieldName]) {
+          clearErrors(fieldName);
+        }
+      },
+    };
+  };
   const quantityBricks = useMemo(() => {
     if (values.quantityUnit === 'trolleys') {
       return Math.round((values.quantityValue || 0) * BRICKS_PER_TROLLEY);
@@ -101,27 +190,36 @@ export default function SmartOrderForm({ onSubmitSuccess }: { onSubmitSuccess?: 
   }, [inventory, quantityBricks]);
 
   useEffect(() => {
-    const fetchInventory = async () => {
-      try {
-        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/inventory`);
-        if (!response.ok) return;
-        const result = await response.json();
-        if (result?.success) {
-          setInventory({ totalBricks: Number(result.data?.totalBricks || 0) });
-        }
-      } catch {
-        // Silently ignore stock awareness failure
-      }
-    };
-
-    fetchInventory();
-  }, []);
-
-  useEffect(() => {
     if (values.isWhatsappSame) {
-      setValue('whatsappNumber', values.phoneNumber || '');
+      setValue('whatsappNumber', values.phoneNumber || '', {
+        shouldDirty: false,
+        shouldTouch: false,
+        shouldValidate: false,
+      });
     }
   }, [values.phoneNumber, values.isWhatsappSame, setValue]);
+
+  const validateCurrentStep = async (stepNumber: number) => {
+    const currentFields = FIELDS_BY_STEP[stepNumber];
+    const currentValues = getValues();
+    const valuesToValidate =
+      stepNumber === 3 && currentValues.isWhatsappSame
+        ? { ...currentValues, whatsappNumber: currentValues.phoneNumber }
+        : currentValues;
+
+    clearErrors(currentFields);
+
+    const schema = STEP_SCHEMAS[stepNumber as keyof typeof STEP_SCHEMAS];
+    const result = schema.safeParse(valuesToValidate);
+
+    if (!result.success) {
+      setFormValidationErrors(result.error.issues, setError, currentFields);
+
+      return false;
+    }
+
+    return true;
+  };
 
   const showToast = (type: 'success' | 'error', message: string) => {
     setToast({ type, message });
@@ -129,14 +227,11 @@ export default function SmartOrderForm({ onSubmitSuccess }: { onSubmitSuccess?: 
   };
 
   const nextStep = async () => {
-    const fieldsByStep: Record<number, (keyof FormValues)[]> = {
-      1: ['brickType', 'usagePurpose', 'quantityUnit', 'quantityValue'],
-      2: ['deliveryArea', 'distanceRange', 'requiredDeliveryDate', 'urgency'],
-      3: ['name', 'phoneNumber', 'email', 'whatsappNumber', 'isWhatsappSame'],
-    };
-
-    const valid = await trigger(fieldsByStep[step]);
+    setAttemptedSteps((current) => ({ ...current, [step]: true }));
+    const valid = await validateCurrentStep(step);
     if (!valid) return;
+
+    setAttemptedSteps((current) => ({ ...current, [step]: false }));
 
     setStep((current) => Math.min(current + 1, 3));
   };
@@ -144,15 +239,23 @@ export default function SmartOrderForm({ onSubmitSuccess }: { onSubmitSuccess?: 
   const previousStep = () => setStep((current) => Math.max(current - 1, 1));
 
   const onSubmit = async (formData: FormValues) => {
-    setIsSubmitting(true);
     trackMetric('order_click');
 
+    const fullResult = smartOrderSchema.safeParse({
+      ...formData,
+      whatsappNumber: formData.isWhatsappSame ? formData.phoneNumber : formData.whatsappNumber,
+    });
+
+    if (!fullResult.success) {
+      setFormValidationErrors(fullResult.error.issues, setError, FIELDS_BY_STEP[step]);
+      setAttemptedSteps((current) => ({ ...current, [step]: true }));
+      return;
+    }
+
+    setIsSubmitting(true);
+
     try {
-      const payload: FormValues = {
-        ...formData,
-        quantityValue: Number(formData.quantityValue),
-        whatsappNumber: formData.isWhatsappSame ? formData.phoneNumber : formData.whatsappNumber,
-      };
+      const payload = fullResult.data;
 
       const result = await submitSmartOrder(payload);
 
@@ -167,6 +270,7 @@ export default function SmartOrderForm({ onSubmitSuccess }: { onSubmitSuccess?: 
       showToast('success', 'Order submitted successfully! Our team will contact you soon.');
       reset();
       setStep(1);
+      setAttemptedSteps({});
       
       // Call the success callback (used by modal to show success screen)
       if (onSubmitSuccess) {
@@ -203,6 +307,8 @@ export default function SmartOrderForm({ onSubmitSuccess }: { onSubmitSuccess?: 
                 ? 'bg-green-50 border-green-200 text-green-700'
                 : 'bg-red-50 border-red-200 text-red-700'
             }`}
+            role={toast.type === 'success' ? 'status' : 'alert'}
+            aria-live={toast.type === 'success' ? 'polite' : 'assertive'}
           >
             {toast.message}
           </motion.div>
@@ -218,14 +324,20 @@ export default function SmartOrderForm({ onSubmitSuccess }: { onSubmitSuccess?: 
 
       <OrderStepIndicator currentStep={step} steps={STEPS} />
 
-      <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+      <form
+        onSubmit={(event) => {
+          event.preventDefault();
+          void onSubmit(getValues());
+        }}
+        className="space-y-6"
+      >
         <AnimatePresence mode="wait">
           {step === 1 && (
             <motion.div key="step-1" initial={{ opacity: 0, x: 16 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -16 }} className="space-y-4">
               <div className="grid md:grid-cols-2 gap-4">
                 <div>
                   <label className="block text-sm font-semibold text-charcoal mb-2">Brick Type</label>
-                  <select {...register('brickType')} className="w-full px-4 py-3 rounded-lg border-2 border-sandy-300 focus:border-terracotta focus:outline-none">
+                  <select {...registerField('brickType')} className="w-full px-4 py-3 rounded-lg border-2 border-sandy-300 focus:border-terracotta focus:outline-none">
                     <option value="Avval">Avval</option>
                     <option value="Second">Second</option>
                     <option value="Rora">Rora</option>
@@ -234,7 +346,7 @@ export default function SmartOrderForm({ onSubmitSuccess }: { onSubmitSuccess?: 
 
                 <div>
                   <label className="block text-sm font-semibold text-charcoal mb-2">Usage Purpose</label>
-                  <select {...register('usagePurpose')} className="w-full px-4 py-3 rounded-lg border-2 border-sandy-300 focus:border-terracotta focus:outline-none">
+                  <select {...registerField('usagePurpose')} className="w-full px-4 py-3 rounded-lg border-2 border-sandy-300 focus:border-terracotta focus:outline-none">
                     <option value="House">House</option>
                     <option value="Boundary">Boundary</option>
                     <option value="Filling">Filling</option>
@@ -255,7 +367,7 @@ export default function SmartOrderForm({ onSubmitSuccess }: { onSubmitSuccess?: 
               <div className="grid md:grid-cols-3 gap-4">
                 <div>
                   <label className="block text-sm font-semibold text-charcoal mb-2">Quantity Unit</label>
-                  <select {...register('quantityUnit')} className="w-full px-4 py-3 rounded-lg border-2 border-sandy-300 focus:border-terracotta focus:outline-none">
+                  <select {...registerField('quantityUnit')} className="w-full px-4 py-3 rounded-lg border-2 border-sandy-300 focus:border-terracotta focus:outline-none focus:bg-white">
                     <option value="bricks">Bricks</option>
                     <option value="trolleys">Trolleys</option>
                   </select>
@@ -267,11 +379,18 @@ export default function SmartOrderForm({ onSubmitSuccess }: { onSubmitSuccess?: 
                     type="number"
                     step="1"
                     min="1"
-                    {...register('quantityValue', { valueAsNumber: true })}
-                    className="w-full px-4 py-3 rounded-lg border-2 border-sandy-300 focus:border-terracotta focus:outline-none"
+                    {...registerField('quantityValue')}
+                    inputMode="numeric"
+                    className={getFieldClass(shouldShowFieldError('quantityValue', 1))}
                     placeholder="Enter quantity"
+                    aria-invalid={shouldShowFieldError('quantityValue', 1) ? 'true' : 'false'}
+                    aria-describedby={shouldShowFieldError('quantityValue', 1) ? 'quantityValue-error' : undefined}
                   />
-                  {errors.quantityValue && <p className="text-red-600 text-xs mt-1">{errors.quantityValue.message}</p>}
+                  {shouldShowFieldError('quantityValue', 1) && (
+                    <p id="quantityValue-error" className="text-red-600 text-xs mt-1" role="alert">
+                      {errors.quantityValue?.message}
+                    </p>
+                  )}
                 </div>
               </div>
 
@@ -298,6 +417,13 @@ export default function SmartOrderForm({ onSubmitSuccess }: { onSubmitSuccess?: 
                 {quantityBricks >= 12000 && (
                   <p className="text-xs text-emerald-700 mt-2 font-semibold">Bulk order benefit: You may get better negotiated pricing.</p>
                 )}
+                {isInventoryError && (
+                  <p className="text-xs text-amber-700 mt-2 font-semibold">
+                    {inventoryError instanceof Error
+                      ? inventoryError.message
+                      : 'Live stock check is temporarily unavailable.'}
+                  </p>
+                )}
               </div>
             </motion.div>
           )}
@@ -306,19 +432,29 @@ export default function SmartOrderForm({ onSubmitSuccess }: { onSubmitSuccess?: 
             <motion.div key="step-2" initial={{ opacity: 0, x: 16 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -16 }} className="space-y-4">
               <div>
                 <label className="block text-sm font-semibold text-charcoal mb-2">Delivery Area / Village</label>
-                <input {...register('deliveryArea')} className="w-full px-4 py-3 rounded-lg border-2 border-sandy-300 focus:border-terracotta focus:outline-none" placeholder="Village / area" />
-                {errors.deliveryArea && <p className="text-red-600 text-xs mt-1">{errors.deliveryArea.message}</p>}
+                  <input
+                  {...registerField('deliveryArea')}
+                  className={getFieldClass(shouldShowFieldError('deliveryArea', 2))}
+                  placeholder="Village / area"
+                  aria-invalid={shouldShowFieldError('deliveryArea', 2) ? 'true' : 'false'}
+                  aria-describedby={shouldShowFieldError('deliveryArea', 2) ? 'deliveryArea-error' : undefined}
+                />
+                {shouldShowFieldError('deliveryArea', 2) && (
+                  <p id="deliveryArea-error" className="text-red-600 text-xs mt-1" role="alert">
+                    {errors.deliveryArea?.message}
+                  </p>
+                )}
               </div>
 
               <div>
                 <label className="block text-sm font-semibold text-charcoal mb-2">Landmark</label>
-                <input {...register('landmark')} className="w-full px-4 py-3 rounded-lg border-2 border-sandy-300 focus:border-terracotta focus:outline-none" placeholder="Nearest landmark (optional)" />
+                <input {...registerField('landmark')} className="w-full px-4 py-3 rounded-lg border-2 border-sandy-300 focus:border-terracotta focus:bg-white focus:outline-none" placeholder="Nearest landmark (optional)" />
               </div>
 
               <div className="grid md:grid-cols-3 gap-4">
                 <div>
                   <label className="block text-sm font-semibold text-charcoal mb-2">Distance Range</label>
-                  <select {...register('distanceRange')} className="w-full px-4 py-3 rounded-lg border-2 border-sandy-300 focus:border-terracotta focus:outline-none">
+                  <select {...registerField('distanceRange')} className="w-full px-4 py-3 rounded-lg border-2 border-sandy-300 focus:border-terracotta focus:outline-none">
                     <option value="0-10km">0-10km</option>
                     <option value="10-25km">10-25km</option>
                     <option value="25+km">25+km</option>
@@ -327,12 +463,23 @@ export default function SmartOrderForm({ onSubmitSuccess }: { onSubmitSuccess?: 
 
                 <div>
                   <label className="block text-sm font-semibold text-charcoal mb-2">Required Date</label>
-                  <input type="date" {...register('requiredDeliveryDate')} className="w-full px-4 py-3 rounded-lg border-2 border-sandy-300 focus:border-terracotta focus:outline-none" />
+                  <input
+                    type="date"
+                    {...registerField('requiredDeliveryDate')}
+                    className={getFieldClass(shouldShowFieldError('requiredDeliveryDate', 2))}
+                    aria-invalid={shouldShowFieldError('requiredDeliveryDate', 2) ? 'true' : 'false'}
+                    aria-describedby={shouldShowFieldError('requiredDeliveryDate', 2) ? 'requiredDeliveryDate-error' : undefined}
+                  />
+                  {shouldShowFieldError('requiredDeliveryDate', 2) && (
+                    <p id="requiredDeliveryDate-error" className="text-red-600 text-xs mt-1" role="alert">
+                      {errors.requiredDeliveryDate?.message}
+                    </p>
+                  )}
                 </div>
 
                 <div>
                   <label className="block text-sm font-semibold text-charcoal mb-2">Urgency</label>
-                  <select {...register('urgency')} className="w-full px-4 py-3 rounded-lg border-2 border-sandy-300 focus:border-terracotta focus:outline-none">
+                  <select {...registerField('urgency')} className="w-full px-4 py-3 rounded-lg border-2 border-sandy-300 focus:border-terracotta focus:outline-none">
                     <option value="immediate">Immediate</option>
                     <option value="flexible">Flexible</option>
                   </select>
@@ -354,31 +501,72 @@ export default function SmartOrderForm({ onSubmitSuccess }: { onSubmitSuccess?: 
               <div className="grid md:grid-cols-2 gap-4">
                 <div>
                   <label className="block text-sm font-semibold text-charcoal mb-2">Name</label>
-                  <input {...register('name')} className="w-full px-4 py-3 rounded-lg border-2 border-sandy-300 focus:border-terracotta focus:outline-none" placeholder="Your name" />
-                  {errors.name && <p className="text-red-600 text-xs mt-1">{errors.name.message}</p>}
+                  <input
+                    {...registerField('name')}
+                    className={getFieldClass(shouldShowFieldError('name', 3))}
+                    placeholder="Your name"
+                    aria-invalid={shouldShowFieldError('name', 3) ? 'true' : 'false'}
+                    aria-describedby={shouldShowFieldError('name', 3) ? 'name-error' : undefined}
+                  />
+                  {shouldShowFieldError('name', 3) && (
+                    <p id="name-error" className="text-red-600 text-xs mt-1" role="alert">
+                      {errors.name?.message}
+                    </p>
+                  )}
                 </div>
                 <div>
                   <label className="block text-sm font-semibold text-charcoal mb-2">Phone Number</label>
-                  <input {...register('phoneNumber')} className="w-full px-4 py-3 rounded-lg border-2 border-sandy-300 focus:border-terracotta focus:outline-none" placeholder="Phone number" />
-                  {errors.phoneNumber && <p className="text-red-600 text-xs mt-1">{errors.phoneNumber.message}</p>}
+                  <input
+                    {...registerField('phoneNumber')}
+                    className={getFieldClass(shouldShowFieldError('phoneNumber', 3))}
+                    placeholder="Phone number"
+                    aria-invalid={shouldShowFieldError('phoneNumber', 3) ? 'true' : 'false'}
+                    aria-describedby={shouldShowFieldError('phoneNumber', 3) ? 'phoneNumber-error' : undefined}
+                  />
+                  {shouldShowFieldError('phoneNumber', 3) && (
+                    <p id="phoneNumber-error" className="text-red-600 text-xs mt-1" role="alert">
+                      {errors.phoneNumber?.message}
+                    </p>
+                  )}
                 </div>
               </div>
 
               <div>
                 <label className="block text-sm font-semibold text-charcoal mb-2">Email</label>
-                <input {...register('email')} className="w-full px-4 py-3 rounded-lg border-2 border-sandy-300 focus:border-terracotta focus:outline-none" placeholder="Email" />
-                {errors.email && <p className="text-red-600 text-xs mt-1">{errors.email.message}</p>}
+                <input
+                    {...registerField('email')}
+                  className={getFieldClass(shouldShowFieldError('email', 3))}
+                  placeholder="Email"
+                  aria-invalid={shouldShowFieldError('email', 3) ? 'true' : 'false'}
+                  aria-describedby={shouldShowFieldError('email', 3) ? 'email-error' : undefined}
+                />
+                {shouldShowFieldError('email', 3) && (
+                  <p id="email-error" className="text-red-600 text-xs mt-1" role="alert">
+                    {errors.email?.message}
+                  </p>
+                )}
               </div>
 
               <div className="flex items-center gap-3 py-2">
-                <input type="checkbox" {...register('isWhatsappSame')} className="w-4 h-4" />
+                <input type="checkbox" {...registerField('isWhatsappSame')} className="w-4 h-4" />
                 <label className="text-sm text-charcoal-700">WhatsApp number same as phone</label>
               </div>
 
               {!values.isWhatsappSame && (
                 <div>
                   <label className="block text-sm font-semibold text-charcoal mb-2">WhatsApp Number</label>
-                  <input {...register('whatsappNumber')} className="w-full px-4 py-3 rounded-lg border-2 border-sandy-300 focus:border-terracotta focus:outline-none" placeholder="WhatsApp number" />
+                  <input
+                    {...registerField('whatsappNumber')}
+                    className={getFieldClass(shouldShowFieldError('whatsappNumber', 3))}
+                    placeholder="WhatsApp number"
+                    aria-invalid={shouldShowFieldError('whatsappNumber', 3) ? 'true' : 'false'}
+                    aria-describedby={shouldShowFieldError('whatsappNumber', 3) ? 'whatsappNumber-error' : undefined}
+                  />
+                  {shouldShowFieldError('whatsappNumber', 3) && (
+                    <p id="whatsappNumber-error" className="text-red-600 text-xs mt-1" role="alert">
+                      {errors.whatsappNumber?.message}
+                    </p>
+                  )}
                 </div>
               )}
 

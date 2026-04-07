@@ -65,6 +65,8 @@ const USAGE_TAG_OPTIONS = [
 
 const QUALITY_GRADES = ['First', 'Second', 'Rora'] as const;
 
+const apiBaseUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api/v1';
+
 export default function AdminProductsPage() {
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
@@ -101,7 +103,7 @@ export default function AdminProductsPage() {
   const fetchProducts = async () => {
     try {
       setLoading(true);
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/admin/products?includeArchived=true`, {
+      const response = await fetch(`${apiBaseUrl}/admin/products?includeArchived=true`, {
         credentials: 'include',
       });
 
@@ -136,7 +138,7 @@ export default function AdminProductsPage() {
 
   const fetchActivityLogs = async () => {
     try {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/admin/activity-logs?limit=25`, {
+      const response = await fetch(`${apiBaseUrl}/admin/activity-logs?limit=25`, {
         credentials: 'include',
       });
 
@@ -231,7 +233,7 @@ export default function AdminProductsPage() {
   // Handle delete
   const handleArchive = async (productId: string) => {
     try {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/admin/products/${productId}`, {
+      const response = await fetch(`${apiBaseUrl}/admin/products/${productId}`, {
         method: 'DELETE',
         credentials: 'include',
       });
@@ -252,7 +254,7 @@ export default function AdminProductsPage() {
 
   const handleRestore = async (productId: string) => {
     try {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/admin/products/${productId}/restore`, {
+      const response = await fetch(`${apiBaseUrl}/admin/products/${productId}/restore`, {
         method: 'PATCH',
         credentials: 'include',
       });
@@ -274,7 +276,7 @@ export default function AdminProductsPage() {
   // Handle toggle active
   const handleToggleActive = async (productId: string) => {
     try {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/admin/products/${productId}/toggle-active`, {
+      const response = await fetch(`${apiBaseUrl}/admin/products/${productId}/toggle-active`, {
         method: 'PATCH',
         credentials: 'include',
       });

@@ -1,9 +1,8 @@
 'use client';
 
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import { motion } from 'framer-motion';
-import { useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
+import { useForm, type Resolver } from 'react-hook-form';
 import { z } from 'zod';
 import { MessageCircle, Phone, User, Send, MapPin, Mail, CheckCircle, XCircle } from 'lucide-react';
 import { trackMetric } from '@/lib/analytics';
@@ -25,10 +24,40 @@ const contactSchema = z.object({
 
 type ContactFormData = z.infer<typeof contactSchema>;
 
+const contactResolver: Resolver<ContactFormData> = async (values) => {
+  const result = contactSchema.safeParse(values);
+
+  if (result.success) {
+    return {
+      values: result.data,
+      errors: {},
+    };
+  }
+
+  const errors: Record<string, { type: string; message: string }> = {};
+
+  result.error.issues.forEach((issue) => {
+    const fieldName = issue.path[0];
+
+    if (typeof fieldName === 'string' && !errors[fieldName]) {
+      errors[fieldName] = {
+        type: issue.code,
+        message: issue.message,
+      };
+    }
+  });
+
+  return {
+    values: {},
+    errors,
+  };
+};
+
 export default function ContactForm() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
   const [submitSuccess, setSubmitSuccess] = useState<string | null>(null);
+  const [focusedField, setFocusedField] = useState<keyof ContactFormData | null>(null);
   const apiBaseUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api/v1';
   
   const {
@@ -37,9 +66,22 @@ export default function ContactForm() {
     formState: { errors },
     reset,
   } = useForm<ContactFormData>({
-    resolver: zodResolver(contactSchema),
-    mode: 'onBlur',
+    resolver: contactResolver,
+    mode: 'onChange',
+    reValidateMode: 'onChange',
   });
+
+  const getFieldClass = useMemo(
+    () => (fieldName: keyof ContactFormData, hasError: boolean, isTextarea = false) => {
+      const basePadding = isTextarea ? 'pl-10 md:pl-12 pr-4 py-2.5 md:py-3' : 'pl-10 md:pl-12 pr-4 py-2.5 md:py-3';
+      const baseClass = `w-full ${basePadding} rounded-lg border-2 transition-all duration-200 text-charcoal placeholder:text-charcoal-400`;
+      const normalState = 'border-sandy-300 bg-sandy-50 focus:border-terracotta focus:bg-white focus:ring-2 focus:ring-terracotta/30';
+      const errorState = 'border-red-500 bg-red-50 focus:border-red-600 focus:bg-white focus:ring-2 focus:ring-red-300';
+      const focusedErrorState = focusedField === fieldName && hasError ? 'ring-2 ring-red-300 border-red-600' : '';
+      return `${baseClass} ${hasError ? errorState : normalState} ${focusedErrorState} focus:outline-none`;
+    },
+    [focusedField]
+  );
 
   const onSubmit = async (data: ContactFormData) => {
     setIsSubmitting(true);
@@ -65,7 +107,7 @@ export default function ContactForm() {
         throw new Error(result?.message || 'Unable to submit your enquiry');
       }
 
-      setSubmitSuccess('Thank you! Your enquiry has been submitted successfully.');
+      setSubmitSuccess('Thank you! Your enquiry has been submitted successfully. We will contact you shortly.');
       reset();
     } catch (err) {
       setSubmitError(err instanceof Error ? err.message : 'Unable to submit your enquiry');
@@ -225,13 +267,14 @@ export default function ContactForm() {
                       type="text"
                       id="name"
                       placeholder="Enter your full name"
-                      className={`w-full pl-12 pr-4 py-3 rounded-lg border-2 ${
-                        errors.name ? 'border-red-500 bg-red-50' : 'border-sandy-300 bg-sandy-50'
-                      } focus:border-terracotta focus:bg-white focus:outline-none focus:ring-2 focus:ring-terracotta/30 transition-all duration-200 text-charcoal placeholder:text-charcoal-400`}
+                      className={getFieldClass('name', Boolean(errors.name))}
+                      onFocus={() => setFocusedField('name')}
+                      onBlur={() => setFocusedField(null)}
                       aria-invalid={errors.name ? 'true' : 'false'}
-                      aria-describedby={errors.name ? 'name-error' : undefined}
+                      aria-describedby={errors.name ? 'name-help name-error' : 'name-help'}
                     />
                   </div>
+                  <p id="name-help" className="text-xs text-charcoal-500 mt-1">Use 2-50 characters, letters and spaces only.</p>
                   {errors.name && (
                     <motion.p
                       id="name-error"
@@ -259,13 +302,14 @@ export default function ContactForm() {
                       type="tel"
                       id="phone"
                       placeholder="+91 98765 43210"
-                      className={`w-full pl-10 md:pl-12 pr-4 py-2.5 md:py-3 rounded-lg border-2 ${
-                        errors.phone ? 'border-red-500 bg-red-50' : 'border-sandy-300 bg-sandy-50'
-                      } focus:border-terracotta focus:bg-white focus:outline-none focus:ring-2 focus:ring-terracotta/30 transition-all duration-200 text-charcoal placeholder:text-charcoal-400`}
+                      className={getFieldClass('phone', Boolean(errors.phone))}
+                      onFocus={() => setFocusedField('phone')}
+                      onBlur={() => setFocusedField(null)}
                       aria-invalid={errors.phone ? 'true' : 'false'}
-                      aria-describedby={errors.phone ? 'phone-error' : undefined}
+                      aria-describedby={errors.phone ? 'phone-help phone-error' : 'phone-help'}
                     />
                   </div>
+                  <p id="phone-help" className="text-xs text-charcoal-500 mt-1">Enter a valid 10-13 digit contact number.</p>
                   {errors.phone && (
                     <motion.p
                       id="phone-error"
@@ -293,13 +337,14 @@ export default function ContactForm() {
                       id="message"
                       rows={5}
                       placeholder="Tell us about your requirements..."
-                      className={`w-full pl-10 md:pl-12 pr-4 py-2.5 md:py-3 rounded-lg border-2 ${
-                        errors.message ? 'border-red-500 bg-red-50' : 'border-sandy-300 bg-sandy-50'
-                      } focus:border-terracotta focus:bg-white focus:outline-none focus:ring-2 focus:ring-terracotta/30 transition-all duration-200 text-charcoal placeholder:text-charcoal-400 resize-none`}
+                      className={`${getFieldClass('message', Boolean(errors.message), true)} resize-none`}
+                      onFocus={() => setFocusedField('message')}
+                      onBlur={() => setFocusedField(null)}
                       aria-invalid={errors.message ? 'true' : 'false'}
-                      aria-describedby={errors.message ? 'message-error' : undefined}
+                      aria-describedby={errors.message ? 'message-help message-error' : 'message-help'}
                     />
                   </div>
+                  <p id="message-help" className="text-xs text-charcoal-500 mt-1">Write 10-500 characters describing your requirement.</p>
                   {errors.message && (
                     <motion.p
                       id="message-error"
@@ -347,6 +392,7 @@ export default function ContactForm() {
                     animate={{ opacity: 1, scale: 1 }}
                     className="p-4 bg-red-50 border-2 border-red-200 rounded-lg text-red-700 text-sm font-semibold flex items-start gap-2"
                     role="alert"
+                    aria-live="assertive"
                   >
                     <XCircle className="w-5 h-5 flex-shrink-0 mt-0.5" />
                     <span>{submitError}</span>
@@ -358,6 +404,8 @@ export default function ContactForm() {
                     initial={{ opacity: 0, scale: 0.9 }}
                     animate={{ opacity: 1, scale: 1 }}
                     className="p-4 bg-green-50 border-2 border-green-200 rounded-lg text-green-700 text-sm font-semibold flex items-start gap-2"
+                    role="status"
+                    aria-live="polite"
                   >
                     <CheckCircle className="w-5 h-5 flex-shrink-0 mt-0.5" />
                     <span>{submitSuccess}</span>

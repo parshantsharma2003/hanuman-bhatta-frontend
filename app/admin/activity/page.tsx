@@ -31,6 +31,8 @@ interface ActivityLogItem {
 
 type ActionFilter = 'all' | 'price_change' | 'inventory_update' | 'product_archived' | 'product_restored';
 
+const apiBaseUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api/v1';
+
 export default function AdminActivityPage() {
   const [logs, setLogs] = useState<ActivityLogItem[]>([]);
   const [loading, setLoading] = useState(true);
@@ -40,7 +42,7 @@ export default function AdminActivityPage() {
   const fetchLogs = async () => {
     try {
       setLoading(true);
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/admin/activity-logs?limit=100`, {
+      const response = await fetch(`${apiBaseUrl}/admin/activity-logs?limit=100`, {
         credentials: 'include',
       });
 

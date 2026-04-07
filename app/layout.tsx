@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import { Inter, Roboto_Slab } from 'next/font/google';
 import './globals.css';
 import { LanguageProvider } from '@/contexts/LanguageContext';
+import QueryProvider from '@/components/providers/QueryProvider';
 
 // Inter for clean, readable body text
 const inter = Inter({
@@ -130,7 +131,7 @@ export default function RootLayout({
     <html lang="en" className={`${inter.variable} ${robotoSlab.variable}`}>
       <body className="min-h-screen bg-sandy text-charcoal">
         <LanguageProvider>
-          {children}
+          <QueryProvider>{children}</QueryProvider>
         </LanguageProvider>
       </body>
     </html>
