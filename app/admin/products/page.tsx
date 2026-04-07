@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import Link from 'next/link';
 import { ArrowLeft, Image as ImageIcon, Clock3 } from 'lucide-react';
+import { getApiBaseUrl } from '@/lib/api/base';
 
 interface Product {
   _id: string;
@@ -65,7 +66,7 @@ const USAGE_TAG_OPTIONS = [
 
 const QUALITY_GRADES = ['First', 'Second', 'Rora'] as const;
 
-const apiBaseUrl = process.env.NEXT_PUBLIC_API_URL || (process.env.NODE_ENV === 'production' ? 'https://hanuman-bhatta-backend.onrender.com/api/v1' : 'http://localhost:5000/api/v1');
+const apiBaseUrl = getApiBaseUrl(process.env.NEXT_PUBLIC_API_URL);
 
 export default function AdminProductsPage() {
   const [products, setProducts] = useState<Product[]>([]);

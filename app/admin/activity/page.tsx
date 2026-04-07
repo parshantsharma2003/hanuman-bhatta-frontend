@@ -4,6 +4,7 @@ import { useEffect, useMemo, useState } from 'react';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
 import { ArrowLeft, Package, Image as ImageIcon, RefreshCw, Clock3 } from 'lucide-react';
+import { getApiBaseUrl } from '@/lib/api/base';
 
 interface ActivityLogItem {
   _id: string;
@@ -31,7 +32,7 @@ interface ActivityLogItem {
 
 type ActionFilter = 'all' | 'price_change' | 'inventory_update' | 'product_archived' | 'product_restored';
 
-const apiBaseUrl = process.env.NEXT_PUBLIC_API_URL || (process.env.NODE_ENV === 'production' ? 'https://hanuman-bhatta-backend.onrender.com/api/v1' : 'http://localhost:5000/api/v1');
+const apiBaseUrl = getApiBaseUrl(process.env.NEXT_PUBLIC_API_URL);
 
 export default function AdminActivityPage() {
   const [logs, setLogs] = useState<ActivityLogItem[]>([]);

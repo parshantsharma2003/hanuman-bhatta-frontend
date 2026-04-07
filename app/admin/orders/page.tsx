@@ -30,6 +30,7 @@ import {
 import Link from 'next/link';
 import AdminSidebar, { AdminNavItem } from '@/components/AdminSidebar';
 import AdminTopBar from '@/components/AdminTopBar';
+import { getApiBaseUrl } from '@/lib/api/base';
 
 // Types
 interface Order {
@@ -411,7 +412,7 @@ export default function OrdersPage() {
   const [selectedOrder, setSelectedOrder] = useState<Order | null>(null);
   const [toast, setToast] = useState<any>(null);
 
-  const apiBaseUrl = process.env.NEXT_PUBLIC_API_URL || (process.env.NODE_ENV === 'production' ? 'https://hanuman-bhatta-backend.onrender.com/api/v1' : 'http://localhost:5000/api/v1');
+  const apiBaseUrl = getApiBaseUrl(process.env.NEXT_PUBLIC_API_URL);
 
   // Check authentication on mount
   useEffect(() => {
@@ -423,7 +424,14 @@ export default function OrdersPage() {
       const response = await fetch(`${apiBaseUrl}/auth/me`, {
         credentials: 'include',
       });
-      if (response.ok) {
+
+      if (!response.ok) {
+        window.location.href = '/admin';
+        return;
+      }
+
+      const data = await response.json();
+      if (data?.authenticated) {
         setIsAuthenticated(true);
         fetchOrders();
       } else {

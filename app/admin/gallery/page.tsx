@@ -16,6 +16,7 @@ import {
   Package,
 } from 'lucide-react';
 import Image from 'next/image';
+import { getApiBaseUrl } from '@/lib/api/base';
 
 interface GalleryItem {
   _id: string;
@@ -33,12 +34,11 @@ export default function AdminGalleryPage() {
   const [isUploading, setIsUploading] = useState(false);
   const [uploadProgress, setUploadProgress] = useState(0);
   const [selectedItem, setSelectedItem] = useState<GalleryItem | null>(null);
+  const apiBaseUrl = getApiBaseUrl(process.env.NEXT_PUBLIC_API_URL);
   const [showEditModal, setShowEditModal] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
-
-  const apiBaseUrl = process.env.NEXT_PUBLIC_API_URL || (process.env.NODE_ENV === 'production' ? 'https://hanuman-bhatta-backend.onrender.com/api/v1' : 'http://localhost:5000/api/v1');
 
   // Fetch gallery items
   const fetchGalleryItems = useCallback(async () => {

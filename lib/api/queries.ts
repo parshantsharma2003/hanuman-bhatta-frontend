@@ -1,4 +1,4 @@
-import { getJson } from './client';
+import { API } from './client';
 
 export interface Product {
   _id: string;
@@ -37,6 +37,17 @@ export const queryKeys = {
   gallery: ['gallery'] as const,
 };
 
-export const fetchProducts = () => getJson<Product[]>('/products');
-export const fetchInventory = () => getJson<InventoryData>('/inventory');
-export const fetchGallery = () => getJson<GalleryItem[]>('/gallery');
+export const fetchProducts = async () => {
+  const response = await API.get<{ success: boolean; data: Product[] }>('/products');
+  return response.data.data;
+};
+
+export const fetchInventory = async () => {
+  const response = await API.get<{ success: boolean; data: InventoryData }>('/inventory');
+  return response.data.data;
+};
+
+export const fetchGallery = async () => {
+  const response = await API.get<{ success: boolean; data: GalleryItem[] }>('/gallery');
+  return response.data.data;
+};

@@ -6,6 +6,7 @@ import { useForm, type Resolver } from 'react-hook-form';
 import { z } from 'zod';
 import { MessageCircle, Phone, User, Send, MapPin, Mail, CheckCircle, XCircle } from 'lucide-react';
 import { trackMetric } from '@/lib/analytics';
+import { API, getApiErrorMessage } from '@/lib/api/client';
 
 // Validation schema
 const contactSchema = z.object({
@@ -58,7 +59,6 @@ export default function ContactForm() {
   const [submitError, setSubmitError] = useState<string | null>(null);
   const [submitSuccess, setSubmitSuccess] = useState<string | null>(null);
   const [focusedField, setFocusedField] = useState<keyof ContactFormData | null>(null);
-  const apiBaseUrl = process.env.NEXT_PUBLIC_API_URL || (process.env.NODE_ENV === 'production' ? 'https://hanuman-bhatta-backend.onrender.com/api/v1' : 'http://localhost:5000/api/v1');
   
   const {
     register,
@@ -89,28 +89,22 @@ export default function ContactForm() {
     setSubmitSuccess(null);
 
     try {
-      const response = await fetch(`${apiBaseUrl}/enquiries`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          name: data.name,
-          phone: data.phone,
-          message: data.message,
-        }),
+      const response = await API.post('/enquiries', {
+        name: data.name,
+        phone: data.phone,
+        message: data.message,
       });
 
-      const result = await response.json();
+      const result = response.data;
 
-      if (!response.ok || !result?.success) {
+      if (!result?.success) {
         throw new Error(result?.message || 'Unable to submit your enquiry');
       }
 
       setSubmitSuccess('Thank you! Your enquiry has been submitted successfully. We will contact you shortly.');
       reset();
     } catch (err) {
-      setSubmitError(err instanceof Error ? err.message : 'Unable to submit your enquiry');
+      setSubmitError(getApiErrorMessage(err, 'Unable to submit your enquiry'));
     } finally {
       setIsSubmitting(false);
     }

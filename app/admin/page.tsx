@@ -31,6 +31,7 @@ import {
 } from 'lucide-react';
 import AdminSidebar, { AdminNavItem } from '@/components/AdminSidebar';
 import AdminTopBar from '@/components/AdminTopBar';
+import { getApiBaseUrl } from '@/lib/api/base';
 
 // Types
 interface AdminUser {
@@ -149,7 +150,7 @@ export default function AdminDashboard() {
   const [modalType, setModalType] = useState<'create' | 'edit' | 'view' | null>(null);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
-  const apiBaseUrl = process.env.NEXT_PUBLIC_API_URL || (process.env.NODE_ENV === 'production' ? 'https://hanuman-bhatta-backend.onrender.com/api/v1' : 'http://localhost:5000/api/v1');
+  const apiBaseUrl = getApiBaseUrl(process.env.NEXT_PUBLIC_API_URL);
 
   // Authentication Check
   useEffect(() => {
@@ -175,15 +176,23 @@ export default function AdminDashboard() {
         credentials: 'include',
       });
 
-      if (response.ok) {
-        const data = await response.json();
+      if (!response.ok) {
+        setIsAuthenticated(false);
+        setUser(null);
+        return;
+      }
+
+      const data = await response.json();
+      if (data?.authenticated && data?.data) {
         setUser(data.data);
         setIsAuthenticated(true);
       } else {
+        setUser(null);
         setIsAuthenticated(false);
       }
     } catch (error) {
       setIsAuthenticated(false);
+      setUser(null);
     } finally {
       setIsLoading(false);
     }
@@ -205,7 +214,7 @@ export default function AdminDashboard() {
 
       if (response.ok) {
         const data = await response.json();
-        setUser(data.data.user);
+        setUser(data.data);
         setIsAuthenticated(true);
       } else {
         const error = await response.json();

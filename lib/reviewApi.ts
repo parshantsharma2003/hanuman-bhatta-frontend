@@ -1,6 +1,9 @@
 import { z } from 'zod';
 
-const apiBaseUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api/v1';
+import { getApiBaseUrl } from './api/base';
+import { API, getApiErrorMessage } from './api/client';
+
+const apiBaseUrl = getApiBaseUrl(process.env.NEXT_PUBLIC_API_URL);
 
 // Validation Schema
 export const reviewSubmissionSchema = z.object({
@@ -33,17 +36,8 @@ export interface PublicReview {
  */
 export async function fetchRatingSummary(): Promise<RatingSummary | null> {
   try {
-    const response = await fetch(`${apiBaseUrl}/reviews/summary`, {
-      method: 'GET',
-      headers: { 'Content-Type': 'application/json' },
-      cache: 'no-store',
-    });
-
-    if (!response.ok) {
-      throw new Error(`Failed to fetch rating summary: ${response.statusText}`);
-    }
-
-    const result = await response.json();
+    const response = await API.get<{ success: boolean; data: RatingSummary }>('/reviews/summary');
+    const result = response.data;
     if (result.success && result.data) {
       return result.data;
     }
@@ -64,17 +58,8 @@ export async function submitReview(data: ReviewSubmission): Promise<{ success: b
     // Validate data
     const validatedData = reviewSubmissionSchema.parse(data);
 
-    const response = await fetch(`${apiBaseUrl}/reviews`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(validatedData),
-    });
-
-    const result = await response.json();
-
-    if (!response.ok) {
-      throw new Error(result.message || 'Failed to submit review');
-    }
+    const response = await API.post<{ success: boolean; message?: string }>('/reviews', validatedData);
+    const result = response.data;
 
     return {
       success: true,
@@ -84,24 +69,15 @@ export async function submitReview(data: ReviewSubmission): Promise<{ success: b
     console.error('[ReviewAPI] Error submitting review:', error);
     return {
       success: false,
-      message: error instanceof Error ? error.message : 'Failed to submit review. Please try again.',
+      message: getApiErrorMessage(error, 'Failed to submit review. Please try again.'),
     };
   }
 }
 
 export async function fetchApprovedReviews(): Promise<PublicReview[]> {
   try {
-    const response = await fetch(`${apiBaseUrl}/reviews`, {
-      method: 'GET',
-      headers: { 'Content-Type': 'application/json' },
-      cache: 'no-store',
-    });
-
-    if (!response.ok) {
-      throw new Error('Failed to fetch reviews');
-    }
-
-    const result = await response.json();
+    const response = await API.get<{ success: boolean; data: PublicReview[] }>('/reviews');
+    const result = response.data;
     return Array.isArray(result.data) ? result.data : [];
   } catch (error) {
     console.error('[ReviewAPI] Error fetching approved reviews:', error);
@@ -135,48 +111,31 @@ export function subscribeReviewUpdates(onMessage: () => void): (() => void) | nu
 }
 
 export async function fetchAllAdminReviews(): Promise<PublicReview[]> {
-  const response = await fetch(`${apiBaseUrl}/admin/reviews`, {
-    credentials: 'include',
-    cache: 'no-store',
-  });
-
-  if (!response.ok) {
-    throw new Error('Failed to fetch admin reviews');
-  }
-
-  const result = await response.json();
+  const response = await API.get<{ success: boolean; data: PublicReview[] }>('/admin/reviews');
+  const result = response.data;
   return Array.isArray(result.data) ? result.data : [];
 }
 
 export async function approveAdminReview(reviewId: string): Promise<void> {
-  const response = await fetch(`${apiBaseUrl}/admin/reviews/${reviewId}/approve`, {
-    method: 'PUT',
-    credentials: 'include',
-  });
+  const response = await API.put(`/admin/reviews/${reviewId}/approve`);
 
-  if (!response.ok) {
+  if (!response.data?.success) {
     throw new Error('Failed to approve review');
   }
 }
 
 export async function disapproveAdminReview(reviewId: string): Promise<void> {
-  const response = await fetch(`${apiBaseUrl}/admin/reviews/${reviewId}/disapprove`, {
-    method: 'PUT',
-    credentials: 'include',
-  });
+  const response = await API.put(`/admin/reviews/${reviewId}/disapprove`);
 
-  if (!response.ok) {
+  if (!response.data?.success) {
     throw new Error('Failed to move review to pending');
   }
 }
 
 export async function deleteAdminReview(reviewId: string): Promise<void> {
-  const response = await fetch(`${apiBaseUrl}/admin/reviews/${reviewId}`, {
-    method: 'DELETE',
-    credentials: 'include',
-  });
+  const response = await API.delete(`/admin/reviews/${reviewId}`);
 
-  if (!response.ok) {
+  if (!response.data?.success) {
     throw new Error('Failed to delete review');
   }
 }

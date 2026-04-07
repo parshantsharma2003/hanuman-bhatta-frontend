@@ -1,6 +1,6 @@
 import { z } from 'zod';
 
-const apiBaseUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api/v1';
+import { API } from './api/client';
 
 export const smartOrderSchema = z.object({
   brickType: z.enum(['Avval', 'Second', 'Rora']),
@@ -41,19 +41,10 @@ export interface SmartOrderResponse {
 }
 
 export const submitSmartOrder = async (payload: SmartOrderPayload): Promise<SmartOrderResponse> => {
-  const response = await fetch(`${apiBaseUrl}/orders`, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify(payload),
-  });
-
-  const result = await response.json();
-
-  if (!response.ok || !result?.success) {
-    throw new Error(result?.message || 'Failed to submit order');
+  try {
+    const response = await API.post<SmartOrderResponse>('/orders', payload);
+    return response.data;
+  } catch (error) {
+    throw new Error(error instanceof Error ? error.message : 'Failed to submit order');
   }
-
-  return result;
 };
