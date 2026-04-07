@@ -31,7 +31,7 @@ interface ActivityLogItem {
 
 type ActionFilter = 'all' | 'price_change' | 'inventory_update' | 'product_archived' | 'product_restored';
 
-const apiBaseUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api/v1';
+const apiBaseUrl = process.env.NEXT_PUBLIC_API_URL || (process.env.NODE_ENV === 'production' ? 'https://hanuman-bhatta-backend.onrender.com/api/v1' : 'http://localhost:5000/api/v1');
 
 export default function AdminActivityPage() {
   const [logs, setLogs] = useState<ActivityLogItem[]>([]);

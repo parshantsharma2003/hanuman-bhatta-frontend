@@ -65,7 +65,7 @@ const USAGE_TAG_OPTIONS = [
 
 const QUALITY_GRADES = ['First', 'Second', 'Rora'] as const;
 
-const apiBaseUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api/v1';
+const apiBaseUrl = process.env.NEXT_PUBLIC_API_URL || (process.env.NODE_ENV === 'production' ? 'https://hanuman-bhatta-backend.onrender.com/api/v1' : 'http://localhost:5000/api/v1');
 
 export default function AdminProductsPage() {
   const [products, setProducts] = useState<Product[]>([]);
@@ -186,8 +186,8 @@ export default function AdminProductsPage() {
 
     try {
       const url = editingProduct
-        ? `${process.env.NEXT_PUBLIC_API_URL}/admin/products/${editingProduct._id}`
-        : `${process.env.NEXT_PUBLIC_API_URL}/admin/products`;
+        ? `${apiBaseUrl}/admin/products/${editingProduct._id}`
+        : `${apiBaseUrl}/admin/products`;
 
       const method = editingProduct ? 'PUT' : 'POST';
 
