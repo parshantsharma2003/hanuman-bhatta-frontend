@@ -4,7 +4,6 @@ import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { Menu, X } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
-import LanguageToggle from './LanguageToggle';
 import { trackMetric } from '@/lib/analytics';
 import { useOrderModal } from '@/lib/orderModalContext';
 
@@ -98,9 +97,6 @@ export default function Navbar() {
               </Link>
             ))}
             
-            {/* Language Toggle */}
-            <LanguageToggle />
-            
             {/* CTA Button */}
             <button
               onClick={handleOrderClick}
@@ -169,21 +165,11 @@ export default function Navbar() {
                   </motion.div>
                 ))}
 
-                {/* Mobile Language Toggle */}
-                <motion.div
-                  initial={{ opacity: 0, x: 20 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ delay: navLinks.length * 0.1 }}
-                  className="pt-4 flex justify-center"
-                >
-                  <LanguageToggle />
-                </motion.div>
-
                 {/* Mobile CTA */}
                 <motion.div
                   initial={{ opacity: 0, x: 20 }}
                   animate={{ opacity: 1, x: 0 }}
-                  transition={{ delay: (navLinks.length + 1) * 0.1 }}
+                  transition={{ delay: navLinks.length * 0.1 }}
                   className="pt-4"
                 >
                   <button
