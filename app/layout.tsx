@@ -11,9 +11,8 @@ const inter = Inter({
   display: 'swap',
 });
 
-// Roboto Slab for rugged, industrial headings
+// Roboto Slab for rugged, industrial headings (variable font supporting 100-900)
 const robotoSlab = Roboto_Slab({
-  weight: ['400', '500', '600', '700', '800', '900'],
   subsets: ['latin'],
   variable: '--font-roboto-slab',
   display: 'swap',
