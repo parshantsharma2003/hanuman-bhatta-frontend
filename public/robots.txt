@@ -1,6 +1,36 @@
 # https://www.robotstxt.org/robotstxt.html
 User-agent: *
 Allow: /
+Disallow: /admin
+Disallow: /admin/
+Disallow: /api/
+
+# Allow major search engines and AI search crawlers
+User-agent: Googlebot
+Allow: /
+Disallow: /admin/
+Disallow: /api/
+
+User-agent: Bingbot
+Allow: /
+Disallow: /admin/
+Disallow: /api/
+
+User-agent: OAI-SearchBot
+Allow: /
+Disallow: /admin/
+Disallow: /api/
+
+User-agent: PerplexityBot
+Allow: /
+Disallow: /admin/
+Disallow: /api/
+
+User-agent: Applebot
+Allow: /
+Disallow: /admin/
+Disallow: /api/
 
 # Sitemaps
-Sitemap: https://hanumanbhatta.com/sitemap.xml
+Sitemap: https://hanuman-bhatta-gohana.vercel.app/sitemap.xml
+Host: https://hanuman-bhatta-gohana.vercel.app

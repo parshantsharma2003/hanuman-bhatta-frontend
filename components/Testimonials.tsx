@@ -19,7 +19,7 @@ const testimonials: Testimonial[] = [
   {
     id: 'testimonial-001',
     name: 'Ramesh Kumar',
-    location: 'Ballia',
+    location: 'Gohana',
     projectType: 'House',
     text: 'Avval quality eent ghar banane ke liye li thi. Majboot aur ek jaisi size ki thi. Bhatta wale ne delivery bhi time par di.',
     isVerified: true,
@@ -28,7 +28,7 @@ const testimonials: Testimonial[] = [
   {
     id: 'testimonial-002',
     name: 'Sunita Devi',
-    location: 'Motihari',
+    location: 'Baroda',
     projectType: 'Boundary Wall',
     text: 'Humne apne ghar ke paas boundary wall banaya. Eent bilkul mazbut thi. Ek saal ho gaya, abhi tak koyi dikkat nahi aaya.',
     isVerified: true,
@@ -37,16 +37,16 @@ const testimonials: Testimonial[] = [
   {
     id: 'testimonial-003',
     name: 'Vikram Singh',
-    location: 'Sitamarhi',
+    location: 'Sonipat',
     projectType: 'Commercial',
-    text: 'Badi nayi shopping complex bana raha tha. Quality consistent rahi aur bulk order mein achcha discount bhi mila. Bilkul reliable supplier.',
+    text: 'Badi commercial building bana raha tha. Quality consistent rahi aur bulk trolley order mein achcha rate mila. Bilkul reliable supplier.',
     isVerified: true,
     isActive: true,
   },
   {
     id: 'testimonial-004',
     name: 'Priya Joshi',
-    location: 'Vaishali',
+    location: 'Mundlana',
     projectType: 'House',
     text: 'Bhatta se second quality eent li thi. Sasti bhi thi aur quality bhi achhi. Contractor ko bhi pasand aaya.',
     isVerified: true,
@@ -55,18 +55,18 @@ const testimonials: Testimonial[] = [
   {
     id: 'testimonial-005',
     name: 'Ajay Yadav',
-    location: 'East Champaran',
+    location: 'Rohtak Road',
     projectType: 'Infrastructure',
-    text: 'Municipal project mein lakho eent chalti hain. Consistency, qua​lity aur on-time delivery - sabse better bhatta yahi hai.',
+    text: 'Construction project mein hazaron eent lagti hain. Shape consistency, solid strength aur time par trolley delivery - sabse better bhatta yahi hai.',
     isVerified: true,
     isActive: true,
   },
   {
     id: 'testimonial-006',
     name: 'Mohini Kumari',
-    location: 'Supaul',
+    location: 'Jind Road',
     projectType: 'House',
-    text: 'Pehli baar order kiya tha, thoda darr tha. Lekin eent ayi to bilkul theek aur ghar ke chakkar mein kahin se leakage nahi aaya.',
+    text: 'Pehli baar direct bhatta se order kiya tha. Eent ki pakaayi aur finish bilkul sahi nikli, mistri ne bhi tareef ki.',
     isVerified: true,
     isActive: true,
   },
@@ -215,7 +215,7 @@ export default function Testimonials({
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <a
-              href="https://wa.me/919876543210"
+              href="https://wa.me/919996669463?text=Hello%20Hanuman%20Bhatta,%20I%20would%20like%20to%20enquire%20about%20brick%20orders."
               className="btn-primary text-lg px-8 py-4 inline-flex items-center justify-center gap-2 focus:outline-none focus-visible:ring-2 focus-visible:ring-terracotta focus-visible:ring-offset-2"
               target="_blank"
               rel="noopener noreferrer"
@@ -223,7 +223,7 @@ export default function Testimonials({
               Order Now on WhatsApp
             </a>
             <a
-              href="tel:+919876543210"
+              href="tel:+919996669463"
               className="btn-outline text-lg px-8 py-4 inline-flex items-center justify-center gap-2 focus:outline-none focus-visible:ring-2 focus-visible:ring-charcoal focus-visible:ring-offset-2"
             >
               Call for More Details

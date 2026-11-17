@@ -10,10 +10,11 @@ import { useOrderModal } from '@/lib/orderModalContext';
 
 const navLinks = [
   { name: 'Home', href: '/' },
-  { name: 'Products', href: '#products' },
-  { name: 'Gallery', href: '#gallery' },
-  { name: 'Calculator', href: '#calculator' },
-  { name: 'Contact', href: '#contact' },
+  { name: 'Products', href: '/#products' },
+  { name: 'Process', href: '/#process' },
+  { name: 'Calculator', href: '/#calculator' },
+  { name: 'FAQ', href: '/#faq' },
+  { name: 'Contact', href: '/#contact' },
 ];
 
 export default function Navbar() {

@@ -2,26 +2,30 @@ import { Metadata } from 'next';
 import { ReactNode } from 'react';
 
 export const metadata: Metadata = {
-  title: 'Customer Testimonials | Verified Trust Reviews by Hanuman Bhatta Clients',
+  title: 'Client Testimonials | Hanuman Bhatta Company - Gohana, Haryana',
   description:
-    'Read verified customer testimonials from builders and homeowners who trust Hanuman Bhatta for consistent quality, reliable delivery, and long-term service.',
+    'Read verified testimonials from homeowners, contractors, and builders across Gohana, Sonipat, Rohtak, and Jind who rely on Hanuman Bhatta Company for quality red clay bricks.',
+  alternates: {
+    canonical: 'https://hanuman-bhatta-gohana.vercel.app/testimonials',
+  },
   keywords: [
-    'brick supplier reviews',
-    'customer testimonials',
-    'verified reviews',
-    'Eent Bhatta feedback',
-    'quality bricks reviews',
+    'Hanuman Bhatta reviews',
+    'brick supplier testimonials Gohana',
+    'customer feedback brick kiln Haryana',
+    'Eent Bhatta Gohana reviews',
+    'red clay bricks feedback',
   ],
   openGraph: {
-    title: 'Customer Testimonials | Verified Client Trust at Hanuman Bhatta',
-    description: 'Explore verified customer feedback that reflects our legacy of dependable quality and service.',
+    title: 'Customer Testimonials | Hanuman Bhatta Company Gohana',
+    description: 'Explore verified client feedback reflecting our legacy of dependable quality and on-time trolley brick delivery across Haryana.',
     type: 'website',
-    siteName: 'Hanuman Bhatta',
+    url: 'https://hanuman-bhatta-gohana.vercel.app/testimonials',
+    siteName: 'Hanuman Bhatta Company',
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Customer Testimonials | Hanuman Bhatta',
-    description: 'Verified reviews highlighting trust, quality consistency, and reliable support.',
+    title: 'Customer Testimonials | Hanuman Bhatta Company Gohana',
+    description: 'Verified reviews highlighting trust, brick strength, and reliable support from Hanuman Bhatta Company.',
   },
 };
 

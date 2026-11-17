@@ -32,8 +32,7 @@ export default function TestimonialsPage() {
             </h1>
 
             <p className="text-lg md:text-xl text-charcoal-700 leading-relaxed mb-8">
-              Real voices from builders, contractors, and families across Bihar who trust Hanuman Bhatta
-              for their brick supply needs. Every testimonial is from a verified customer.
+              Real voices from builders, contractors, and families across Gohana, Sonipat, Rohtak, Jind, and nearby Haryana areas who trust Hanuman Bhatta Company for their brick supply needs. Every testimonial reflects authentic customer experiences.
             </p>
 
             <div className="bg-gradient-to-r from-terracotta/5 via-orange-500/5 to-terracotta/5 border border-terracotta/20 rounded-lg p-6 md:p-8 text-center">

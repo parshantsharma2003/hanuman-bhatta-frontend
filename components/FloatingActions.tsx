@@ -5,8 +5,8 @@ import TrackableButton from './TrackableButton';
 import { useOrderModal } from '@/lib/orderModalContext';
 import { trackMetric } from '@/lib/analytics';
 
-const whatsappNumber = '8295669463';
-const callNumber = '+918295669463';
+const whatsappNumber = '919996669463';
+const callNumber = '+919996669463';
 
 export default function FloatingActions() {
   const { openModal } = useOrderModal();

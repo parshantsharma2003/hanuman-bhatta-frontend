@@ -81,14 +81,13 @@ export default function AboutPage() {
             className="max-w-3xl mx-auto text-center"
           >
             <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold font-display text-charcoal-900 mb-6">
-              The Story of Our <span className="text-gradient">Bhatta</span>
+              The Story of <span className="text-gradient">Hanuman Bhatta Company</span>
             </h1>
             <p className="text-lg md:text-xl text-charcoal-700 leading-relaxed mb-5 max-w-2xl mx-auto">
-              We are a family-run bhatta built to support real construction needs in our area with honest quality.
+              We are an established brick manufacturing kiln located in Kahlpa, Gohana (Haryana), dedicated to producing high-strength red clay bricks with uncompromised quality.
             </p>
             <p className="text-base md:text-lg text-charcoal-600 leading-relaxed max-w-2xl mx-auto">
-              Our work began with one kiln, local trust, and the belief that every family deserves bricks that last.
-              That same belief still guides us every day.
+              Operating on the Kahlpa-Bhanderi Road in Gohana, our work combines traditional kiln-firing expertise with meticulous hand inspection to supply long-lasting bricks for homes, commercial complexes, and boundary walls across Haryana.
             </p>
           </motion.div>
         </div>
@@ -306,18 +305,18 @@ export default function AboutPage() {
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <a
-                href="https://wa.me/919876543210"
+                href="https://wa.me/919996669463?text=Hello%20Hanuman%20Bhatta,%20I'm%20interested%20in%20your%20brick%20products."
                 className="btn-primary text-lg px-8 py-4 inline-flex items-center justify-center gap-2 focus:outline-none focus-visible:ring-2 focus-visible:ring-terracotta focus-visible:ring-offset-2"
                 target="_blank"
                 rel="noopener noreferrer"
               >
-                WhatsApp Us
+                WhatsApp Us (+91 99966 69463)
               </a>
               <a
-                href="tel:+919876543210"
+                href="tel:+919996669463"
                 className="btn-outline text-lg px-8 py-4 inline-flex items-center justify-center gap-2 focus:outline-none focus-visible:ring-2 focus-visible:ring-charcoal focus-visible:ring-offset-2"
               >
-                Call Us
+                Call Us (+91 99966 69463)
               </a>
             </div>
           </motion.div>

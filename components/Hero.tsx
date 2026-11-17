@@ -66,11 +66,17 @@ export default function Hero() {
             </motion.div>
 
             {/* Main Headline */}
-            <motion.div variants={fadeInUp} className="space-y-4 md:space-y-6">
-              <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold font-display leading-tight">
-                {t('Building', 'निर्माण')} <span className="text-gradient">{t('Strength', 'शक्ति')}</span>,<br />
-                {t('Forging', 'रचना')} <span className="text-gradient">{t('Tradition', 'परंपरा')}</span>
+            <motion.div variants={fadeInUp} className="space-y-3 md:space-y-4">
+              <span className="inline-block text-xs sm:text-sm font-semibold tracking-wider uppercase text-sandy-300">
+                Hanuman Bhatta Company • Kahlpa, Gohana (Haryana)
+              </span>
+              <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold font-display leading-tight">
+                {t('Premium Red Clay Bricks &', 'प्रीमियम लाल मिट्टी की ईंटें व')}{' '}
+                <span className="text-gradient">{t('Eent Bhatta in Gohana', 'ईंट भट्टा गोहाना')}</span>
               </h1>
+              <p className="text-sm sm:text-base text-terracotta-light font-medium italic">
+                {t('Building Strength, Forging Tradition', 'निर्माण शक्ति, रचना परंपरा')}
+              </p>
               <div className="w-24 h-1.5 bg-gradient-to-r from-terracotta to-terracotta-dark rounded-full"></div>
             </motion.div>
 
@@ -162,7 +168,7 @@ export default function Hero() {
                 {/* Image placeholder - replace with actual image */}
                 <Image
                   src="/placeholder-brick-kiln.svg"
-                  alt="red clay brick kiln manufacturing process"
+                  alt="Hanuman Bhatta Company red clay brick kiln manufacturing facility in Kahlpa, Gohana, Haryana"
                   fill
                   sizes="(max-width: 1024px) 100vw, 50vw"
                   className="object-cover mix-blend-overlay opacity-60"
@@ -202,8 +208,8 @@ export default function Hero() {
                   <Award className="w-6 h-6 text-white" />
                 </div>
                 <div>
-                  <div className="font-bold text-charcoal font-display">ISO Certified</div>
-                  <div className="text-sm text-charcoal-600">Quality Assured</div>
+                  <div className="font-bold text-charcoal font-display">Grade-1 Quality</div>
+                  <div className="text-sm text-charcoal-600">Kiln Assured Strength</div>
                 </div>
               </div>
             </motion.div>

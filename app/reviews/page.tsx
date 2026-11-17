@@ -40,8 +40,12 @@ export default function ReviewsPage() {
         </Link>
 
         <div className="mt-6 mb-8">
-          <h1 className="text-3xl md:text-4xl font-bold font-display text-charcoal-900">Customer Reviews</h1>
-          <p className="text-charcoal-600 mt-3">Honest feedback from approved local customers.</p>
+          <h1 className="text-3xl md:text-4xl font-bold font-display text-charcoal-900">
+            Customer Reviews &amp; Ratings | Hanuman Bhatta Company
+          </h1>
+          <p className="text-charcoal-600 mt-3">
+            Honest feedback from approved builders, contractors, and homeowners across Gohana and Haryana.
+          </p>
         </div>
 
         {isLoading ? (

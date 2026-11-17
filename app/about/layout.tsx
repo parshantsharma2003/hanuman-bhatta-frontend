@@ -2,28 +2,33 @@ import { Metadata } from 'next';
 import { ReactNode } from 'react';
 
 export const metadata: Metadata = {
-  title: 'About the Bhatta | Hanuman Bhatta Legacy & Quality Commitment',
+  title: 'About Us | Hanuman Bhatta Company - Brick Kiln in Gohana, Haryana',
   description:
-    'Read the story of Hanuman Bhatta, our founder-led values, and the practical quality process that local families and builders trust.',
+    'Learn about Hanuman Bhatta Company in Kahlpa, Gohana. Our kiln manufacturing heritage, traditional clay firing, stringent quality checks, and dependable supply for Haryana builders.',
+  alternates: {
+    canonical: 'https://hanuman-bhatta-gohana.vercel.app/about',
+  },
   keywords: [
-    'brick manufacturer',
-    'clay bricks',
-    'Eent Bhatta',
-    'quality bricks',
-    'brick supplier',
-    'local brick manufacturer',
-    'red clay bricks',
+    'About Hanuman Bhatta Company',
+    'brick manufacturer in Gohana',
+    'clay bricks Haryana',
+    'Eent Bhatta Gohana',
+    'quality red clay bricks',
+    'brick supplier Sonipat',
+    'brick supplier Rohtak',
+    'local brick kiln Haryana',
   ],
   openGraph: {
-    title: 'About the Bhatta | Legacy, Founder Story, and Quality Promise',
-    description: 'Explore our local journey, founder values, and the honest quality standards we follow at Hanuman Bhatta.',
+    title: 'About Hanuman Bhatta Company | Brick Kiln in Gohana, Haryana',
+    description: 'Explore our local brick manufacturing journey, founder values, and the honest quality standards we uphold at Hanuman Bhatta Company.',
     type: 'website',
-    siteName: 'Hanuman Bhatta',
+    url: 'https://hanuman-bhatta-gohana.vercel.app/about',
+    siteName: 'Hanuman Bhatta Company',
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'About the Bhatta | Hanuman Bhatta',
-    description: 'Family-led brick legacy focused on trust, consistency, and uncompromising quality.',
+    title: 'About Hanuman Bhatta Company | Gohana, Haryana',
+    description: 'Trusted brick manufacturer in Gohana focused on strength, consistency, and kiln-direct supply.',
   },
 };
 

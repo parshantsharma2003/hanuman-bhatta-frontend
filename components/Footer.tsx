@@ -10,19 +10,21 @@ import ReviewModal from './ReviewModal';
 
 const quickLinks = [
   { name: 'Home', href: '/' },
-  { name: 'Products', href: '/#products' },
-  { name: 'Calculator', href: '/#calculator' },
-  { name: 'Contact', href: '/#contact' },
+  { name: 'Our Bricks', href: '/#products' },
+  { name: 'Manufacturing Process', href: '/#process' },
+  { name: 'Brick Calculator', href: '/#calculator' },
+  { name: 'Brick Buying FAQs', href: '/#faq' },
   { name: 'About the Bhatta', href: '/about' },
   { name: 'Customer Testimonials', href: '/testimonials' },
   { name: 'View All Reviews', href: '/reviews' },
+  { name: 'Contact & Kiln Location', href: '/#contact' },
 ];
 
 const contactInfo = {
-  phone: '+91 8295669463', // Replace with actual phone
+  phone: '+91 99966 69463',
   email: 'info@hanumanbhatta.com',
-  address: 'Kahlpa-Bhanderi road, v.p.o Kahlpa, Gohana, Sonipat, Haryana 131301',
-  whatsapp: '+91 8295669463', // Replace with actual WhatsApp number (no + or spaces)
+  address: 'Kahlpa-Bhanderi Road, V.P.O. Kahlpa, Gohana, Sonipat, Haryana 131301',
+  whatsapp: '919996669463',
 };
 
 export default function Footer() {
@@ -61,7 +63,7 @@ export default function Footer() {
                 <div className="absolute inset-0 bg-gradient-to-t from-charcoal/20 to-transparent rounded"></div>
               </div>
               <div>
-                <h3 className="text-xl font-bold text-terracotta font-display">Hanuman Bhatta </h3>
+                <h3 className="text-xl font-bold text-terracotta font-display">Hanuman Bhatta Company</h3>
                 <p className="text-xs text-sandy-300">Eent Bhatta - Clay Bricks</p>
               </div>
             </div>

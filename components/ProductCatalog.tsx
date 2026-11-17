@@ -57,12 +57,69 @@ const cardVariants = {
   },
 };
 
+const defaultProducts: Product[] = [
+  {
+    _id: 'prod-avval-gohana',
+    name: 'First-Class Red Clay Bricks (अव्वल ईंट)',
+    slug: 'first-class-red-clay-bricks-gohana',
+    type: 'Red Clay Brick',
+    qualityGrade: 'First',
+    pricePer1000: 6500,
+    pricePerTrolley: 19500,
+    usageTags: [
+      'Load-Bearing Walls',
+      'Multi-Story Construction',
+      'Exposed Brickwork',
+      'High Compressive Strength (10.5+ N/mm²)',
+    ],
+    description:
+      'Our Grade-1 kiln-fired red clay bricks (अव्वल ईंट) represent the highest quality standard for residential and commercial construction in Gohana and Haryana. Hand-sorted and laboratory-tested for superior load-bearing capacity and low water absorption.',
+    isActive: true,
+  },
+  {
+    _id: 'prod-doyam-gohana',
+    name: 'Second-Class Red Clay Bricks (दोयम ईंट)',
+    slug: 'second-class-red-clay-bricks-gohana',
+    type: 'Red Clay Brick',
+    qualityGrade: 'Second',
+    pricePer1000: 5500,
+    pricePerTrolley: 16500,
+    usageTags: [
+      'Internal Partition Walls',
+      'Plastered Masonry',
+      'Boundary Walls',
+      'Solid Strength (7.5+ N/mm²)',
+    ],
+    description:
+      'Durable, well-fired Grade-2 construction bricks (दोयम ईंट) suited for internal walls, boundary fences, foundation filling, and standard plastering masonry where high performance meets practical cost efficiency.',
+    isActive: true,
+  },
+  {
+    _id: 'prod-rora-gohana',
+    name: 'Brick Bats / Crushed Brick Rora (रोड़ा ईंट)',
+    slug: 'brick-bats-crushed-rora-gohana',
+    type: 'Brick Aggregate',
+    qualityGrade: 'Rora',
+    pricePer1000: 3500,
+    pricePerTrolley: 10500,
+    usageTags: [
+      'Sub-base Flooring',
+      'Road Foundation Beds',
+      'Soak Pits & Drainage',
+      'Roof Lime Concrete Terraces',
+    ],
+    description:
+      'Clean, kiln-hardened crushed brick bats and broken aggregates (रोड़ा) indispensable for heavy-duty floor sub-bases, road foundational layers, soak pits, and damp-proofing concrete mixtures.',
+    isActive: true,
+  },
+];
+
 export default function ProductCatalog() {
   const [pricingMode, setPricingMode] = useState<'thousand' | 'trolley'>('thousand');
   const { openModal } = useOrderModal();
 
   const {
-    data: products = [],
+    data: products = defaultProducts,
     isLoading,
     isError,
     error,
@@ -70,8 +127,11 @@ export default function ProductCatalog() {
   } = useQuery({
     queryKey: queryKeys.products,
     queryFn: fetchProducts,
+    initialData: defaultProducts,
     refetchInterval: 30000,
   });
+
+  const displayProducts = products && products.length > 0 ? products : defaultProducts;
 
   const handleOrderClick = () => {
     trackMetric('order_click');
@@ -203,17 +263,15 @@ export default function ProductCatalog() {
 
           {/* Products Display */}
           <AnimatePresence mode="popLayout">
-            {!isLoading &&
-              !isError &&
-              products.map((product) => (
-                <ProductCard
-                  key={product._id}
-                  product={product}
-                  variants={cardVariants}
-                  pricingMode={pricingMode}
-                  onOrderClick={handleOrderClick}
-                />
-              ))}
+            {displayProducts.map((product) => (
+              <ProductCard
+                key={product._id}
+                product={product}
+                variants={cardVariants}
+                pricingMode={pricingMode}
+                onOrderClick={handleOrderClick}
+              />
+            ))}
           </AnimatePresence>
         </motion.div>
 

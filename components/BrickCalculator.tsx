@@ -157,7 +157,7 @@ export default function BrickCalculator() {
 Thank you!`;
 
     const encodedMessage = encodeURIComponent(message);
-    const whatsappUrl = `https://wa.me/918295669463?text=${encodedMessage}`;
+    const whatsappUrl = `https://wa.me/919996669463?text=${encodedMessage}`;
     trackMetric('whatsapp_click');
     
     // Create a temporary link element to trigger the WhatsApp opening

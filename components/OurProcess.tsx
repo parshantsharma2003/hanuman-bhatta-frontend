@@ -174,8 +174,9 @@ export default function OurProcess() {
 
   return (
     <section
+      id="process"
       ref={ref}
-      className="py-16 md:py-20 lg:py-24 bg-gradient-to-b from-sandy-50 via-white to-sandy-50 relative overflow-hidden"
+      className="py-16 md:py-20 lg:py-24 bg-gradient-to-b from-sandy-50 via-white to-sandy-50 relative overflow-hidden scroll-mt-20"
       aria-label="Manufacturing process section"
     >
       {/* Background decorative elements */}

@@ -19,8 +19,8 @@ interface SuccessScreenProps {
 }
 
 function SuccessScreen({ onClose }: SuccessScreenProps) {
-  const whatsappNumber = '8295669463';
-  const callNumber = '+918295669463';
+  const whatsappNumber = '919996669463';
+  const callNumber = '+919996669463';
   const whatsappMessage = encodeURIComponent(
     'Hi! I just submitted my brick order and wanted to confirm the details with you. 🧱'
   );

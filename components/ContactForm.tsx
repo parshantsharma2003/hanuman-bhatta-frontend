@@ -148,11 +148,11 @@ export default function ContactForm() {
                 <div>
                   <h3 className="font-bold text-charcoal mb-1">Call Us</h3>
                   <a
-                    href="tel:+918295669463"
+                    href="tel:+919996669463"
                     onClick={() => trackMetric('call_click')}
                     className="text-terracotta hover:text-terracotta-600 transition-colors font-semibold"
                   >
-                    +91 82956 69463
+                    +91 99966 69463
                   </a>
                   <p className="text-xs text-charcoal-500 mt-1">Mon - Sat: 8:00 AM - 6:00 PM</p>
                 </div>
@@ -172,13 +172,13 @@ export default function ContactForm() {
                 <div>
                   <h3 className="font-bold text-charcoal mb-1">WhatsApp</h3>
                   <a
-                    href="https://wa.me/918295669463"
+                    href="https://wa.me/919996669463?text=Hello%20Hanuman%20Bhatta,%20I%20want%20to%20enquire%20about%20brick%20prices%20and%20orders."
                     target="_blank"
                     rel="noopener noreferrer"
                     onClick={() => trackMetric('whatsapp_click')}
                     className="text-terracotta hover:text-terracotta-600 transition-colors font-semibold"
                   >
-                    Chat with us
+                    Chat on WhatsApp (+91 99966 69463)
                   </a>
                   <p className="text-xs text-charcoal-500 mt-1">Quick response guaranteed</p>
                 </div>
