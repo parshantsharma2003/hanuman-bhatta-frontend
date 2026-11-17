@@ -22,7 +22,7 @@ const contactInfo = {
   phone: '+91 99966 69463',
   email: 'info@hanumanbhatta.com',
   address: 'Kahlpa-Bhanderi Road, V.P.O. Kahlpa, Gohana, Sonipat, Haryana 131301',
-  whatsapp: '919996669463',
+  whatsapp: '918295669463',
 };
 
 export default function Footer() {

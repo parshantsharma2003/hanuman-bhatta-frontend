@@ -97,7 +97,7 @@ export default function FaqSection() {
               <span>Call 99966 69463</span>
             </a>
             <a
-              href="https://wa.me/919996669463?text=Hello%20Hanuman%20Bhatta,%20I%20have%20a%20question%20regarding%20brick%20orders."
+              href="https://wa.me/918295669463?text=Hello%20Hanuman%20Bhatta,%20I%20have%20a%20question%20regarding%20brick%20orders."
               target="_blank"
               rel="noopener noreferrer"
               className="inline-flex items-center gap-2 border border-[#42403B] hover:border-white text-white font-medium px-5 py-2.5 rounded transition-colors text-sm"

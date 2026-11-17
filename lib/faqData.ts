@@ -32,7 +32,7 @@ export const FAQ_DATA: FaqItem[] = [
   {
     question: 'How do I contact Hanuman Bhatta Company or place an order?',
     answer:
-      'You can contact Hanuman Bhatta Company directly by calling +91 99966 69463 or chatting with our sales team on WhatsApp at +91 99966 69463. Customers are also welcome to visit our kiln at Kahlpa, Gohana from Monday to Saturday, 8:00 AM to 6:00 PM, to inspect brick batches in person before booking.',
+      'You can contact Hanuman Bhatta Company directly by calling +91 99966 69463 or chatting with our sales team on WhatsApp at +91 82956 69463. Customers are also welcome to visit our kiln at Kahlpa, Gohana from Monday to Saturday, 8:00 AM to 6:00 PM, to inspect brick batches in person before booking.',
     category: 'Contact',
   },
   {

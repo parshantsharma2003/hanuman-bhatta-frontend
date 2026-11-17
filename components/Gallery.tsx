@@ -20,7 +20,7 @@ interface GalleryImage {
 const defaultGalleryItems: GalleryImage[] = [
   {
     id: 'gal-1',
-    src: '/og-image.jpg',
+    src: '/images/brick-texture.jpg',
     alt: 'Stacked kiln-fired red clay bricks ready for dispatch in Kahlpa',
     caption: 'Grade-1 Fired Brick Stacks Ready for Dispatch',
     category: 'Yard Inventory',
@@ -28,9 +28,9 @@ const defaultGalleryItems: GalleryImage[] = [
   },
   {
     id: 'gal-2',
-    src: '/placeholder-brick-kiln.svg',
+    src: '/og-image.jpg',
     alt: 'Traditional brick kiln firing facility in Gohana',
-    caption: 'Continuous Bull’s Trench Kiln Firing Chamber (1000°C)',
+    caption: 'Continuous Bull’s Trench Kiln Firing Chamber',
     category: 'Production',
     type: 'image',
   },

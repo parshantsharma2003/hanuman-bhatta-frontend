@@ -297,12 +297,12 @@ export default function AboutPage() {
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <a
-                href="https://wa.me/919996669463?text=Hello%20Hanuman%20Bhatta,%20I'm%20interested%20in%20your%20brick%20products."
+                href="https://wa.me/918295669463?text=Hello%20Hanuman%20Bhatta,%20I'm%20interested%20in%20your%20brick%20products."
                 className="btn-primary text-lg px-8 py-4 inline-flex items-center justify-center gap-2 focus:outline-none focus-visible:ring-2 focus-visible:ring-terracotta focus-visible:ring-offset-2"
                 target="_blank"
                 rel="noopener noreferrer"
               >
-                WhatsApp Us (+91 99966 69463)
+                WhatsApp Us (+91 82956 69463)
               </a>
               <a
                 href="tel:+919996669463"

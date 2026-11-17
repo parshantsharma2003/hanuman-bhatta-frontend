@@ -17,7 +17,9 @@
     /* Architectural Brand Variables */
     --color-terracotta: #B8402C;
     --color-charcoal: #242321;
+    --color-charcoal-deep: #191817;
     --color-sandy: #F5F0E8;
+    --color-muted: #A9A39A;
   }
   
   /* Default sandy beige background with charcoal text for earthy aesthetic */

@@ -70,7 +70,7 @@ export default function NotFound() {
               <span>Brick Calculator</span>
             </Link>
             <a
-              href="https://wa.me/919996669463?text=Hello%20Hanuman%20Bhatta,%20I%20need%20assistance%20with%20brick%20pricing%20and%20orders."
+              href="https://wa.me/918295669463?text=Hello%20Hanuman%20Bhatta,%20I%20need%20assistance%20with%20brick%20pricing%20and%20orders."
               target="_blank"
               rel="noopener noreferrer"
               className="inline-flex items-center justify-center gap-2 bg-green-700 hover:bg-green-800 text-white font-bold py-3 px-5 rounded-xl transition-all text-sm"

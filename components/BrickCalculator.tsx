@@ -122,7 +122,7 @@ export default function BrickCalculator() {
 Please provide pricing and delivery timeline to my site in Gohana/Haryana.`;
 
     const encodedMessage = encodeURIComponent(message);
-    const whatsappUrl = `https://wa.me/919996669463?text=${encodedMessage}`;
+    const whatsappUrl = `https://wa.me/918295669463?text=${encodedMessage}`;
     trackMetric('whatsapp_click');
 
     window.open(whatsappUrl, '_blank', 'noopener,noreferrer');
@@ -299,7 +299,7 @@ Please provide pricing and delivery timeline to my site in Gohana/Haryana.`;
             className="w-full inline-flex items-center justify-center gap-2 bg-[#242321] hover:bg-[#B8402C] text-white py-3.5 px-4 rounded transition-colors text-sm font-medium disabled:opacity-50 disabled:cursor-not-allowed"
           >
             <MessageCircle className="w-4 h-4" />
-            <span>Send Estimate to WhatsApp (+91 99966 69463)</span>
+            <span>Send Estimate to WhatsApp (+91 82956 69463)</span>
           </button>
         </div>
 
