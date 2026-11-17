@@ -33,8 +33,8 @@ export default function FloatingActions() {
   return (
     <aside
       aria-label="Direct Kiln Contact & Navigation"
-      className="fixed bottom-4 sm:bottom-6 right-4 sm:right-6 z-50 flex items-center gap-2 pointer-events-auto"
-      style={{ paddingBottom: 'env(safe-area-inset-bottom, 0px)' }}
+      className="fixed right-3 sm:right-6 z-50 flex items-center gap-2 pointer-events-auto transition-all duration-200"
+      style={{ bottom: 'calc(1rem + env(safe-area-inset-bottom, 0px))' }}
     >
       {/* Back to Top Button */}
       {showBackToTop && (
@@ -42,28 +42,27 @@ export default function FloatingActions() {
           onClick={scrollToTop}
           type="button"
           aria-label="Scroll to top of page"
-          className="w-12 h-12 rounded-full bg-[#191817] text-[#F5F0E8] border border-[#31302C] shadow-lg flex items-center justify-center hover:bg-[#242321] hover:text-[#B8402C] transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-[#B8402C]"
+          className="w-10 h-10 sm:w-11 sm:h-11 rounded-full bg-[#191817]/95 backdrop-blur-sm text-[#F5F0E8] border border-[#31302C] shadow-xl flex items-center justify-center hover:bg-[#242321] hover:text-[#B8402C] transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-[#B8402C] flex-shrink-0"
         >
-          <ArrowUp className="w-5 h-5" />
+          <ArrowUp className="w-4 h-4 sm:w-4.5 sm:h-4.5" />
         </button>
       )}
 
       {/* Unified Direct Kiln Contact Bar */}
-      <div className="flex items-center bg-[#191817] text-white border border-[#31302C] rounded-full shadow-2xl overflow-hidden p-1">
+      <div className="flex items-center bg-[#191817]/95 backdrop-blur-sm text-white border border-[#31302C] rounded-full shadow-2xl overflow-hidden p-1">
         {/* Direct Call Button */}
         <TrackableButton
           as="a"
           metricType="call_click"
           href={`tel:${CALL_NUMBER}`}
-          className="flex items-center gap-2 text-white hover:text-[#B8402C] px-4 py-2.5 min-h-[48px] text-xs font-mono font-medium transition-colors"
+          className="flex items-center gap-1.5 sm:gap-2 text-white hover:text-[#B8402C] px-3 sm:px-4 py-2 sm:py-2.5 min-h-[44px] sm:min-h-[48px] text-xs font-mono font-medium transition-colors"
           ariaLabel="Call Hanuman Bhatta Company (+91 99966 69463)"
         >
-          <PhoneCall className="w-4 h-4 text-[#B8402C]" />
-          <span className="hidden sm:inline font-sans">Call Kiln</span>
-          <span className="sm:hidden font-sans">Call</span>
+          <PhoneCall className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-[#B8402C]" />
+          <span className="font-sans text-[11px] sm:text-xs">Call Kiln</span>
         </TrackableButton>
 
-        <span className="w-px h-5 bg-[#31302C]" />
+        <span className="w-px h-4 sm:h-5 bg-[#31302C]" />
 
         {/* Direct WhatsApp Button */}
         <TrackableButton
@@ -72,11 +71,11 @@ export default function FloatingActions() {
           href={`https://wa.me/${WHATSAPP_NUMBER}?text=${whatsappMessage}`}
           target="_blank"
           rel="noopener noreferrer"
-          className="flex items-center gap-2 text-white hover:text-emerald-400 px-4 py-2.5 min-h-[48px] text-xs font-mono font-medium transition-colors"
+          className="flex items-center gap-1.5 sm:gap-2 text-white hover:text-emerald-400 px-3 sm:px-4 py-2 sm:py-2.5 min-h-[44px] sm:min-h-[48px] text-xs font-mono font-medium transition-colors"
           ariaLabel="Chat with Hanuman Bhatta on WhatsApp (+91 82956 69463)"
         >
-          <MessageCircle className="w-4 h-4 text-emerald-500" />
-          <span className="font-sans">WhatsApp</span>
+          <MessageCircle className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-emerald-500" />
+          <span className="font-sans text-[11px] sm:text-xs">WhatsApp</span>
         </TrackableButton>
       </div>
     </aside>

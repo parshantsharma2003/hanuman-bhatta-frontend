@@ -7,8 +7,6 @@ import { AlertCircle, CheckCircle2, Loader2, TrendingUp } from 'lucide-react';
 import OrderStepIndicator from './OrderStepIndicator';
 import { submitSmartOrder, SmartOrderPayload, smartOrderSchema } from '@/lib/orderApi';
 import { trackMetric } from '@/lib/analytics';
-import { useQuery } from '@tanstack/react-query';
-import { fetchInventory, queryKeys } from '@/lib/api/queries';
 
 type FormValues = SmartOrderPayload;
 
@@ -55,10 +53,6 @@ const STEP_SCHEMAS = {
   }),
 } as const;
 
-interface InventoryInfo {
-  totalBricks: number;
-}
-
 function setFormValidationErrors(
   issues: Array<{ path: (string | number | symbol)[]; message: string }>,
   setErrorFn: ReturnType<typeof useForm<FormValues>>['setError'],
@@ -80,23 +74,6 @@ export default function SmartOrderForm({ onSubmitSuccess }: { onSubmitSuccess?: 
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [toast, setToast] = useState<{ type: 'success' | 'error'; message: string } | null>(null);
   const [attemptedSteps, setAttemptedSteps] = useState<Record<number, boolean>>({});
-
-  const {
-    data: inventoryData,
-    isError: isInventoryError,
-    error: inventoryError,
-  } = useQuery({
-    queryKey: queryKeys.inventory,
-    queryFn: fetchInventory,
-  });
-
-  const inventory: InventoryInfo | null = useMemo(
-    () =>
-      inventoryData
-        ? { totalBricks: Number(inventoryData.totalBricks || 0) }
-        : null,
-    [inventoryData]
-  );
 
   const {
     register,
@@ -177,17 +154,6 @@ export default function SmartOrderForm({ onSubmitSuccess }: { onSubmitSuccess?: 
       max: Math.round(quantityBricks * rate.max),
     };
   }, [values.brickType, quantityBricks]);
-
-  const stockWarning = useMemo(() => {
-    if (!inventory) return null;
-    if (quantityBricks > inventory.totalBricks) {
-      return {
-        availableBricks: inventory.totalBricks,
-        requestedBricks: quantityBricks,
-      };
-    }
-    return null;
-  }, [inventory, quantityBricks]);
 
   useEffect(() => {
     if (values.isWhatsappSame) {
@@ -417,13 +383,6 @@ export default function SmartOrderForm({ onSubmitSuccess }: { onSubmitSuccess?: 
                 {quantityBricks >= 12000 && (
                   <p className="text-xs text-emerald-700 mt-2 font-semibold">Bulk order benefit: You may get better negotiated pricing.</p>
                 )}
-                {isInventoryError && (
-                  <p className="text-xs text-amber-700 mt-2 font-semibold">
-                    {inventoryError instanceof Error
-                      ? inventoryError.message
-                      : 'Live stock check is temporarily unavailable.'}
-                  </p>
-                )}
               </div>
             </motion.div>
           )}
@@ -485,14 +444,6 @@ export default function SmartOrderForm({ onSubmitSuccess }: { onSubmitSuccess?: 
                   </select>
                 </div>
               </div>
-
-              {stockWarning && (
-                <div className="rounded-lg border border-amber-300 bg-amber-50 p-3 text-amber-700 text-sm">
-                  <p className="font-semibold">Limited stock available</p>
-                  <p>Requested: {stockWarning.requestedBricks.toLocaleString()} bricks, Available: {stockWarning.availableBricks.toLocaleString()} bricks.</p>
-                  <p className="mt-1">Suggestion: Request partial delivery now or choose a later date.</p>
-                </div>
-              )}
             </motion.div>
           )}
 

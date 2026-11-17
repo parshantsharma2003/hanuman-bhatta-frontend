@@ -34,7 +34,7 @@ export default function Footer() {
       <footer className="bg-[#171615] text-[#F5F0E8] border-t border-[#31302C]">
         <FooterRatingBar />
 
-        <div className="container-custom py-14 md:py-20">
+        <div className="container-custom pt-14 pb-28 md:pt-20 md:pb-24">
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-12 gap-10 lg:gap-12 pb-12 border-b border-[#31302C]">
             
             {/* Col 1: Brand & Mission (4 cols) */}

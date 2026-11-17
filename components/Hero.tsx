@@ -3,7 +3,7 @@
 import React from 'react';
 import Image from 'next/image';
 import { motion } from 'framer-motion';
-import { ArrowRight } from 'lucide-react';
+import { ArrowRight, Calendar, MapPin, Truck } from 'lucide-react';
 import { trackMetric } from '@/lib/analytics';
 import { useOrderModal } from '@/lib/orderModalContext';
 
@@ -92,17 +92,17 @@ export default function Hero() {
               transition={{ duration: 0.6, delay: 0.1, ease: 'easeOut' }}
               className="lg:col-span-5"
             >
-              <div className="group relative bg-[#191817] border border-[#31302C] rounded-[3px] overflow-hidden shadow-2xl">
+              <div className="group relative bg-[#191817] border border-[#31302C] rounded-[2px] overflow-hidden shadow-2xl">
                 
-                {/* Large Editorial Photo Container */}
-                <div className="relative aspect-[4/3] sm:aspect-[16/11] lg:aspect-[3/4] w-full overflow-hidden bg-[#171615]">
+                {/* Large Editorial Photo Container - Emphasizing Chimney, Kiln Yard & Brick Stacks */}
+                <div className="relative aspect-[4/5] sm:aspect-[16/11] lg:aspect-[3/4] w-full min-h-[380px] sm:min-h-[440px] lg:min-h-[560px] overflow-hidden bg-[#171615]">
                   <Image
                     src="/images/hero-kiln.jpg"
-                    alt="Active brick kiln chimney and tractor dispatch yard at Hanuman Bhatta Company in Kahlpa, Gohana"
+                    alt="Active brick kiln chimney with Hindi inscription, delivery tractor and red clay brick stacks at Hanuman Bhatta Company in Kahlpa, Gohana"
                     fill
-                    sizes="(max-width: 768px) 100vw, (max-width: 1200px) 45vw, 520px"
+                    sizes="(max-width: 768px) 100vw, (max-width: 1200px) 45vw, 540px"
                     priority
-                    className="object-cover object-[center_35%] transition-transform duration-700 ease-out group-hover:scale-[1.02]"
+                    className="object-cover object-[center_30%] transition-transform duration-700 ease-out group-hover:scale-[1.02]"
                   />
 
                   {/* Architectural Corner Crop Marks */}
@@ -111,27 +111,29 @@ export default function Hero() {
                   <div className="absolute bottom-2.5 left-2.5 w-3 h-3 border-b-2 border-l-2 border-white/70 pointer-events-none" />
                   <div className="absolute bottom-2.5 right-2.5 w-3 h-3 border-b-2 border-r-2 border-white/70 pointer-events-none" />
 
-                  {/* Subtle Tonal Gradient & Authentic Facility Caption */}
-                  <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent p-4 sm:p-5 flex items-end justify-between pointer-events-none">
-                    <div>
-                      <span className="text-[10px] font-mono tracking-widest uppercase text-[#B8402C] block font-semibold">
-                        Kahlpa Facility • Firing Chamber
-                      </span>
-                      <p className="text-xs sm:text-sm font-semibold text-white mt-0.5">
-                        Active Bull’s Trench Kiln Yard
-                      </p>
-                    </div>
+                  {/* High-Contrast Tonal Gradient & Legible Caption Overlay */}
+                  <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/95 via-black/75 to-transparent pt-14 pb-4 px-4 sm:px-5 pointer-events-none">
+                    <div className="flex items-end justify-between gap-3">
+                      <div>
+                        <span className="text-[10px] sm:text-[11px] font-mono tracking-widest uppercase text-[#B8402C] font-semibold block">
+                          KAHLPA KILN YARD · ESTD. 2010
+                        </span>
+                        <p className="text-sm sm:text-base font-semibold text-white mt-0.5 tracking-tight">
+                          Active Bull’s Trench Kiln &amp; Dispatch Facility
+                        </p>
+                      </div>
 
-                    <span className="text-[10px] font-mono px-2 py-0.5 bg-[#242321]/90 text-[#F5F0E8] border border-[#42403B] rounded-[2px] whitespace-nowrap">
-                      ESTD. 2010
-                    </span>
+                      <span className="text-[10px] sm:text-[11px] font-mono px-2.5 py-1 bg-[#191817]/95 text-[#F5F0E8] border border-[#42403B] rounded-[2px] whitespace-nowrap">
+                        Gohana, Haryana
+                      </span>
+                    </div>
                   </div>
                 </div>
 
                 {/* Sub-photo Caption Strip */}
-                <div className="p-3 sm:p-3.5 bg-[#191817] border-t border-[#31302C] flex items-center justify-between text-[11px] text-[#A9A39A]">
-                  <span className="font-mono">Tractor-Trolley Direct Dispatch</span>
-                  <span className="text-[#BCB7AD]">Gohana &amp; Surrounding Belt</span>
+                <div className="px-4 py-3 bg-[#191817] border-t border-[#31302C] flex items-center justify-between text-xs text-[#A9A39A]">
+                  <span className="font-mono">Direct Yard Tractor Dispatch</span>
+                  <span className="text-[#EAE7E1] font-medium">Kahlpa-Bhanderi Belt</span>
                 </div>
 
               </div>
@@ -141,42 +143,57 @@ export default function Hero() {
         </div>
       </section>
 
-      {/* Separate Business Proof Strip Section Immediately Below Hero */}
+      {/* Premium Local Trust Section (Replacing the 3 statistics) */}
       <section
-        aria-label="Verified Manufacturing Standards and Capacity"
-        className="bg-[#191817] text-[#F5F0E8] border-b border-[#31302C] py-6 sm:py-8"
+        aria-label="Local Heritage and Supply Network"
+        className="bg-[#191817] text-[#F5F0E8] border-b border-[#31302C] py-8 sm:py-10"
       >
         <div className="container-custom">
-          <div className="grid grid-cols-1 sm:grid-cols-3 divide-y sm:divide-y-0 sm:divide-x divide-[#31302C]">
+          <div className="grid grid-cols-1 md:grid-cols-3 divide-y md:divide-y-0 md:divide-x divide-[#31302C]">
             
-            {/* Specification 1: Trolley Load */}
-            <div className="py-3 sm:py-0 sm:px-6 first:sm:pl-0 flex flex-col justify-center">
-              <span className="text-2xl sm:text-3xl font-bold font-display text-white tracking-tight">
-                3,000 Bricks
-              </span>
-              <span className="text-xs font-mono text-[#A9A39A] uppercase tracking-wider mt-1">
-                Standard Trolley Load
-              </span>
+            {/* Trust Point 1: Established in 2010 */}
+            <div className="py-5 md:py-0 md:px-8 first:md:pl-0 flex items-start gap-4">
+              <div className="w-9 h-9 rounded-[2px] bg-[#242321] border border-[#31302C] flex items-center justify-center text-[#B8402C] flex-shrink-0 mt-0.5">
+                <Calendar className="w-4 h-4" strokeWidth={1.75} />
+              </div>
+              <div>
+                <h2 className="text-base sm:text-lg font-bold font-display text-white tracking-tight">
+                  Established in 2010
+                </h2>
+                <p className="text-xs sm:text-sm text-[#A9A39A] mt-1 leading-relaxed">
+                  A local brick manufacturing business.
+                </p>
+              </div>
             </div>
 
-            {/* Specification 2: Compressive Strength */}
-            <div className="py-3 sm:py-0 sm:px-6 flex flex-col justify-center">
-              <span className="text-2xl sm:text-3xl font-bold font-display text-white tracking-tight">
-                10.5+ N/mm²
-              </span>
-              <span className="text-xs font-mono text-[#A9A39A] uppercase tracking-wider mt-1">
-                Grade-1 Compressive Strength
-              </span>
+            {/* Trust Point 2: Made in Kahlpa, Gohana */}
+            <div className="py-5 md:py-0 md:px-8 flex items-start gap-4">
+              <div className="w-9 h-9 rounded-[2px] bg-[#242321] border border-[#31302C] flex items-center justify-center text-[#B8402C] flex-shrink-0 mt-0.5">
+                <MapPin className="w-4 h-4" strokeWidth={1.75} />
+              </div>
+              <div>
+                <h2 className="text-base sm:text-lg font-bold font-display text-white tracking-tight">
+                  Made in Kahlpa, Gohana
+                </h2>
+                <p className="text-xs sm:text-sm text-[#A9A39A] mt-1 leading-relaxed">
+                  Manufactured locally for nearby construction needs.
+                </p>
+              </div>
             </div>
 
-            {/* Specification 3: Wholesale Pricing */}
-            <div className="py-3 sm:py-0 sm:px-6 last:sm:pr-0 flex flex-col justify-center">
-              <span className="text-2xl sm:text-3xl font-bold font-display text-white tracking-tight">
-                Direct Kiln
-              </span>
-              <span className="text-xs font-mono text-[#A9A39A] uppercase tracking-wider mt-1">
-                Wholesale Yard Pricing
-              </span>
+            {/* Trust Point 3: Local Delivery Network */}
+            <div className="py-5 md:py-0 md:px-8 last:md:pr-0 flex items-start gap-4">
+              <div className="w-9 h-9 rounded-[2px] bg-[#242321] border border-[#31302C] flex items-center justify-center text-[#B8402C] flex-shrink-0 mt-0.5">
+                <Truck className="w-4 h-4" strokeWidth={1.75} />
+              </div>
+              <div>
+                <h2 className="text-base sm:text-lg font-bold font-display text-white tracking-tight">
+                  Local Delivery Network
+                </h2>
+                <p className="text-xs sm:text-sm text-[#A9A39A] mt-1 leading-relaxed">
+                  Serving Gohana and surrounding areas.
+                </p>
+              </div>
             </div>
 
           </div>

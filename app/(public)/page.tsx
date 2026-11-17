@@ -17,10 +17,6 @@ const SectionLoader = ({ label }: { label: string }) => (
 );
 
 // SSR enabled for complete search engine and AI crawler crawlability
-const InventoryTicker = dynamic(() => import('@/components/InventoryTicker'), {
-  loading: () => <SectionLoader label="Loading live inventory..." />,
-});
-
 const OurProcess = dynamic(() => import('@/components/OurProcess'), {
   loading: () => <SectionLoader label="Loading manufacturing process..." />,
 });
@@ -73,11 +69,8 @@ export default function Home() {
       <JsonLd />
 
       <main className="min-h-screen bg-sand text-charcoal">
-        {/* Hero Section */}
+        {/* Hero Section & Local Trust */}
         <Hero />
-
-        {/* Live Inventory & Dispatch Capacity */}
-        <InventoryTicker />
 
         {/* Manufacturing Process */}
         <OurProcess />
