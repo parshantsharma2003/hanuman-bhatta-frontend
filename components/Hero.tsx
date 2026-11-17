@@ -2,30 +2,9 @@
 
 import React from 'react';
 import { motion } from 'framer-motion';
-import { ArrowRight, Award, Shield, TrendingUp } from 'lucide-react';
-import Image from 'next/image';
+import { ArrowRight, CheckCircle2 } from 'lucide-react';
 import { trackMetric } from '@/lib/analytics';
 import { useOrderModal } from '@/lib/orderModalContext';
-
-const fadeInUp = {
-  initial: { opacity: 0, y: 60 },
-  animate: { opacity: 1, y: 0 },
-  transition: { duration: 0.6, ease: 'easeOut' },
-};
-
-const staggerContainer = {
-  animate: {
-    transition: {
-      staggerChildren: 0.15,
-    },
-  },
-};
-
-const features = [
-  { icon: Shield, text: 'Built to Last Generations' },
-  { icon: Award, text: 'Premium Quality Certified' },
-  { icon: TrendingUp, text: 'Trusted by 500+ Builders' },
-];
 
 export default function Hero() {
   const { openModal } = useOrderModal();
@@ -36,196 +15,141 @@ export default function Hero() {
   };
 
   return (
-    <section id="home" className="relative min-h-screen flex items-center bg-gradient-to-br from-charcoal-900 via-charcoal-800 to-charcoal-900 text-white overflow-hidden scroll-mt-20">
-      {/* Background Pattern */}
-      <div className="absolute inset-0 brick-pattern opacity-5"></div>
-      
-      {/* Decorative Elements */}
-      <div className="absolute top-20 right-0 w-96 h-96 bg-terracotta opacity-10 rounded-full blur-3xl"></div>
-      <div className="absolute bottom-0 left-0 w-96 h-96 bg-sandy opacity-5 rounded-full blur-3xl"></div>
+    <section
+      id="home"
+      className="relative min-h-[92vh] flex items-center bg-[#242321] text-[#F5F0E8] overflow-hidden pt-28 pb-20 md:pt-36 md:pb-28 border-b border-[#31302C] scroll-mt-20"
+      aria-label="Hanuman Bhatta Company Introduction"
+    >
+      {/* Subtle architectural grid */}
+      <div className="absolute inset-0 brick-pattern opacity-15 pointer-events-none" />
 
-      <div className="container-custom relative z-10 py-16 md:py-20 lg:py-24">
-        <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
-          {/* Left Content */}
-          <motion.div
-            variants={staggerContainer}
-            initial="initial"
-            animate="animate"
-            className="space-y-6 md:space-y-8"
-          >
-            {/* Badge */}
-            <motion.div variants={fadeInUp}>
-              <div className="inline-flex items-center gap-2 px-4 py-2 bg-terracotta/20 border border-terracotta/30 rounded-full backdrop-blur-sm">
-                <div className="w-2 h-2 bg-terracotta rounded-full animate-pulse"></div>
-                <span className="text-sm font-semibold text-sandy-100">
-                  Since 2010 - Two Generations of Excellence
-                </span>
-              </div>
-            </motion.div>
-
-            {/* Main Headline */}
-            <motion.div variants={fadeInUp} className="space-y-3 md:space-y-4">
-              <span className="inline-block text-xs sm:text-sm font-semibold tracking-wider uppercase text-sandy-300">
-                Hanuman Bhatta Company • Kahlpa, Gohana (Haryana)
-              </span>
-              <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold font-display leading-tight">
-                Premium Red Clay Bricks &{' '}
-                <span className="text-gradient">Eent Bhatta in Gohana</span>
-              </h1>
-              <p className="text-sm sm:text-base text-terracotta-light font-medium italic">
-                Building Strength, Forging Tradition
-              </p>
-              <div className="w-24 h-1.5 bg-gradient-to-r from-terracotta to-terracotta-dark rounded-full"></div>
-            </motion.div>
-
-            {/* Supporting Text */}
-            <motion.p
-              variants={fadeInUp}
-              className="text-base md:text-lg lg:text-xl text-sandy-200 leading-relaxed max-w-xl"
-            >
-              Premium red clay bricks crafted with precision for contractors, builders, and architects who demand uncompromising quality and lasting durability in every project.
-            </motion.p>
-
-            {/* Features */}
-            <motion.div
-              variants={fadeInUp}
-              className="flex flex-wrap gap-3 md:gap-4"
-            >
-              {features.map((feature, index) => (
-                <div
-                  key={index}
-                  className="flex items-center gap-2 px-4 py-2 bg-white/5 backdrop-blur-sm rounded-lg border border-white/10"
-                >
-                  <feature.icon className="w-4 h-4 text-terracotta" />
-                  <span className="text-sm font-medium text-sandy-100">
-                    {feature.text}
-                  </span>
-                </div>
-              ))}
-            </motion.div>
-
-            {/* CTA Buttons */}
-            <motion.div
-              variants={fadeInUp}
-              className="flex flex-col sm:flex-row flex-wrap gap-3 md:gap-4 pt-2 md:pt-4"
-            >
-              <button
-                onClick={handleOrderClick}
-                className="group inline-flex items-center justify-center gap-2 bg-terracotta hover:bg-terracotta-dark text-white font-bold px-6 md:px-8 py-3.5 md:py-4 rounded-xl transition-all duration-300 shadow-brick-lg hover:shadow-2xl hover:scale-105 text-sm md:text-base focus:outline-none focus-visible:ring-2 focus-visible:ring-sandy focus-visible:ring-offset-2 focus-visible:ring-offset-charcoal-900"
-                aria-label="Request a quote for brick orders"
-              >
-                Request Quote
-                <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
-              </button>
-              
-              <a
-                href="#calculator"
-                className="inline-flex items-center justify-center gap-2 bg-white/10 hover:bg-white/20 backdrop-blur-sm text-white font-semibold px-6 md:px-8 py-3.5 md:py-4 rounded-xl border-2 border-white/20 hover:border-sandy transition-all duration-300 text-sm md:text-base focus:outline-none focus-visible:ring-2 focus-visible:ring-sandy focus-visible:ring-offset-2 focus-visible:ring-offset-charcoal-900"
-                aria-label="Navigate to brick calculator to estimate requirements"
-              >
-                Calculate Bricks Needed
-              </a>
-            </motion.div>
-
-            {/* Trust Indicators */}
-            <motion.div
-              variants={fadeInUp}
-              className="flex flex-wrap items-center gap-6 md:gap-8 pt-6 md:pt-8 border-t border-white/10"
-            >
-              <div>
-                <div className="text-2xl md:text-3xl font-bold text-terracotta font-display">15+</div>
-                <div className="text-xs md:text-sm text-sandy-300">Years Experience</div>
-              </div>
-              <div className="w-px h-10 md:h-12 bg-white/20"></div>
-              <div>
-                <div className="text-2xl md:text-3xl font-bold text-terracotta font-display">150M+</div>
-                <div className="text-xs md:text-sm text-sandy-300">Bricks Produced</div>
-              </div>
-              <div className="w-px h-10 md:h-12 bg-white/20"></div>
-              <div>
-                <div className="text-2xl md:text-3xl font-bold text-terracotta font-display">50K+</div>
-                <div className="text-xs md:text-sm text-sandy-300">Happy Clients</div>
-              </div>
-            </motion.div>
-          </motion.div>
-
-          {/* Right Image */}
-          <motion.div
-            initial={{ opacity: 0, scale: 0.9 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.8, delay: 0.3 }}
-            className="relative"
-          >
-            {/* Image Container */}
-            <div className="relative aspect-[4/3] rounded-2xl overflow-hidden border-4 border-terracotta/30 shadow-2xl">
-              {/* Placeholder with gradient overlay */}
-              <div className="absolute inset-0 bg-gradient-to-br from-terracotta-900 via-charcoal-700 to-charcoal-900">
-                {/* Image placeholder - replace with actual image */}
-                <Image
-                  src="/placeholder-brick-kiln.svg"
-                  alt="Hanuman Bhatta Company red clay brick kiln manufacturing facility in Kahlpa, Gohana, Haryana"
-                  fill
-                  sizes="(max-width: 1024px) 100vw, 50vw"
-                  className="object-cover mix-blend-overlay opacity-60"
-                  priority
-                />
-                
-                {/* Decorative overlay */}
-                <div className="absolute inset-0 bg-gradient-to-t from-charcoal-900/80 via-transparent to-transparent"></div>
-                
-                {/* Placeholder content */}
-                <div className="absolute inset-0 flex items-center justify-center">
-                  <div className="text-center space-y-4">
-                    <div className="w-24 h-24 mx-auto bg-terracotta/20 rounded-full flex items-center justify-center backdrop-blur-sm border-2 border-terracotta/50">
-                      <div className="text-4xl">🧱</div>
-                    </div>
-                    <p className="text-sandy-200 font-medium px-4">
-                      Premium Clay Brick<br />Manufacturing Process
-                    </p>
-                  </div>
-                </div>
-              </div>
-
-              {/* Decorative corner accents */}
-              <div className="absolute top-0 left-0 w-16 h-16 border-l-4 border-t-4 border-sandy rounded-tl-2xl"></div>
-              <div className="absolute bottom-0 right-0 w-16 h-16 border-r-4 border-b-4 border-sandy rounded-br-2xl"></div>
+      <div className="container-custom relative z-10">
+        <div className="grid lg:grid-cols-12 gap-12 lg:gap-16 items-center">
+          
+          {/* Left Column: Brand Statement & Technical Credentials (7 cols) */}
+          <div className="lg:col-span-7 space-y-8">
+            
+            {/* Meta Registration Line */}
+            <div className="flex items-center gap-3 text-xs tracking-widest uppercase text-terracotta font-semibold">
+              <span className="w-6 h-px bg-terracotta"></span>
+              <span>Estd. 2010 • Kiln Facility in Kahlpa, Gohana (Haryana)</span>
             </div>
 
-            {/* Floating badge */}
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 1, duration: 0.6 }}
-              className="absolute -bottom-6 -left-6 bg-white rounded-xl shadow-2xl p-6 border-2 border-terracotta"
-            >
-              <div className="flex items-center gap-4">
-                <div className="w-12 h-12 bg-gradient-to-br from-terracotta to-terracotta-dark rounded-lg flex items-center justify-center">
-                  <Award className="w-6 h-6 text-white" />
-                </div>
+            {/* Architectural Heading Hierarchy */}
+            <div className="space-y-4">
+              <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold font-display tracking-tight text-white leading-[1.08]">
+                Hanuman Bhatta <br />
+                <span className="text-[#B8402C]">Company.</span>
+              </h1>
+              <p className="text-xl sm:text-2xl text-[#EAE7E1] font-display font-normal max-w-2xl leading-snug">
+                Kiln-Fired Red Clay Bricks &amp; Direct Tractor-Trolley Supply
+              </p>
+            </div>
+
+            {/* Authoritative, Grounded Body */}
+            <p className="text-base sm:text-lg text-[#BCB7AD] leading-relaxed max-w-2xl font-sans font-normal">
+              Manufactured directly from dense alluvial clay along the Kahlpa-Bhanderi belt, slow-fired at high kiln temperatures for load-bearing strength, low water absorption, and clean architectural masonry. Serving contractors, builders, and homeowners across Gohana, Sonipat, Rohtak, and Jind.
+            </p>
+
+            {/* Verified Technical Standards */}
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 pt-2 border-t border-[#31302C]">
+              <div className="py-2">
+                <span className="block text-xl font-bold font-display text-white">3,000 Bricks</span>
+                <span className="text-xs text-[#969188] uppercase tracking-wider">Standard Trolley Load</span>
+              </div>
+              <div className="py-2 border-t sm:border-t-0 sm:border-l border-[#31302C] sm:pl-4">
+                <span className="block text-xl font-bold font-display text-white">10.5+ N/mm²</span>
+                <span className="text-xs text-[#969188] uppercase tracking-wider">Grade-1 Compressive Strength</span>
+              </div>
+              <div className="py-2 border-t sm:border-t-0 sm:border-l border-[#31302C] sm:pl-4">
+                <span className="block text-xl font-bold font-display text-white">Direct Kiln</span>
+                <span className="text-xs text-[#969188] uppercase tracking-wider">Wholesale Yard Pricing</span>
+              </div>
+            </div>
+
+            {/* Call to Actions */}
+            <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-4 pt-2">
+              <button
+                onClick={handleOrderClick}
+                className="inline-flex items-center justify-center gap-3 bg-[#B8402C] hover:bg-[#8E2E1D] text-white font-medium px-7 py-4 rounded transition-colors duration-150 text-base focus:outline-none focus-visible:ring-2 focus-visible:ring-[#B8402C] focus-visible:ring-offset-2 focus-visible:ring-offset-[#242321]"
+                aria-label="Request a direct kiln quote or delivery schedule"
+              >
+                <span>Request Kiln Quote</span>
+                <ArrowRight className="w-4 h-4" />
+              </button>
+
+              <a
+                href="#calculator"
+                className="inline-flex items-center justify-center gap-2 border border-[#42403B] hover:border-[#B8402C] hover:text-white text-[#D8D4CC] font-medium px-7 py-4 rounded transition-colors duration-150 text-base focus:outline-none focus-visible:ring-2 focus-visible:ring-[#B8402C]"
+                aria-label="Estimate required bricks for your wall"
+              >
+                Estimate Brick Quantity
+              </a>
+            </div>
+          </div>
+
+          {/* Right Column: Architectural Masonry Card / Spec Plate (5 cols) */}
+          <div className="lg:col-span-5">
+            <div className="bg-[#171615] border border-[#31302C] rounded p-6 sm:p-8 space-y-6 relative shadow-2xl">
+              
+              {/* Card Header: Product Specification Plate */}
+              <div className="flex items-start justify-between border-b border-[#31302C] pb-5">
                 <div>
-                  <div className="font-bold text-charcoal font-display">Grade-1 Quality</div>
-                  <div className="text-sm text-charcoal-600">Kiln Assured Strength</div>
+                  <span className="text-[11px] font-mono tracking-widest uppercase text-terracotta block">
+                    Product Specification • Grade-1
+                  </span>
+                  <h3 className="text-xl font-bold font-display text-white mt-1">
+                    Red Clay Masonry Brick (अव्वल)
+                  </h3>
+                </div>
+                <div className="text-right">
+                  <span className="text-xs font-mono text-[#969188] block">STANDARD</span>
+                  <span className="text-sm font-mono text-white font-semibold">IS:1077</span>
                 </div>
               </div>
-            </motion.div>
-          </motion.div>
-        </div>
-      </div>
 
-      {/* Bottom wave decoration */}
-      <div className="absolute bottom-0 left-0 right-0">
-        <svg
-          viewBox="0 0 1440 120"
-          fill="none"
-          xmlns="http://www.w3.org/2000/svg"
-          className="w-full h-auto"
-        >
-          <path
-            d="M0 120L60 105C120 90 240 60 360 45C480 30 600 30 720 37.5C840 45 960 60 1080 67.5C1200 75 1320 75 1380 75L1440 75V120H1380C1320 120 1200 120 1080 120C960 120 840 120 720 120C600 120 480 120 360 120C240 120 120 120 60 120H0Z"
-            fill="#F5F5DC"
-            className="opacity-10"
-          />
-        </svg>
+              {/* Technical Specifications Table */}
+              <div className="space-y-3.5 text-sm">
+                <div className="flex justify-between py-1.5 border-b border-[#242321]">
+                  <span className="text-[#969188]">Nominal Dimensions</span>
+                  <span className="font-mono text-[#EAE7E1] font-medium">{'9" × 4.25" × 2.75" (230×110×70mm)'}</span>
+                </div>
+                <div className="flex justify-between py-1.5 border-b border-[#242321]">
+                  <span className="text-[#969188]">Compressive Strength</span>
+                  <span className="font-mono text-[#EAE7E1] font-medium">≥ 10.5 N/mm² (Class 105)</span>
+                </div>
+                <div className="flex justify-between py-1.5 border-b border-[#242321]">
+                  <span className="text-[#969188]">Water Absorption</span>
+                  <span className="font-mono text-[#EAE7E1] font-medium">&lt; 15% (24-hr Cold Water)</span>
+                </div>
+                <div className="flex justify-between py-1.5 border-b border-[#242321]">
+                  <span className="text-[#969188]">Color &amp; Sound</span>
+                  <span className="font-mono text-[#EAE7E1] font-medium">Uniform Deep Red • Metallic Ring</span>
+                </div>
+                <div className="flex justify-between py-1.5">
+                  <span className="text-[#969188]">Dispatched In</span>
+                  <span className="font-mono text-[#EAE7E1] font-medium">3,000 Units per Tractor-Trolley</span>
+                </div>
+              </div>
+
+              {/* Verified Dispatch Notice */}
+              <div className="bg-[#242321] border border-[#31302C] p-4 rounded flex items-center gap-3">
+                <CheckCircle2 className="w-5 h-5 text-terracotta flex-shrink-0" />
+                <p className="text-xs text-[#BCB7AD] leading-relaxed">
+                  Every batch is inspected at our Kahlpa kiln yard prior to tractor-trolley dispatch.
+                </p>
+              </div>
+
+              {/* Direct Dispatch Indicator */}
+              <div className="pt-2 flex items-center justify-between text-xs text-[#969188]">
+                <span>Dispatch Radius: 50+ km</span>
+                <span className="text-terracotta font-medium">Gohana • Sonipat • Rohtak • Jind</span>
+              </div>
+
+            </div>
+          </div>
+
+        </div>
       </div>
     </section>
   );

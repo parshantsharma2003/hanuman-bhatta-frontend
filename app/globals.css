@@ -14,10 +14,10 @@
     --font-inter: 'Inter', system-ui, sans-serif;
     --font-roboto-slab: 'Roboto Slab', serif;
     
-    /* Earthy Color Variables */
-    --color-terracotta: #B2422F;
-    --color-charcoal: #333333;
-    --color-sandy: #F5F5DC;
+    /* Architectural Brand Variables */
+    --color-terracotta: #B8402C;
+    --color-charcoal: #242321;
+    --color-sandy: #F5F0E8;
   }
   
   /* Default sandy beige background with charcoal text for earthy aesthetic */
@@ -134,17 +134,17 @@ textarea:focus-visible {
 }
 
 @layer utilities {
-  /* Terracotta gradient text effect */
+  /* Restrained terracotta accent text */
   .text-gradient {
-    @apply bg-gradient-to-r from-terracotta to-terracotta-dark bg-clip-text text-transparent;
+    @apply text-terracotta;
   }
   
-  /* Subtle brick pattern overlay using terracotta */
+  /* Fine architectural grid pattern */
   .brick-pattern {
     background-image: 
-      linear-gradient(90deg, rgba(178, 66, 47, 0.05) 1px, transparent 1px),
-      linear-gradient(rgba(178, 66, 47, 0.05) 1px, transparent 1px);
-    background-size: 50px 50px;
+      linear-gradient(90deg, rgba(36, 35, 33, 0.03) 1px, transparent 1px),
+      linear-gradient(rgba(36, 35, 33, 0.03) 1px, transparent 1px);
+    background-size: 40px 40px;
   }
   
   /* Sandy beige background utility */
@@ -168,26 +168,23 @@ textarea:focus-visible {
   }
 }
 
-/* Custom Scrollbar with Earthy Colors */
+/* Custom Architectural Scrollbar */
 ::-webkit-scrollbar {
-  width: 10px;
-  height: 10px;
+  width: 8px;
+  height: 8px;
 }
 
-/* Sandy beige track */
 ::-webkit-scrollbar-track {
-  background: #F5F5DC;
+  background: #EDE8DF;
 }
 
-/* Terracotta red thumb */
 ::-webkit-scrollbar-thumb {
-  background: #B2422F;
-  border-radius: 5px;
+  background: #B8402C;
+  border-radius: 4px;
 }
 
-/* Darker terracotta on hover */
 ::-webkit-scrollbar-thumb:hover {
-  background: #8E3525;
+  background: #8E2E1D;
 }
 
 /* Smooth scroll behavior */

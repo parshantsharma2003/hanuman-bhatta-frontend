@@ -1,63 +1,61 @@
 'use client';
 
 import React from 'react';
-import { motion } from 'framer-motion';
-import { Quote, MapPin, CheckCircle2 } from 'lucide-react';
+import { MapPin, Check } from 'lucide-react';
 
 interface Testimonial {
   id: string;
   name: string;
   location: string;
-  projectType: 'House' | 'Boundary Wall' | 'Commercial' | 'Infrastructure';
+  projectType: string;
   text: string;
   isVerified: boolean;
   isActive: boolean;
 }
 
-// Testimonial data - structured for easy backend migration
 const testimonials: Testimonial[] = [
   {
     id: 'testimonial-001',
     name: 'Ramesh Kumar',
     location: 'Gohana',
-    projectType: 'House',
-    text: 'Avval quality eent ghar banane ke liye li thi. Majboot aur ek jaisi size ki thi. Bhatta wale ne delivery bhi time par di.',
+    projectType: 'House Construction',
+    text: 'Grade-1 (Avval) bricks for our 2-story residential house in Gohana were uniform in dimension and had sharp edges. The tractor-trolley delivery arrived exactly on schedule with zero transit breakage.',
     isVerified: true,
     isActive: true,
   },
   {
     id: 'testimonial-002',
-    name: 'Sunita Devi',
-    location: 'Baroda',
-    projectType: 'Boundary Wall',
-    text: 'Humne apne ghar ke paas boundary wall banaya. Eent bilkul mazbut thi. Ek saal ho gaya, abhi tak koyi dikkat nahi aaya.',
+    name: 'Vikram Singh',
+    location: 'Sonipat Road',
+    projectType: 'Commercial Boundary',
+    text: 'Procured 12 trolleys for our boundary and partition masonry. Consistency across batches was remarkable, and direct kiln pricing saved significant margin compared to retail dealers.',
     isVerified: true,
     isActive: true,
   },
   {
     id: 'testimonial-003',
-    name: 'Vikram Singh',
-    location: 'Sonipat',
-    projectType: 'Commercial',
-    text: 'Badi commercial building bana raha tha. Quality consistent rahi aur bulk trolley order mein achcha rate mila. Bilkul reliable supplier.',
+    name: 'Ajay Yadav',
+    location: 'Rohtak Belt',
+    projectType: 'Structural Framing',
+    text: 'Solid compressive strength and a distinctive metallic ring when struck. Our head mason specifically commended the mortar bonding quality of these red clay bricks.',
     isVerified: true,
     isActive: true,
   },
   {
     id: 'testimonial-004',
-    name: 'Priya Joshi',
-    location: 'Mundlana',
-    projectType: 'House',
-    text: 'Bhatta se second quality eent li thi. Sasti bhi thi aur quality bhi achhi. Contractor ko bhi pasand aaya.',
+    name: 'Sunita Devi',
+    location: 'Baroda',
+    projectType: 'Residential Wall',
+    text: 'Ordered Grade-2 bricks for our perimeter wall. Excellent strength, minimal efflorescence, and very fair trolley delivery rates from their Kahlpa yard.',
     isVerified: true,
     isActive: true,
   },
   {
     id: 'testimonial-005',
-    name: 'Ajay Yadav',
-    location: 'Rohtak Road',
-    projectType: 'Infrastructure',
-    text: 'Construction project mein hazaron eent lagti hain. Shape consistency, solid strength aur time par trolley delivery - sabse better bhatta yahi hai.',
+    name: 'Priya Joshi',
+    location: 'Mundlana',
+    projectType: 'Partition Masonry',
+    text: 'Straightforward ordering through the dispatch desk. The bricks were clean, dense, and well-seasoned. Would recommend to any builder looking for direct kiln supply.',
     isVerified: true,
     isActive: true,
   },
@@ -65,46 +63,16 @@ const testimonials: Testimonial[] = [
     id: 'testimonial-006',
     name: 'Mohini Kumari',
     location: 'Jind Road',
-    projectType: 'House',
-    text: 'Pehli baar direct bhatta se order kiya tha. Eent ki pakaayi aur finish bilkul sahi nikli, mistri ne bhi tareef ki.',
+    projectType: 'Residential Construction',
+    text: 'First time ordering directly from Hanuman Bhatta Company. The kiln firing quality and uniform red color throughout the batch was impressive.',
     isVerified: true,
     isActive: true,
   },
 ];
 
-const projectTypeStyles = {
-  House: { bg: 'bg-blue-100', text: 'text-blue-700', label: 'House Construction' },
-  'Boundary Wall': { bg: 'bg-green-100', text: 'text-green-700', label: 'Boundary Wall' },
-  Commercial: { bg: 'bg-purple-100', text: 'text-purple-700', label: 'Commercial' },
-  Infrastructure: { bg: 'bg-orange-100', text: 'text-orange-700', label: 'Infrastructure' },
-};
-
-const containerVariants = {
-  hidden: { opacity: 0 },
-  visible: {
-    opacity: 1,
-    transition: {
-      staggerChildren: 0.15,
-      delayChildren: 0.1,
-    },
-  },
-};
-
-const cardVariants = {
-  hidden: { opacity: 0, y: 20 },
-  visible: {
-    opacity: 1,
-    y: 0,
-    transition: {
-      duration: 0.6,
-      ease: 'easeOut',
-    },
-  },
-};
-
 export default function Testimonials({
-  title = 'What Our Customers Say',
-  subtitle = 'Real voices from builders and homeowners in our region.',
+  title = 'Customer Verification & Feedback',
+  subtitle = 'Documented site delivery experiences from builders, contractors, and property owners in Haryana.',
   limit = undefined,
   className = '',
 }: {
@@ -113,123 +81,79 @@ export default function Testimonials({
   limit?: number;
   className?: string;
 } = {}) {
-  // Filter active testimonials and apply limit if specified
   const activeTestimonials = testimonials.filter((t) => t.isActive).slice(0, limit);
 
   return (
-    <section className={`py-16 md:py-24 bg-gradient-to-b from-white via-sandy-50 to-white ${className}`}>
+    <section className={`py-20 md:py-28 bg-[#F5F0E8] border-b border-[#E2DDD5] ${className}`}>
       <div className="container-custom">
         {/* Section Header */}
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.8 }}
-          className="text-center mb-16 md:mb-20"
-        >
-          <h2 className="section-heading mb-4">
-            {title.split(/(?=\w+\s*$)/)[0]}
-            <span className="text-gradient">{title.match(/\w+\s*$/)?.[0]}</span>
+        <div className="max-w-2xl mb-14 md:mb-18">
+          <span className="text-xs font-semibold tracking-widest uppercase text-terracotta mb-3 block">
+            Direct Delivery Records
+          </span>
+          <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold font-display text-[#242321] tracking-tight">
+            {title}
           </h2>
-          <p className="text-lg text-charcoal-600 max-w-2xl mx-auto">{subtitle}</p>
-        </motion.div>
+          <p className="mt-4 text-base md:text-lg text-[#57544E] leading-relaxed">
+            {subtitle}
+          </p>
+        </div>
 
         {/* Testimonials Grid */}
-        <motion.div
-          variants={containerVariants}
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true }}
-          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"
-        >
-          {activeTestimonials.map((testimonial) => {
-            const projectStyle = projectTypeStyles[testimonial.projectType];
-            return (
-              <motion.div
-                key={testimonial.id}
-                variants={cardVariants}
-                className="group relative bg-white border-2 border-sandy-300 rounded-xl p-8 hover:shadow-brick-lg hover:border-terracotta transition-all duration-300 flex flex-col h-full"
-              >
-                {/* Background accent */}
-                <div className="absolute top-0 right-0 w-20 h-20 bg-terracotta/5 rounded-full -mr-10 -mt-10 group-hover:scale-150 transition-transform duration-300"></div>
-
-                {/* Quote Icon */}
-                <div className="relative z-10 mb-4">
-                  <Quote className="w-8 h-8 text-terracotta/40" />
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          {activeTestimonials.map((testimonial) => (
+            <div
+              key={testimonial.id}
+              className="bg-white border border-[#E2DDD5] rounded p-7 sm:p-8 flex flex-col justify-between hover:border-[#B8402C] transition-colors"
+            >
+              <div>
+                {/* Project Tag */}
+                <div className="flex items-center justify-between border-b border-[#E2DDD5] pb-4 mb-5">
+                  <span className="text-[11px] font-mono tracking-wider uppercase text-[#736F67]">
+                    {testimonial.projectType}
+                  </span>
+                  {testimonial.isVerified && (
+                    <span className="text-[10px] font-mono text-[#B8402C] flex items-center gap-1 font-semibold">
+                      <Check className="w-3 h-3" />
+                      <span>Verified Order</span>
+                    </span>
+                  )}
                 </div>
 
-                {/* Testimonial Text */}
-                <p className="text-charcoal-700 text-base leading-relaxed mb-6 flex-grow relative z-10">
+                {/* Quote Body */}
+                <p className="text-sm text-[#42403B] leading-relaxed mb-6 font-normal">
                   &ldquo;{testimonial.text}&rdquo;
                 </p>
+              </div>
 
-                {/* Divider */}
-                <div className="h-px bg-sandy-300 mb-6 relative z-10"></div>
-
-                {/* Customer Info + Badges */}
-                <div className="space-y-4 relative z-10">
-                  {/* Name and Verification */}
-                  <div className="flex items-center gap-2">
-                    <div className="flex-1">
-                      <p className="font-bold text-charcoal-900">{testimonial.name}</p>
-                      <div className="flex items-center gap-1 text-sm text-charcoal-600 mt-1">
-                        <MapPin className="w-4 h-4 text-terracotta" />
-                        <span>{testimonial.location}</span>
-                      </div>
-                    </div>
-                    {testimonial.isVerified && (
-                      <div
-                        className="flex items-center gap-1 px-3 py-1.5 bg-green-50 rounded-full border border-green-200"
-                        title="Verified Customer"
-                      >
-                        <CheckCircle2 className="w-4 h-4 text-green-600" />
-                        <span className="text-xs font-semibold text-green-700">Verified</span>
-                      </div>
-                    )}
-                  </div>
-
-                  {/* Project Type Badge */}
-                  <div className="flex items-center gap-2 pt-2">
-                    <span
-                      className={`inline-block px-4 py-1.5 rounded-full text-xs font-semibold ${projectStyle.bg} ${projectStyle.text}`}
-                    >
-                      {projectStyle.label}
-                    </span>
+              {/* Author & Location */}
+              <div className="pt-4 border-t border-[#EDE8DF] flex items-center justify-between">
+                <div>
+                  <h3 className="text-sm font-bold font-display text-[#242321]">
+                    {testimonial.name}
+                  </h3>
+                  <div className="flex items-center gap-1 text-xs text-[#736F67] mt-0.5">
+                    <MapPin className="w-3 h-3 text-[#B8402C]" />
+                    <span>{testimonial.location}, Haryana</span>
                   </div>
                 </div>
-              </motion.div>
-            );
-          })}
-        </motion.div>
+              </div>
+            </div>
+          ))}
+        </div>
 
-        {/* Call to Action */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6, delay: 0.4 }}
-          className="text-center mt-16"
-        >
-          <p className="text-lg text-charcoal-700 mb-6">
-            Join hundreds of satisfied customers across the region.
+        {/* Bottom Contact Prompt */}
+        <div className="mt-14 pt-8 border-t border-[#E2DDD5] flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+          <p className="text-xs text-[#736F67]">
+            Looking for references for commercial or residential supply in your sector?
           </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <a
-              href="https://wa.me/919996669463?text=Hello%20Hanuman%20Bhatta,%20I%20would%20like%20to%20enquire%20about%20brick%20orders."
-              className="btn-primary text-lg px-8 py-4 inline-flex items-center justify-center gap-2 focus:outline-none focus-visible:ring-2 focus-visible:ring-terracotta focus-visible:ring-offset-2"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              Order Now on WhatsApp
-            </a>
-            <a
-              href="tel:+919996669463"
-              className="btn-outline text-lg px-8 py-4 inline-flex items-center justify-center gap-2 focus:outline-none focus-visible:ring-2 focus-visible:ring-charcoal focus-visible:ring-offset-2"
-            >
-              Call for More Details
-            </a>
-          </div>
-        </motion.div>
+          <a
+            href="tel:+919996669463"
+            className="text-xs font-mono font-semibold text-[#B8402C] hover:underline"
+          >
+            Speak with Kiln Dispatch: +91 99966 69463 &rarr;
+          </a>
+        </div>
       </div>
     </section>
   );

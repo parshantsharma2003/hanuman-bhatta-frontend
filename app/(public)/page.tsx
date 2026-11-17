@@ -72,115 +72,47 @@ export default function Home() {
       {/* Search Engine & AI Structured Data */}
       <JsonLd />
 
-      <main className="min-h-screen bg-sandy text-charcoal">
+      <main className="min-h-screen bg-sand text-charcoal">
         {/* Hero Section */}
         <Hero />
 
-        {/* Live Inventory Ticker */}
+        {/* Live Inventory & Dispatch Capacity */}
         <InventoryTicker />
 
-        {/* Section Separator with Icon */}
-        <div className="relative py-8 bg-gradient-to-b from-sandy-50 to-white overflow-hidden">
-          <div className="container-custom">
-            <div className="flex items-center gap-4">
-              <div className="flex-1 h-px bg-gradient-to-r from-transparent via-sandy-400 to-sandy-400"></div>
-              <div className="p-3 bg-gradient-to-br from-terracotta to-terracotta-dark rounded-xl shadow-brick">
-                <div className="text-2xl">🔥</div>
-              </div>
-              <div className="flex-1 h-px bg-gradient-to-r from-sandy-400 to-transparent"></div>
-            </div>
-          </div>
-        </div>
-
-        {/* Our Process Section */}
+        {/* Manufacturing Process */}
         <OurProcess />
 
-        {/* Section Separator with Icon */}
-        <div className="relative py-8 bg-gradient-to-b from-white to-sandy-50 overflow-hidden">
-          <div className="container-custom">
-            <div className="flex items-center gap-4">
-              <div className="flex-1 h-px bg-gradient-to-r from-transparent via-sandy-400 to-sandy-400"></div>
-              <div className="p-3 bg-gradient-to-br from-terracotta to-terracotta-dark rounded-xl shadow-brick">
-                <div className="text-2xl">🧱</div>
-              </div>
-              <div className="flex-1 h-px bg-gradient-to-r from-sandy-400 to-transparent"></div>
-            </div>
-          </div>
-        </div>
-
-        {/* Product Catalog Section */}
+        {/* Product Catalog & Technical Specifications */}
         <ProductCatalog />
 
-        {/* Section Separator with Icon */}
-        <div className="relative py-8 bg-gradient-to-b from-sandy-50 to-sandy-100 overflow-hidden">
-          <div className="container-custom">
-            <div className="flex items-center gap-4">
-              <div className="flex-1 h-px bg-gradient-to-r from-transparent via-sandy-400 to-sandy-400"></div>
-              <div className="p-3 bg-gradient-to-br from-terracotta to-terracotta-dark rounded-xl shadow-brick">
-                <div className="text-2xl">📸</div>
-              </div>
-              <div className="flex-1 h-px bg-gradient-to-r from-sandy-400 to-transparent"></div>
-            </div>
-          </div>
-        </div>
-
-        {/* Gallery Section */}
+        {/* Facility & Production Gallery */}
         <Gallery />
 
-        {/* Section Separator with Icon */}
-        <div className="relative py-8 bg-gradient-to-b from-white to-white overflow-hidden">
+        {/* Architectural Brick Estimator */}
+        <section id="calculator" className="py-20 md:py-28 bg-white border-y border-sand-300 scroll-mt-20">
           <div className="container-custom">
-            <div className="flex items-center gap-4">
-              <div className="flex-1 h-px bg-gradient-to-r from-transparent via-sandy-400 to-sandy-400"></div>
-              <div className="p-3 bg-gradient-to-br from-terracotta to-terracotta-dark rounded-xl shadow-brick">
-                <div className="text-2xl">🧮</div>
-              </div>
-              <div className="flex-1 h-px bg-gradient-to-r from-sandy-400 to-transparent"></div>
-            </div>
-          </div>
-        </div>
-
-        {/* Calculator Section */}
-        <section id="calculator" className="py-16 md:py-20 lg:py-24 bg-gradient-to-b from-white via-sandy-50 to-sandy-50 scroll-mt-20">
-          <div className="container-custom">
-            <div className="text-center mb-12 md:mb-16">
-              <h2 className="section-heading">
-                Calculate Your <span className="text-gradient">Brick Requirements</span>
+            <div className="max-w-3xl mb-12 md:mb-16">
+              <span className="text-xs font-semibold tracking-widest uppercase text-terracotta mb-3 block">
+                Quantity Planning &amp; Estimation
+              </span>
+              <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold font-display text-charcoal tracking-tight">
+                Calculate Brick Requirements
               </h2>
-              <p className="section-subheading mx-auto mt-4">
-                Get instant estimates for your construction project with our intelligent brick calculator. Estimates include standard mortar margins and wastage.
+              <p className="mt-4 text-base md:text-lg text-charcoal-600 leading-relaxed">
+                Estimate required brick volume, mortar allowance, and standard tractor-trolley loads for residential or commercial construction walls.
               </p>
             </div>
             
-            <div className="max-w-4xl mx-auto">
+            <div className="max-w-5xl">
               <BrickCalculator />
             </div>
           </div>
         </section>
 
-        {/* Section Separator with Icon */}
-        <div className="relative py-8 bg-gradient-to-b from-sandy-50 to-white overflow-hidden">
-          <div className="container-custom">
-            <div className="flex items-center gap-4">
-              <div className="flex-1 h-px bg-gradient-to-r from-transparent via-sandy-400 to-sandy-400"></div>
-              <div className="p-3 bg-gradient-to-br from-terracotta to-terracotta-dark rounded-xl shadow-brick">
-                <div className="text-2xl">💡</div>
-              </div>
-              <div className="flex-1 h-px bg-gradient-to-r from-sandy-400 to-transparent"></div>
-            </div>
-          </div>
-        </div>
-
-        {/* Generative Engine Optimization (GEO) & FAQ Section */}
+        {/* Generative Engine Optimization (GEO) & Factual FAQ Section */}
         <FaqSection />
 
-        {/* Section Separator - Final */}
-        <div className="relative h-12 bg-gradient-to-b from-sandy-50 to-sandy-100 overflow-hidden">
-          <div className="absolute inset-0 brick-pattern opacity-5"></div>
-          <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-terracotta/30 to-transparent"></div>
-        </div>
-
-        {/* Contact Form & Google Maps Section */}
+        {/* Direct Kiln Contact, Inquiry & Logistics */}
         <ContactForm />
 
         {/* Footer */}

@@ -114,33 +114,29 @@ export default function AboutPage() {
           {/* Timeline Items */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6 relative">
             {/* Timeline connector line (desktop only) */}
-            <div className="hidden lg:block absolute top-24 left-0 right-0 h-1 bg-gradient-to-r from-terracotta via-orange-600 to-transparent"></div>
+            <div className="hidden lg:block absolute top-24 left-0 right-0 h-px bg-[#E2DDD5]"></div>
 
             {timelineEvents.map((event, index) => (
-              <motion.div
+              <div
                 key={index}
-                initial={{ opacity: 0, y: 16 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.4, delay: index * 0.08 }}
                 className="relative"
               >
-                {/* Timeline dot (desktop only) */}
-                <div className="hidden lg:block absolute -top-12 left-1/2 -translate-x-1/2 w-6 h-6 bg-terracotta rounded-full border-4 border-white z-10"></div>
+                {/* Timeline marker (desktop only) */}
+                <div className="hidden lg:block absolute -top-12 left-1/2 -translate-x-1/2 w-4 h-4 bg-[#B8402C] rounded-full border-2 border-white z-10"></div>
 
                 {/* Card */}
-                <div className="bg-gradient-to-br from-sandy-50 to-white border-2 border-sandy-300 rounded-xl p-5 md:p-6 lg:pt-20 h-full">
-                  <div className="mb-3 pb-3 border-b border-sandy-300/80">
-                    <span className="inline-block text-4xl md:text-5xl font-extrabold font-display text-terracotta leading-none">
+                <div className="bg-[#FAF8F5] border border-[#E2DDD5] rounded p-6 lg:pt-16 h-full">
+                  <div className="mb-3 pb-3 border-b border-[#E2DDD5]">
+                    <span className="inline-block text-3xl font-bold font-display text-[#B8402C] leading-none">
                       {event.year}
                     </span>
                   </div>
-                  <h3 className="text-lg md:text-xl font-bold text-charcoal-900 mb-2">{event.title}</h3>
-                  <p className="text-charcoal-700 text-sm md:text-base leading-relaxed max-w-prose">
+                  <h3 className="text-lg font-bold font-display text-[#242321] mb-2">{event.title}</h3>
+                  <p className="text-[#57544E] text-sm leading-relaxed">
                     {event.description}
                   </p>
                 </div>
-              </motion.div>
+              </div>
             ))}
           </div>
         </div>
@@ -197,23 +193,19 @@ export default function AboutPage() {
                 </p>
 
                 {/* Hindi Quote */}
-                <motion.div
-                  initial={{ opacity: 0, scale: 0.95 }}
-                  whileInView={{ opacity: 1, scale: 1 }}
-                  viewport={{ once: true }}
-                  transition={{ duration: 0.4, delay: 0.1 }}
-                  className="bg-gradient-to-br from-terracotta/15 to-orange-500/10 border-l-4 border-terracotta rounded-lg p-5 md:p-6 mt-8"
+                <div
+                  className="bg-[#FAF8F5] border border-[#E2DDD5] border-l-4 border-l-[#B8402C] rounded p-6 mt-8"
                 >
-                  <p className="text-xs uppercase tracking-wider font-semibold text-charcoal-600 mb-3">
-                    Founder&rsquo;s Words
+                  <p className="text-[11px] font-mono uppercase tracking-widest text-[#736F67] mb-2">
+                    Founder&rsquo;s Commitment
                   </p>
-                  <p className="text-2xl md:text-3xl font-display italic text-terracotta mb-2 leading-relaxed">
+                  <p className="text-xl md:text-2xl font-display italic text-[#242321] mb-2 leading-relaxed">
                     &ldquo;हम हमेशा मजबूत और ईमानदार ईंट बनाने में विश्वास रखते हैं।&rdquo;
                   </p>
-                  <p className="text-charcoal-600 text-sm md:text-base">
+                  <p className="text-[#57544E] text-sm">
                     &ldquo;We always believe in making strong and honest bricks.&rdquo;
                   </p>
-                </motion.div>
+                </div>
               </div>
             </motion.div>
           </div>

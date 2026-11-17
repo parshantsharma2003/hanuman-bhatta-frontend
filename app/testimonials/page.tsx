@@ -35,9 +35,9 @@ export default function TestimonialsPage() {
               Real voices from builders, contractors, and families across Gohana, Sonipat, Rohtak, Jind, and nearby Haryana areas who trust Hanuman Bhatta Company for their brick supply needs. Every testimonial reflects authentic customer experiences.
             </p>
 
-            <div className="bg-gradient-to-r from-terracotta/5 via-orange-500/5 to-terracotta/5 border border-terracotta/20 rounded-lg p-6 md:p-8 text-center">
-              <p className="text-charcoal-700">
-                <span className="font-bold text-terracotta">500+</span> happy customers across the region
+            <div className="bg-[#FAF8F5] border border-[#E2DDD5] rounded p-6 text-center">
+              <p className="text-xs font-mono uppercase tracking-wider text-[#736F67]">
+                Supplying residential, commercial, and agricultural construction masonry throughout Gohana &amp; neighboring Haryana districts since 2010
               </p>
             </div>
           </motion.div>

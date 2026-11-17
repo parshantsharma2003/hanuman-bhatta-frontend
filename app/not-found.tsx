@@ -16,9 +16,12 @@ export default function NotFound() {
     <div className="min-h-screen bg-sandy-50 flex flex-col justify-between text-charcoal font-sans">
       <header className="border-b border-sandy-300 bg-white/90 backdrop-blur-sm px-6 py-4">
         <div className="max-w-6xl mx-auto flex items-center justify-between">
-          <Link href="/" className="flex items-center gap-2">
-            <span className="text-2xl font-black font-display text-terracotta tracking-tight">
-              🧱 HANUMAN BHATTA
+          <Link href="/" className="flex items-center gap-2.5">
+            <div className="w-8 h-6 bg-[#B8402C] rounded-[2px] flex items-center justify-center text-white text-[10px] font-mono font-bold tracking-wider">
+              HB
+            </div>
+            <span className="text-xl font-bold font-display text-[#242321] tracking-tight">
+              Hanuman Bhatta Company
             </span>
           </Link>
           <a

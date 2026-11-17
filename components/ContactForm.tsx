@@ -1,14 +1,12 @@
 'use client';
 
 import { useMemo, useState } from 'react';
-import { motion } from 'framer-motion';
 import { useForm, type Resolver } from 'react-hook-form';
 import { z } from 'zod';
-import { MessageCircle, Phone, User, Send, MapPin, Mail, CheckCircle, XCircle } from 'lucide-react';
+import { Phone, User, Send, MapPin, Mail, CheckCircle, XCircle, Clock } from 'lucide-react';
 import { trackMetric } from '@/lib/analytics';
 import { API, getApiErrorMessage } from '@/lib/api/client';
 
-// Validation schema
 const contactSchema = z.object({
   name: z.string()
     .min(2, 'Name must be at least 2 characters')
@@ -58,8 +56,7 @@ export default function ContactForm() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
   const [submitSuccess, setSubmitSuccess] = useState<string | null>(null);
-  const [focusedField, setFocusedField] = useState<keyof ContactFormData | null>(null);
-  
+
   const {
     register,
     handleSubmit,
@@ -68,20 +65,7 @@ export default function ContactForm() {
   } = useForm<ContactFormData>({
     resolver: contactResolver,
     mode: 'onChange',
-    reValidateMode: 'onChange',
   });
-
-  const getFieldClass = useMemo(
-    () => (fieldName: keyof ContactFormData, hasError: boolean, isTextarea = false) => {
-      const basePadding = isTextarea ? 'pl-10 md:pl-12 pr-4 py-2.5 md:py-3' : 'pl-10 md:pl-12 pr-4 py-2.5 md:py-3';
-      const baseClass = `w-full ${basePadding} rounded-lg border-2 transition-all duration-200 text-charcoal placeholder:text-charcoal-400`;
-      const normalState = 'border-sandy-300 bg-sandy-50 focus:border-terracotta focus:bg-white focus:ring-2 focus:ring-terracotta/30';
-      const errorState = 'border-red-500 bg-red-50 focus:border-red-600 focus:bg-white focus:ring-2 focus:ring-red-300';
-      const focusedErrorState = focusedField === fieldName && hasError ? 'ring-2 ring-red-300 border-red-600' : '';
-      return `${baseClass} ${hasError ? errorState : normalState} ${focusedErrorState} focus:outline-none`;
-    },
-    [focusedField]
-  );
 
   const onSubmit = async (data: ContactFormData) => {
     setIsSubmitting(true);
@@ -98,380 +82,235 @@ export default function ContactForm() {
       const result = response.data;
 
       if (!result?.success) {
-        throw new Error(result?.message || 'Unable to submit your enquiry');
+        throw new Error(result?.message || 'Failed to submit enquiry');
       }
 
-      setSubmitSuccess('Thank you! Your enquiry has been submitted successfully. We will contact you shortly.');
+      setSubmitSuccess('Thank you. Your inquiry has been sent to our dispatch team.');
       reset();
-    } catch (err) {
-      setSubmitError(getApiErrorMessage(err, 'Unable to submit your enquiry'));
+    } catch (err: any) {
+      setSubmitError(getApiErrorMessage(err, 'Failed to submit enquiry. Please call us directly.'));
     } finally {
       setIsSubmitting(false);
     }
   };
 
   return (
-    <section id="contact" className="py-16 md:py-20 lg:py-24 bg-gradient-to-b from-sandy-50 via-white to-sandy-50 scroll-mt-20">
+    <section
+      id="contact"
+      className="py-20 md:py-28 bg-white border-b border-[#E2DDD5] scroll-mt-20"
+      aria-label="Contact Information and Location"
+    >
       <div className="container-custom">
-        <div className="grid lg:grid-cols-2 gap-10 md:gap-12 lg:gap-16 items-start">
-          {/* Left Column - Contact Info & CTA */}
-          <motion.div
-            initial={{ opacity: 0, x: -30 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.5, ease: "easeOut" }}
-            className="space-y-6 md:space-y-8"
-          >
-            {/* Section Header */}
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-start">
+          
+          {/* Left Column: Direct Kiln Contact & Dispatch Details (5 cols) */}
+          <div className="lg:col-span-5 space-y-8">
             <div>
-              <h2 className="section-heading text-left">
-                Get in <span className="text-gradient">Touch</span>
+              <span className="text-xs font-semibold tracking-widest uppercase text-terracotta mb-3 block">
+                Kiln Yard &amp; Office Details
+              </span>
+              <h2 className="text-3xl md:text-4xl font-bold font-display text-[#242321] tracking-tight">
+                Direct Dispatch &amp; Kiln Location
               </h2>
-              <p className="section-subheading text-left mt-4">
-                Have questions about our products? Need a custom quote? We&apos;re here to help build your vision.
+              <p className="mt-4 text-base text-[#57544E] leading-relaxed">
+                Connect directly with our kiln manager for pricing, dispatch scheduling, or to arrange an on-site sample inspection in Kahlpa.
               </p>
             </div>
 
-            {/* Contact Details */}
-            <div className="space-y-4 md:space-y-6">
-              {/* Phone */}
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.5, delay: 0.1, ease: "easeOut" }}
-                className="flex items-start gap-3 md:gap-4 p-4 md:p-5 bg-gradient-to-br from-sandy-100 to-white rounded-xl border-2 border-sandy-300 shadow-brick hover:shadow-brick-lg transition-all duration-300"
-              >
-                <div className="w-12 h-12 rounded-lg bg-terracotta/10 flex items-center justify-center flex-shrink-0">
-                  <Phone className="w-5 h-5 text-terracotta" />
+            {/* Structured Specifications */}
+            <div className="space-y-6 border-t border-[#E2DDD5] pt-6">
+              
+              {/* Location */}
+              <div className="flex items-start gap-4">
+                <div className="w-10 h-10 rounded border border-[#E2DDD5] bg-[#F5F0E8] flex items-center justify-center text-[#B8402C] flex-shrink-0 mt-0.5">
+                  <MapPin className="w-5 h-5" />
                 </div>
                 <div>
-                  <h3 className="font-bold text-charcoal mb-1">Call Us</h3>
+                  <h3 className="text-sm font-bold font-display text-[#242321]">Kiln Premises</h3>
+                  <p className="text-sm text-[#57544E] mt-0.5 leading-relaxed">
+                    Hanuman Bhatta Company<br />
+                    Kahlpa-Bhanderi Road, V.P.O. Kahlpa<br />
+                    Gohana, Sonipat District, Haryana 131301
+                  </p>
+                </div>
+              </div>
+
+              {/* Direct Telephone */}
+              <div className="flex items-start gap-4">
+                <div className="w-10 h-10 rounded border border-[#E2DDD5] bg-[#F5F0E8] flex items-center justify-center text-[#B8402C] flex-shrink-0 mt-0.5">
+                  <Phone className="w-5 h-5" />
+                </div>
+                <div>
+                  <h3 className="text-sm font-bold font-display text-[#242321]">Direct Phone &amp; WhatsApp</h3>
                   <a
                     href="tel:+919996669463"
-                    onClick={() => trackMetric('call_click')}
-                    className="text-terracotta hover:text-terracotta-600 transition-colors font-semibold"
+                    className="text-base font-mono font-semibold text-[#B8402C] hover:underline block mt-0.5"
                   >
                     +91 99966 69463
                   </a>
-                  <p className="text-xs text-charcoal-500 mt-1">Mon - Sat: 8:00 AM - 6:00 PM</p>
+                  <span className="text-xs text-[#736F67]">Direct line to kiln dispatch desk</span>
                 </div>
-              </motion.div>
+              </div>
 
-              {/* WhatsApp */}
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.5, delay: 0.2, ease: "easeOut" }}
-                className="flex items-start gap-3 md:gap-4 p-4 md:p-5 bg-gradient-to-br from-sandy-100 to-white rounded-xl border-2 border-sandy-300 shadow-brick hover:shadow-brick-lg transition-all duration-300"
-              >
-                <div className="w-12 h-12 rounded-lg bg-terracotta/10 flex items-center justify-center flex-shrink-0">
-                  <MessageCircle className="w-5 h-5 text-terracotta" />
+              {/* Operating Hours */}
+              <div className="flex items-start gap-4">
+                <div className="w-10 h-10 rounded border border-[#E2DDD5] bg-[#F5F0E8] flex items-center justify-center text-[#B8402C] flex-shrink-0 mt-0.5">
+                  <Clock className="w-5 h-5" />
                 </div>
                 <div>
-                  <h3 className="font-bold text-charcoal mb-1">WhatsApp</h3>
-                  <a
-                    href="https://wa.me/919996669463?text=Hello%20Hanuman%20Bhatta,%20I%20want%20to%20enquire%20about%20brick%20prices%20and%20orders."
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    onClick={() => trackMetric('whatsapp_click')}
-                    className="text-terracotta hover:text-terracotta-600 transition-colors font-semibold"
-                  >
-                    Chat on WhatsApp (+91 99966 69463)
-                  </a>
-                  <p className="text-xs text-charcoal-500 mt-1">Quick response guaranteed</p>
-                </div>
-              </motion.div>
-
-              {/* Location */}
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.5, delay: 0.3, ease: "easeOut" }}
-                className="flex items-start gap-3 md:gap-4 p-4 md:p-5 bg-gradient-to-br from-sandy-100 to-white rounded-xl border-2 border-sandy-300 shadow-brick hover:shadow-brick-lg transition-all duration-300"
-              >
-                <div className="w-12 h-12 rounded-lg bg-terracotta/10 flex items-center justify-center flex-shrink-0">
-                  <MapPin className="w-5 h-5 text-terracotta" />
-                </div>
-                <div>
-                  <h3 className="font-bold text-charcoal mb-1">Visit Our Bhatta</h3>
-                  <p className="text-charcoal-700 text-sm">
-                    Kahlpa-Bhanderi road<br />
-                    Kahlpa, Gohana - 131301
+                  <h3 className="text-sm font-bold font-display text-[#242321]">Operating &amp; Dispatch Hours</h3>
+                  <p className="text-sm text-[#57544E] mt-0.5">
+                    Monday &ndash; Sunday: 06:00 AM &ndash; 07:00 PM
                   </p>
+                  <span className="text-xs text-[#736F67]">Continuous dispatch during construction season</span>
                 </div>
-              </motion.div>
+              </div>
+
             </div>
 
-            {/* Trust Badge */}
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.5, delay: 0.4, ease: "easeOut" }}
-              className="bg-gradient-to-r from-terracotta to-terracotta-600 text-white p-5 md:p-6 lg:p-7 rounded-2xl shadow-brick"
-            >
-              <p className="text-sm font-semibold mb-2">💪 Built on Trust</p>
-              <h3 className="text-2xl font-bold font-display mb-1">15+ Years of Excellence</h3>
-              <p className="text-sandy-100 text-sm">
-                Serving the construction industry with high-quality bricks and reliable service
+            {/* Delivery Zones */}
+            <div className="p-5 bg-[#F5F0E8] border border-[#E2DDD5] rounded">
+              <span className="text-xs font-mono uppercase tracking-wider text-[#736F67] block mb-1.5">
+                Primary Transit Delivery Coverage
+              </span>
+              <p className="text-xs text-[#42403B] leading-relaxed">
+                Gohana • Sonipat • Rohtak • Jind • Safidon • Panipat • Baroda • Mundlana • Kahlpa &amp; surrounding villages.
               </p>
-            </motion.div>
-          </motion.div>
+            </div>
+          </div>
 
-          {/* Right Column - Contact Form */}
-          <motion.div
-            initial={{ opacity: 0, x: 30 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.5, delay: 0.1, ease: "easeOut" }}
-          >
-            <div className="bg-white rounded-2xl shadow-brick-lg border-2 border-sandy-300 p-4 md:p-8 relative overflow-hidden">
-              {/* Background Pattern */}
-              <div className="absolute inset-0 brick-pattern opacity-5"></div>
-
-              {/* Form Header */}
-              <div className="relative mb-6 md:mb-8">
-                <div className="flex items-center gap-2 md:gap-3 mb-2 md:mb-3">
-                  <div className="w-8 h-8 md:w-10 md:h-10 rounded-lg bg-terracotta/10 flex items-center justify-center">
-                    <Mail className="w-4 h-4 md:w-5 md:h-5 text-terracotta" />
-                  </div>
-                  <h3 className="text-xl md:text-2xl font-bold text-charcoal font-display">Send us a Message</h3>
-                </div>
-                <p className="text-charcoal-600 text-sm">
-                  Fill out the form below and our team will get back to you shortly
+          {/* Right Column: Inquiry Form (7 cols) */}
+          <div className="lg:col-span-7">
+            <div className="border border-[#E2DDD5] rounded bg-[#FAF8F5] p-7 sm:p-10">
+              <div className="border-b border-[#E2DDD5] pb-5 mb-6">
+                <h3 className="text-xl font-bold font-display text-[#242321]">
+                  Request Site Delivery Quote
+                </h3>
+                <p className="text-xs text-[#736F67] mt-1">
+                  Fill in your details below and our dispatch manager will call you with exact trolley pricing.
                 </p>
               </div>
 
-              {/* Form */}
-              <form onSubmit={handleSubmit(onSubmit)} className="space-y-6 relative">
-                {/* Name Field */}
+              <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
+                {/* Name */}
                 <div>
-                  <label htmlFor="name" className="block text-sm font-bold text-charcoal mb-2 uppercase tracking-wide">
+                  <label htmlFor="name" className="block text-xs font-mono uppercase text-[#42403B] mb-1.5">
                     Your Name *
                   </label>
                   <div className="relative">
-                    <div className="absolute left-4 top-1/2 -translate-y-1/2 text-charcoal-400">
-                      <User className="w-5 h-5" />
-                    </div>
                     <input
                       {...register('name')}
                       type="text"
                       id="name"
-                      placeholder="Enter your full name"
-                      className={getFieldClass('name', Boolean(errors.name))}
-                      onFocus={() => setFocusedField('name')}
-                      onBlur={() => setFocusedField(null)}
-                      aria-invalid={errors.name ? 'true' : 'false'}
-                      aria-describedby={errors.name ? 'name-help name-error' : 'name-help'}
+                      placeholder="e.g. Ramesh Kumar"
+                      className="w-full px-3.5 py-3 border border-[#D1C7B6] rounded text-[#242321] text-sm bg-white focus:outline-none focus:border-[#B8402C]"
                     />
                   </div>
-                  <p id="name-help" className="text-xs text-charcoal-500 mt-1">Use 2-50 characters, letters and spaces only.</p>
                   {errors.name && (
-                    <motion.p
-                      id="name-error"
-                      initial={{ opacity: 0, y: -5 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      className="text-red-500 text-xs mt-1 font-medium"
-                      role="alert"
-                    >
-                      {errors.name.message}
-                    </motion.p>
+                    <p className="text-xs text-red-600 mt-1">{errors.name.message}</p>
                   )}
                 </div>
 
-                {/* Phone Field */}
+                {/* Phone */}
                 <div>
-                  <label htmlFor="phone" className="block text-sm font-bold text-charcoal mb-2 uppercase tracking-wide">
-                    Phone Number *
+                  <label htmlFor="phone" className="block text-xs font-mono uppercase text-[#42403B] mb-1.5">
+                    Contact Phone Number *
                   </label>
                   <div className="relative">
-                    <div className="absolute left-4 top-1/2 -translate-y-1/2 text-charcoal-400">
-                      <Phone className="w-5 h-5" />
-                    </div>
                     <input
                       {...register('phone')}
                       type="tel"
                       id="phone"
-                      placeholder="+91 98765 43210"
-                      className={getFieldClass('phone', Boolean(errors.phone))}
-                      onFocus={() => setFocusedField('phone')}
-                      onBlur={() => setFocusedField(null)}
-                      aria-invalid={errors.phone ? 'true' : 'false'}
-                      aria-describedby={errors.phone ? 'phone-help phone-error' : 'phone-help'}
+                      placeholder="e.g. 99966 69463"
+                      className="w-full px-3.5 py-3 border border-[#D1C7B6] rounded text-[#242321] text-sm bg-white focus:outline-none focus:border-[#B8402C]"
                     />
                   </div>
-                  <p id="phone-help" className="text-xs text-charcoal-500 mt-1">Enter a valid 10-13 digit contact number.</p>
                   {errors.phone && (
-                    <motion.p
-                      id="phone-error"
-                      initial={{ opacity: 0, y: -5 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      className="text-red-500 text-xs mt-1 font-medium"
-                      role="alert"
-                    >
-                      {errors.phone.message}
-                    </motion.p>
+                    <p className="text-xs text-red-600 mt-1">{errors.phone.message}</p>
                   )}
                 </div>
 
-                {/* Message Field */}
+                {/* Message */}
                 <div>
-                  <label htmlFor="message" className="block text-sm font-bold text-charcoal mb-2 uppercase tracking-wide">
-                    Your Message *
+                  <label htmlFor="message" className="block text-xs font-mono uppercase text-[#42403B] mb-1.5">
+                    Project Requirements / Site Location *
                   </label>
-                  <div className="relative">
-                    <div className="absolute left-4 top-4 text-charcoal-400">
-                      <MessageCircle className="w-5 h-5" />
-                    </div>
-                    <textarea
-                      {...register('message')}
-                      id="message"
-                      rows={5}
-                      placeholder="Tell us about your requirements..."
-                      className={`${getFieldClass('message', Boolean(errors.message), true)} resize-none`}
-                      onFocus={() => setFocusedField('message')}
-                      onBlur={() => setFocusedField(null)}
-                      aria-invalid={errors.message ? 'true' : 'false'}
-                      aria-describedby={errors.message ? 'message-help message-error' : 'message-help'}
-                    />
-                  </div>
-                  <p id="message-help" className="text-xs text-charcoal-500 mt-1">Write 10-500 characters describing your requirement.</p>
+                  <textarea
+                    {...register('message')}
+                    id="message"
+                    rows={4}
+                    placeholder="e.g. Need 4 trolleys Grade-1 bricks for house construction near Rohtak Road, Gohana."
+                    className="w-full px-3.5 py-3 border border-[#D1C7B6] rounded text-[#242321] text-sm bg-white focus:outline-none focus:border-[#B8402C]"
+                  />
                   {errors.message && (
-                    <motion.p
-                      id="message-error"
-                      initial={{ opacity: 0, y: -5 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      className="text-red-500 text-xs mt-1 font-medium"
-                      role="alert"
-                    >
-                      {errors.message.message}
-                    </motion.p>
+                    <p className="text-xs text-red-600 mt-1">{errors.message.message}</p>
                   )}
                 </div>
 
-                {/* Submit Button */}
-                <motion.button
+                {/* Submit */}
+                <button
                   type="submit"
                   disabled={isSubmitting}
-                  whileHover={{ scale: 1.02 }}
-                  whileTap={{ scale: 0.98 }}
-                  className={`w-full bg-gradient-to-r from-terracotta to-terracotta-600 hover:from-terracotta-600 hover:to-terracotta-700 text-white font-bold py-3 md:py-4 px-4 md:px-6 rounded-lg shadow-brick hover:shadow-brick-lg transition-all duration-300 flex items-center justify-center gap-2 uppercase tracking-wide text-sm md:text-base focus:outline-none focus-visible:ring-2 focus-visible:ring-terracotta focus-visible:ring-offset-2 ${
-                    isSubmitting ? 'opacity-70 cursor-not-allowed' : ''
-                  }`}
-                  aria-label="Submit contact form"
+                  className="w-full inline-flex items-center justify-center gap-2 bg-[#B8402C] hover:bg-[#8E2E1D] text-white py-3.5 px-6 rounded transition-colors text-sm font-medium disabled:opacity-50"
                 >
-                  {isSubmitting ? (
-                    <>
-                      <motion.div
-                        animate={{ rotate: 360 }}
-                        transition={{ duration: 1, repeat: Infinity, ease: 'linear' }}
-                        className="w-5 h-5 border-2 border-white border-t-transparent rounded-full"
-                      />
-                      Sending...
-                    </>
-                  ) : (
-                    <>
-                      Send Enquiry
-                      <Send className="w-5 h-5" />
-                    </>
-                  )}
-                </motion.button>
-
-                {submitError && (
-                  <motion.div
-                    initial={{ opacity: 0, scale: 0.9 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    className="p-4 bg-red-50 border-2 border-red-200 rounded-lg text-red-700 text-sm font-semibold flex items-start gap-2"
-                    role="alert"
-                    aria-live="assertive"
-                  >
-                    <XCircle className="w-5 h-5 flex-shrink-0 mt-0.5" />
-                    <span>{submitError}</span>
-                  </motion.div>
-                )}
+                  <Send className="w-4 h-4" />
+                  <span>{isSubmitting ? 'Sending Request...' : 'Submit Inquiry to Dispatch Desk'}</span>
+                </button>
 
                 {submitSuccess && (
-                  <motion.div
-                    initial={{ opacity: 0, scale: 0.9 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    className="p-4 bg-green-50 border-2 border-green-200 rounded-lg text-green-700 text-sm font-semibold flex items-start gap-2"
-                    role="status"
-                    aria-live="polite"
-                  >
-                    <CheckCircle className="w-5 h-5 flex-shrink-0 mt-0.5" />
+                  <div className="p-4 bg-emerald-50 border border-emerald-200 rounded text-emerald-800 text-xs flex items-center gap-2">
+                    <CheckCircle className="w-4 h-4 flex-shrink-0" />
                     <span>{submitSuccess}</span>
-                  </motion.div>
+                  </div>
                 )}
 
-                {/* Privacy Note */}
-                <p className="text-xs text-charcoal-500 text-center">
-                  🔒 Your information is secure and will only be used to contact you
-                </p>
+                {submitError && (
+                  <div className="p-4 bg-red-50 border border-red-200 rounded text-red-800 text-xs flex items-center gap-2">
+                    <XCircle className="w-4 h-4 flex-shrink-0" />
+                    <span>{submitError}</span>
+                  </div>
+                )}
               </form>
             </div>
-          </motion.div>
+          </div>
+
         </div>
 
-        {/* Google Maps Section */}
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6, delay: 0.4 }}
-          className="mt-16"
-        >
-          <div className="text-center mb-8">
-            <h3 className="text-2xl font-bold text-charcoal font-display mb-2">
-              Find Us on the <span className="text-gradient">Map</span>
-            </h3>
-            <p className="text-charcoal-600">
-              Visit our brick kiln for product inspection and bulk orders
-            </p>
+        {/* Google Maps Location */}
+        <div className="mt-16 pt-12 border-t border-[#E2DDD5]">
+          <div className="flex flex-col sm:flex-row sm:items-baseline justify-between gap-4 mb-6">
+            <div>
+              <h3 className="text-xl font-bold font-display text-[#242321]">
+                Kiln Location &amp; Satellite Coordinates
+              </h3>
+              <p className="text-xs text-[#736F67] mt-0.5">
+                Kahlpa-Bhanderi Road, Gohana (Coordinates: 29.1052° N, 76.5954° E)
+              </p>
+            </div>
+            <a
+              href="https://www.google.com/maps/place/Hanuman+Bhatta+company/@29.1052208,76.5948049,19z"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-xs font-mono font-semibold text-[#B8402C] hover:underline"
+            >
+              Open in Google Maps &rarr;
+            </a>
           </div>
 
-          <div className="bg-white rounded-2xl shadow-brick-lg border-2 border-sandy-300 p-4 overflow-hidden">
-            <div className="relative w-full h-[350px] md:h-[450px] lg:h-[500px] rounded-xl overflow-hidden bg-sandy-100">
-              {/* Google Maps Embed */}
-              <iframe
-                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d1585.1293907390345!2d76.59480487785433!3d29.105220820180755!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x390d8d78522f1c3d%3A0x3c4e4e4aaec68a13!2sHanuman%20Bhatta%20company!5e1!3m2!1sen!2sin!4v1771436018793!5m2!1sen!2sin"
-                width="100%"
-                height="100%"
-                style={{ border: 0 }}
-                allowFullScreen
-                loading="lazy"
-                referrerPolicy="no-referrer-when-downgrade"
-                title="Hanuman Bhatta Location - Brick Kiln Manufacturing Unit"
-                aria-label="Google Maps showing the location of Hanuman Bhatta brick manufacturing facility"
-                className="rounded-lg"
-              />
-            </div>
-
-            {/* Map Action Buttons */}
-            <div className="flex flex-col sm:flex-row gap-3 md:gap-4 mt-4">
-              <a
-                href="https://www.google.com/maps/place/Hanuman+Bhatta+company/@29.1052208,76.5948049,19z/data=!3m1!4b1!4m6!3m5!1s0x390d8d78522f1c3d:0x3c4e4e4aaec68a13!8m2!3d29.1052208!4d76.5954486!16s%2Fg%2F11t_5ns_6j"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex-1 flex items-center justify-center gap-2 bg-gradient-to-r from-terracotta to-terracotta-600 hover:from-terracotta-600 hover:to-terracotta-700 text-white font-semibold py-2.5 md:py-3 px-4 md:px-6 rounded-lg shadow-brick hover:shadow-brick-lg transition-all duration-300 text-sm md:text-base"
-              >
-                <MapPin className="w-5 h-5" />
-                Open in Google Maps
-              </a>
-              <a
-                href="https://www.google.com/maps/dir/?api=1&destination=29.105220820180755,76.59480487785433&destination_place_id=ChIJPRwo1Xi9EDkRE4rsquROTjw"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex-1 flex items-center justify-center gap-2 bg-white hover:bg-sandy-50 text-terracotta border-2 border-terracotta font-semibold py-3 px-6 rounded-lg shadow-brick hover:shadow-brick-lg transition-all duration-300"
-              >
-                <MapPin className="w-5 h-5" />
-                Get Directions
-              </a>
-            </div>
+          <div className="w-full h-[360px] md:h-[440px] rounded border border-[#E2DDD5] overflow-hidden bg-[#EDE8DF]">
+            <iframe
+              src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d1585.1293907390345!2d76.59480487785433!3d29.105220820180755!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x390d8d78522f1c3d%3A0x3c4e4e4aaec68a13!2sHanuman%20Bhatta%20company!5e1!3m2!1sen!2sin!4v1771436018793!5m2!1sen!2sin"
+              width="100%"
+              height="100%"
+              style={{ border: 0 }}
+              allowFullScreen
+              loading="lazy"
+              referrerPolicy="no-referrer-when-downgrade"
+              title="Hanuman Bhatta Company Kiln Map"
+            />
           </div>
-        </motion.div>
+        </div>
+
       </div>
     </section>
   );
