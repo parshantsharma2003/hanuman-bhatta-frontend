@@ -87,9 +87,10 @@ const STAGES: ManufacturingStage[] = [
       'Gradual moisture evaporation down to below 2%',
       'Elimination of thermal shock cracks prior to kiln loading',
     ],
-    visualType: 'pending_photo',
-    pendingPhotoLabel: 'Facility Photo: Sun-Drying Hacks in Open Yard',
-    pendingPhotoSpecs: 'Wide photograph of outdoor drying yard showing thousands of raw green bricks stacked in staggered rows under natural sunlight.',
+    visualType: 'photo',
+    imageSrc: '/images/process-drying.jpg',
+    imageAlt: 'Open-air sun drying yard with thousands of freshly molded raw bricks arranged in rows at Hanuman Bhatta Company, Kahlpa',
+    photoCaption: 'Actual Kahlpa Yard · Open-Air Sun Drying Lines of Freshly Molded Raw Bricks',
   },
   {
     number: '05',
