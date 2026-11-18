@@ -14,10 +14,14 @@ interface Product {
   type: string;
   pricePer1000: number;
   pricePerTrolley: number;
+  pricePerBrick?: number;
+  localName?: string;
+  grade?: string;
+  badge?: string;
   imageUrl?: string;
   imagePublicId?: string;
   usageTags: string[];
-  qualityGrade: 'First' | 'Second' | 'Rora';
+  qualityGrade: string;
   isActive: boolean;
   availability: boolean;
   isArchived?: boolean;
@@ -40,13 +44,16 @@ interface ActivityLogItem {
 
 interface ProductFormData {
   name: string;
+  localName?: string;
+  grade?: string;
   slug?: string;
   description: string;
   type: string;
+  pricePerBrick: string;
   pricePer1000: string;
   pricePerTrolley: string;
   usageTags: string[];
-  qualityGrade: 'First' | 'Second' | 'Rora';
+  qualityGrade: string;
   isActive: boolean;
   image?: string;
 }
@@ -64,7 +71,7 @@ const USAGE_TAG_OPTIONS = [
   'Garden Walls',
 ];
 
-const QUALITY_GRADES = ['First', 'Second', 'Rora'] as const;
+const QUALITY_GRADES = ['Grade 1 (Awwal)', 'Grade 1.5 (Laal Peti)', 'Grade 2 (Duyam)', 'Grade 3 (Peela)', 'Grade 4 (Chatka)'] as const;
 
 const apiBaseUrl = getApiBaseUrl(process.env.NEXT_PUBLIC_API_URL);
 
@@ -76,13 +83,16 @@ export default function AdminProductsPage() {
   const [editingProduct, setEditingProduct] = useState<Product | null>(null);
   const [formData, setFormData] = useState<ProductFormData>({
     name: '',
+    localName: '',
+    grade: '',
     slug: '',
     description: '',
-    type: '',
+    type: 'Red Clay Brick',
+    pricePerBrick: '',
     pricePer1000: '',
     pricePerTrolley: '',
     usageTags: [],
-    qualityGrade: 'First',
+    qualityGrade: 'Grade 1 (Awwal)',
     isActive: true,
     image: undefined,
   });
@@ -194,9 +204,12 @@ export default function AdminProductsPage() {
 
       const payload = {
         name: formData.name.trim(),
+        localName: formData.localName?.trim() || undefined,
+        grade: formData.grade?.trim() || undefined,
         slug: formData.slug?.trim() || undefined,
         description: formData.description.trim() || undefined,
         type: formData.type.trim(),
+        pricePerBrick: formData.pricePerBrick ? parseFloat(formData.pricePerBrick) : undefined,
         pricePer1000: parseFloat(formData.pricePer1000),
         pricePerTrolley: parseFloat(formData.pricePerTrolley),
         usageTags: formData.usageTags,
@@ -318,13 +331,16 @@ export default function AdminProductsPage() {
     setEditingProduct(null);
     setFormData({
       name: '',
+      localName: '',
+      grade: '',
       slug: '',
       description: '',
-      type: '',
+      type: 'Red Clay Brick',
+      pricePerBrick: '',
       pricePer1000: '',
       pricePerTrolley: '',
       usageTags: [],
-      qualityGrade: 'First',
+      qualityGrade: 'Grade 1 (Awwal)',
       isActive: true,
       image: undefined,
     });
@@ -335,11 +351,17 @@ export default function AdminProductsPage() {
   // Open modal for editing
   const openEditModal = (product: Product) => {
     setEditingProduct(product);
+    const brickPrice = product.pricePerBrick 
+      ? product.pricePerBrick.toString() 
+      : (product.pricePer1000 ? (product.pricePer1000 / 1000).toString() : '');
     setFormData({
       name: product.name,
+      localName: product.localName || '',
+      grade: product.grade || '',
       slug: product.slug,
       description: product.description || '',
       type: product.type,
+      pricePerBrick: brickPrice,
       pricePer1000: product.pricePer1000.toString(),
       pricePerTrolley: product.pricePerTrolley.toString(),
       usageTags: product.usageTags,
@@ -357,13 +379,16 @@ export default function AdminProductsPage() {
     setEditingProduct(null);
     setFormData({
       name: '',
+      localName: '',
+      grade: '',
       slug: '',
       description: '',
-      type: '',
+      type: 'Red Clay Brick',
+      pricePerBrick: '',
       pricePer1000: '',
       pricePerTrolley: '',
       usageTags: [],
-      qualityGrade: 'First',
+      qualityGrade: 'Grade 1 (Awwal)',
       isActive: true,
       image: undefined,
     });
@@ -544,8 +569,18 @@ export default function AdminProductsPage() {
 
                   {/* Product Info */}
                   <div className="p-4">
-                    <h3 className="text-lg font-bold text-gray-900 mb-1">{product.name}</h3>
-                    <p className="text-sm text-gray-500 mb-2">{product.type}</p>
+                    <div className="flex items-center justify-between mb-1">
+                      <h3 className="text-lg font-bold text-gray-900">{product.name}</h3>
+                      {product.grade && (
+                        <span className="text-xs font-semibold px-2 py-0.5 rounded bg-amber-100 text-amber-800">
+                          Grade {product.grade}
+                        </span>
+                      )}
+                    </div>
+                    {product.localName && (
+                      <p className="text-sm font-medium text-amber-700 mb-1">{product.localName}</p>
+                    )}
+                    <p className="text-xs text-gray-500 mb-2">{product.type}</p>
                     {product.description && (
                       <p className="text-sm text-gray-600 mb-3 line-clamp-2">
                         {product.description}
@@ -553,16 +588,22 @@ export default function AdminProductsPage() {
                     )}
 
                     {/* Pricing */}
-                    <div className="flex justify-between items-center mb-3">
+                    <div className="grid grid-cols-3 gap-2 mb-3 bg-gray-50 p-2.5 rounded-lg border border-gray-100 text-center">
                       <div>
-                        <p className="text-xs text-gray-500">Per 1000</p>
-                        <p className="text-lg font-bold text-orange-600">
+                        <p className="text-[10px] text-gray-500 uppercase tracking-wider font-semibold">Per Brick</p>
+                        <p className="text-base font-bold text-orange-600">
+                          ₹{product.pricePerBrick !== undefined ? product.pricePerBrick.toFixed(2) : (product.pricePer1000 / 1000).toFixed(2)}
+                        </p>
+                      </div>
+                      <div>
+                        <p className="text-[10px] text-gray-500 uppercase tracking-wider font-semibold">Per 1000</p>
+                        <p className="text-base font-bold text-orange-600">
                           ₹{product.pricePer1000.toLocaleString()}
                         </p>
                       </div>
-                      <div className="text-right">
-                        <p className="text-xs text-gray-500">Per Trolley</p>
-                        <p className="text-lg font-bold text-orange-600">
+                      <div>
+                        <p className="text-[10px] text-gray-500 uppercase tracking-wider font-semibold">Per Trolley</p>
+                        <p className="text-base font-bold text-orange-600">
                           ₹{product.pricePerTrolley.toLocaleString()}
                         </p>
                       </div>
@@ -723,7 +764,7 @@ export default function AdminProductsPage() {
                     </div>
                   </div>
 
-                  {/* Name and Type in one row */}
+                  {/* Name and Hindi Local Name */}
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
                       <label className="block text-sm font-semibold text-gray-700 mb-2">
@@ -735,10 +776,26 @@ export default function AdminProductsPage() {
                         value={formData.name}
                         onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                         className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
-                        placeholder="e.g., Red Clay Brick"
+                        placeholder="e.g., First Class Bricks"
                       />
                     </div>
 
+                    <div>
+                      <label className="block text-sm font-semibold text-gray-700 mb-2">
+                        Local / Hindi Name (अव्वल / लाल पेटी / दुयम)
+                      </label>
+                      <input
+                        type="text"
+                        value={formData.localName || ''}
+                        onChange={(e) => setFormData({ ...formData, localName: e.target.value })}
+                        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+                        placeholder="e.g., अव्वल (Awwal)"
+                      />
+                    </div>
+                  </div>
+
+                  {/* Type and Grade */}
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
                       <label className="block text-sm font-semibold text-gray-700 mb-2">
                         Type *
@@ -749,7 +806,20 @@ export default function AdminProductsPage() {
                         value={formData.type}
                         onChange={(e) => setFormData({ ...formData, type: e.target.value })}
                         className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
-                        placeholder="e.g., Red Brick, Fly Ash Brick"
+                        placeholder="e.g., Red Clay Brick"
+                      />
+                    </div>
+
+                    <div>
+                      <label className="block text-sm font-semibold text-gray-700 mb-2">
+                        Grade Identifier (1, 1.5, 2, 3, 4)
+                      </label>
+                      <input
+                        type="text"
+                        value={formData.grade || ''}
+                        onChange={(e) => setFormData({ ...formData, grade: e.target.value })}
+                        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+                        placeholder="e.g., 1 or 1.5"
                       />
                     </div>
                   </div>
@@ -789,8 +859,34 @@ export default function AdminProductsPage() {
                     </p>
                   </div>
 
-                  {/* Pricing and Quality Grade in one row */}
-                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                  {/* Pricing and Quality Grade */}
+                  <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+                    <div>
+                      <label className="block text-sm font-semibold text-gray-700 mb-2">
+                        Price Per Brick (₹) *
+                      </label>
+                      <div className="relative">
+                        <span className="absolute left-3 top-2 text-gray-500">₹</span>
+                        <input
+                          type="number"
+                          step="0.05"
+                          min="0"
+                          value={formData.pricePerBrick}
+                          onChange={(e) => {
+                            const val = e.target.value;
+                            const num = parseFloat(val);
+                            setFormData((prev) => ({
+                              ...prev,
+                              pricePerBrick: val,
+                              pricePer1000: !isNaN(num) ? (num * 1000).toString() : prev.pricePer1000,
+                              pricePerTrolley: !isNaN(num) ? (num * 3000).toString() : prev.pricePerTrolley,
+                            }));
+                          }}
+                          className="w-full pl-8 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+                          placeholder="e.g., 9.00"
+                        />
+                      </div>
+                    </div>
                     <div>
                       <label className="block text-sm font-semibold text-gray-700 mb-2">
                         Price Per 1000 *
@@ -803,9 +899,16 @@ export default function AdminProductsPage() {
                           min="0"
                           step="0.01"
                           value={formData.pricePer1000}
-                          onChange={(e) =>
-                            setFormData({ ...formData, pricePer1000: e.target.value })
-                          }
+                          onChange={(e) => {
+                            const val = e.target.value;
+                            const num = parseFloat(val);
+                            setFormData((prev) => ({
+                              ...prev,
+                              pricePer1000: val,
+                              pricePerBrick: !isNaN(num) ? (num / 1000).toFixed(2) : prev.pricePerBrick,
+                              pricePerTrolley: !isNaN(num) ? (num * 3).toString() : prev.pricePerTrolley,
+                            }));
+                          }}
                           className="w-full pl-8 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
                           placeholder="0.00"
                         />
@@ -833,24 +936,19 @@ export default function AdminProductsPage() {
                     </div>
                     <div>
                       <label className="block text-sm font-semibold text-gray-700 mb-2">
-                        Quality Grade *
+                        Quality Grade
                       </label>
-                      <div className="flex gap-2">
-                        {QUALITY_GRADES.map((grade) => (
-                          <button
-                            key={grade}
-                            type="button"
-                            onClick={() => setFormData({ ...formData, qualityGrade: grade })}
-                            className={`flex-1 px-3 py-2 rounded-lg text-sm font-semibold transition-colors ${
-                              formData.qualityGrade === grade
-                                ? 'bg-orange-600 text-white'
-                                : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-                            }`}
-                          >
-                            {grade}
-                          </button>
+                      <select
+                        value={formData.qualityGrade}
+                        onChange={(e) => setFormData({ ...formData, qualityGrade: e.target.value })}
+                        className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+                      >
+                        {QUALITY_GRADES.map((g) => (
+                          <option key={g} value={g}>
+                            {g}
+                          </option>
                         ))}
-                      </div>
+                      </select>
                     </div>
                   </div>
 

@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import Image from 'next/image';
 import { 
   ArrowRight, 
@@ -17,6 +17,8 @@ import {
 } from 'lucide-react';
 import { trackMetric } from '@/lib/analytics';
 import { useOrderModal } from '@/lib/orderModalContext';
+import { useQuery } from '@tanstack/react-query';
+import { fetchProducts, Product, queryKeys } from '@/lib/api/queries';
 
 export interface BrickGrade {
   id: string;
@@ -205,8 +207,48 @@ export default function ProductCatalog() {
     return `https://wa.me/919996669463?text=${encodeURIComponent(message)}`;
   };
 
-  const flagshipBrick = BRICK_COLLECTION[0];
-  const secondaryBricks = BRICK_COLLECTION.slice(1);
+  const { data: serverProducts = [] } = useQuery({
+    queryKey: queryKeys.products,
+    queryFn: fetchProducts,
+    refetchInterval: 30000,
+  });
+
+  const liveBricks = useMemo(() => {
+    if (!serverProducts || serverProducts.length === 0) {
+      return BRICK_COLLECTION;
+    }
+    return BRICK_COLLECTION.map((local) => {
+      const match = serverProducts.find(
+        (sp: Product) =>
+          sp.grade?.toLowerCase() === local.gradeBadge.toLowerCase() ||
+          sp.name.toLowerCase() === local.name.toLowerCase() ||
+          (sp.qualityGrade && sp.qualityGrade.toLowerCase() === local.gradeBadge.toLowerCase())
+      );
+      if (match) {
+        const pricePerBrick =
+          match.pricePerBrick || (match.pricePer1000 ? match.pricePer1000 / 1000 : local.pricePerBrick);
+        const pricePer1000 = match.pricePer1000 || pricePerBrick * 1000;
+        return {
+          ...local,
+          name: match.name || local.name,
+          hindiName: match.localName || local.hindiName,
+          pricePerBrick,
+          pricePer1000,
+          description: match.description || local.description,
+          characteristics: match.characteristics && match.characteristics.length > 0 ? match.characteristics : local.characteristics,
+          applications: match.recommendedApplications && match.recommendedApplications.length > 0 ? match.recommendedApplications : local.applications,
+          colour: match.colourDescription || local.colour,
+          soundWhenStruck: match.soundDescription || local.soundWhenStruck,
+          strengthLevel: match.strengthLevel || local.strengthLevel,
+          badge: match.badge || local.badge,
+        };
+      }
+      return local;
+    });
+  }, [serverProducts]);
+
+  const flagshipBrick = liveBricks[0];
+  const secondaryBricks = liveBricks.slice(1);
 
   return (
     <section
@@ -670,7 +712,7 @@ export default function ProductCatalog() {
                 </tr>
               </thead>
               <tbody className="divide-y divide-[#E2DDD5]">
-                {BRICK_COLLECTION.map((brick) => {
+                {liveBricks.map((brick) => {
                   const price =
                     pricingMode === 'brick'
                       ? `₹${brick.pricePerBrick.toFixed(2)}`
@@ -731,7 +773,7 @@ export default function ProductCatalog() {
               Select Grade to Inspect:
             </span>
             <div className="grid grid-cols-2 sm:grid-cols-5 gap-1.5 mb-4">
-              {BRICK_COLLECTION.map((b) => (
+              {liveBricks.map((b) => (
                 <button
                   key={b.id}
                   type="button"
@@ -750,7 +792,7 @@ export default function ProductCatalog() {
             {/* Selected Grade Mobile Card */}
             {(() => {
               const activeGrade =
-                BRICK_COLLECTION.find((b) => b.id === selectedMobileGrade) || BRICK_COLLECTION[0];
+                liveBricks.find((b) => b.id === selectedMobileGrade) || liveBricks[0];
               const mobilePrice =
                 pricingMode === 'brick'
                   ? `₹${activeGrade.pricePerBrick.toFixed(2)} per brick`

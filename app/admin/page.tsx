@@ -1297,12 +1297,22 @@ function ProductsView({
   );
 }
 
-// Inventory View Component
+// Inventory View Component with 5-Grade Breakdown
 function InventoryView({ inventory, onUpdateInventory, onSaveInventory }: any) {
   const [formData, setFormData] = useState({
     totalBricks: inventory?.totalBricks || 0,
     availableTrolleys: inventory?.availableTrolleys || 0,
   });
+
+  const defaultGradeItems = [
+    { grade: 'Grade 1', productName: 'First Class Bricks', localName: 'Awwal / अव्वल', availableQuantity: 50000, stockStatus: 'In Stock', internalRemarks: 'Kiln yard active' },
+    { grade: 'Grade 1.5', productName: 'Standard Bricks', localName: 'Laal Peti / लाल पेटी', availableQuantity: 30000, stockStatus: 'In Stock', internalRemarks: 'Chamber 2 fired' },
+    { grade: 'Grade 2', productName: 'Second Class Bricks', localName: 'Duyam / दुयम', availableQuantity: 25000, stockStatus: 'In Stock', internalRemarks: 'Cooling zone' },
+    { grade: 'Grade 3', productName: 'Third Class Bricks', localName: 'Peela Eent / पीला', availableQuantity: 15000, stockStatus: 'In Stock', internalRemarks: 'Foundation filling' },
+    { grade: 'Grade 4', productName: 'Fourth Class Bricks', localName: 'Chatka Eent / छटका', availableQuantity: 20000, stockStatus: 'In Stock', internalRemarks: 'Hard clinker bats' },
+  ];
+
+  const gradeItems = inventory?.items && inventory.items.length > 0 ? inventory.items : defaultGradeItems;
 
   useEffect(() => {
     if (inventory) {
@@ -1320,68 +1330,98 @@ function InventoryView({ inventory, onUpdateInventory, onSaveInventory }: any) {
   return (
     <div className="space-y-6 pb-24 lg:pb-0">
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <div className="bg-white rounded-xl shadow-lg p-8">
-          <div className="flex items-center justify-between mb-4">
-            <h3 className="text-xl font-bold text-gray-900">Total Bricks</h3>
+        <div className="bg-white rounded-xl shadow-lg p-6 sm:p-8 border border-gray-200">
+          <div className="flex items-center justify-between mb-3">
+            <h3 className="text-xl font-bold text-gray-900">Total Kiln Yard Stock</h3>
             <Warehouse className="text-orange-600" size={32} />
           </div>
-          <p className="text-4xl font-bold text-orange-600 mb-2">
-            {inventory.totalBricks.toLocaleString()}
+          <p className="text-4xl font-bold text-orange-600 mb-1">
+            {inventory.totalBricks?.toLocaleString() || formData.totalBricks?.toLocaleString()}
           </p>
-          <p className="text-gray-600">Bricks in stock</p>
+          <p className="text-gray-600 text-sm">Combined red clay bricks in yard</p>
         </div>
 
-        <div className="bg-white rounded-xl shadow-lg p-8">
-          <div className="flex items-center justify-between mb-4">
-            <h3 className="text-xl font-bold text-gray-900">Available Trolleys</h3>
+        <div className="bg-white rounded-xl shadow-lg p-6 sm:p-8 border border-gray-200">
+          <div className="flex items-center justify-between mb-3">
+            <h3 className="text-xl font-bold text-gray-900">Available Trolley Loads</h3>
             <ShoppingCart className="text-orange-600" size={32} />
           </div>
-          <p className="text-4xl font-bold text-orange-600 mb-2">
-            {inventory.availableTrolleys}
+          <p className="text-4xl font-bold text-orange-600 mb-1">
+            {inventory.availableTrolleys || formData.availableTrolleys}
           </p>
-          <p className="text-gray-600">Trolleys available</p>
+          <p className="text-gray-600 text-sm">Standard 3,000-brick trolley loads ready for dispatch</p>
         </div>
       </div>
 
-      <div className="lg:hidden space-y-4">
-        <div className="bg-white rounded-xl shadow-lg p-4">
-          <label className="block text-sm font-semibold text-gray-700 mb-2">Total Bricks</label>
-          <input
-            type="number"
-            min={0}
-            value={formData.totalBricks}
-            onChange={(e) => setFormData((prev) => ({ ...prev, totalBricks: Number(e.target.value) }))}
-            className="w-full px-4 py-3 min-h-[44px] text-lg border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
-          />
+      {/* Grade-by-Grade Stock Breakdown */}
+      <div className="bg-white rounded-xl shadow-lg overflow-hidden border border-gray-200">
+        <div className="p-5 border-b border-gray-200 bg-gray-50 flex flex-wrap items-center justify-between gap-3">
+          <div>
+            <h3 className="text-lg font-bold text-gray-900">Kiln Grade Inventory Breakdown</h3>
+            <p className="text-xs text-gray-500 mt-0.5">Live stock status across all five manufactured grades</p>
+          </div>
+          <button
+            onClick={onUpdateInventory}
+            className="px-5 py-2.5 bg-orange-600 text-white rounded-lg text-xs sm:text-sm font-semibold hover:bg-orange-700 transition-colors shadow-sm"
+          >
+            Adjust Grade Stock
+          </button>
         </div>
-        <div className="bg-white rounded-xl shadow-lg p-4">
-          <label className="block text-sm font-semibold text-gray-700 mb-2">Available Trolleys</label>
-          <input
-            type="number"
-            min={0}
-            value={formData.availableTrolleys}
-            onChange={(e) => setFormData((prev) => ({ ...prev, availableTrolleys: Number(e.target.value) }))}
-            className="w-full px-4 py-3 min-h-[44px] text-lg border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
-          />
+
+        <div className="overflow-x-auto">
+          <table className="w-full text-left text-xs sm:text-sm">
+            <thead className="bg-gray-100 text-gray-700 font-semibold border-b border-gray-200">
+              <tr>
+                <th className="px-5 py-3">Grade</th>
+                <th className="px-5 py-3">Product Name</th>
+                <th className="px-5 py-3">Local Name</th>
+                <th className="px-5 py-3">Available Bricks</th>
+                <th className="px-5 py-3">Est. Trolleys</th>
+                <th className="px-5 py-3">Stock Status</th>
+                <th className="px-5 py-3">Kiln Remarks</th>
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-gray-200">
+              {gradeItems.map((item: any, idx: number) => {
+                const available = Number(item.availableQuantity) || 0;
+                const trolleys = Math.floor(available / 3000);
+                return (
+                  <tr key={idx} className="hover:bg-gray-50 transition-colors">
+                    <td className="px-5 py-3.5 font-bold font-mono text-orange-700">
+                      {item.grade}
+                    </td>
+                    <td className="px-5 py-3.5 font-semibold text-gray-900">
+                      {item.productName}
+                    </td>
+                    <td className="px-5 py-3.5 text-gray-600">
+                      {item.localName || '-'}
+                    </td>
+                    <td className="px-5 py-3.5 font-mono font-bold text-gray-900">
+                      {available.toLocaleString('en-IN')}
+                    </td>
+                    <td className="px-5 py-3.5 font-mono text-gray-600">
+                      ≈ {trolleys} loads
+                    </td>
+                    <td className="px-5 py-3.5">
+                      <span className={`inline-flex px-2.5 py-1 rounded-full text-xs font-semibold ${
+                        item.stockStatus === 'In Stock'
+                          ? 'bg-green-100 text-green-800'
+                          : item.stockStatus === 'Limited Stock'
+                          ? 'bg-yellow-100 text-yellow-800'
+                          : 'bg-red-100 text-red-800'
+                      }`}>
+                        {item.stockStatus || 'In Stock'}
+                      </span>
+                    </td>
+                    <td className="px-5 py-3.5 text-xs text-gray-500 italic">
+                      {item.internalRemarks || 'Standard batch'}
+                    </td>
+                  </tr>
+                );
+              })}
+            </tbody>
+          </table>
         </div>
-      </div>
-
-      <div className="hidden lg:block">
-        <button
-          onClick={onUpdateInventory}
-          className="w-full md:w-auto min-h-[44px] px-8 py-3 bg-gradient-to-r from-orange-600 to-orange-700 text-white rounded-lg font-semibold hover:from-orange-700 hover:to-orange-800 transition-all shadow-lg"
-        >
-          Update Inventory
-        </button>
-      </div>
-
-      <div className="lg:hidden fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 p-4 z-20">
-        <button
-          onClick={() => onSaveInventory(formData)}
-          className="w-full min-h-[44px] px-6 py-3 bg-gradient-to-r from-orange-600 to-orange-700 text-white rounded-lg font-semibold"
-        >
-          Update Inventory
-        </button>
       </div>
     </div>
   );
@@ -1872,11 +1912,35 @@ function GalleryView({ galleryItems, onUpload, onEdit, onDelete, onRefresh }: an
 function ProductModal({ product, onClose, onSave }: any) {
   const [formData, setFormData] = useState({
     name: product?.name || '',
-    type: product?.type || '',
-    pricePer1000: product?.pricePer1000 || 0,
-    pricePerTrolley: product?.pricePerTrolley || 0,
+    localName: product?.localName || '',
+    grade: product?.grade || 'Grade 1',
+    category: product?.category || 'Standard Quality',
+    badge: product?.badge || '',
+    type: product?.type || 'Standard Masonry Brick',
+    pricePerBrick: product?.pricePerBrick || (product?.pricePer1000 ? product.pricePer1000 / 1000 : 9.0),
+    pricePer1000: product?.pricePer1000 || 9000,
+    pricePerTrolley: product?.pricePerTrolley || 27000,
+    description: product?.description || '',
     availability: product?.availability ?? true,
   });
+
+  const handlePricePerBrickChange = (val: number) => {
+    setFormData((prev) => ({
+      ...prev,
+      pricePerBrick: val,
+      pricePer1000: Math.round(val * 1000),
+      pricePerTrolley: Math.round(val * 3000),
+    }));
+  };
+
+  const handlePricePer1000Change = (val: number) => {
+    setFormData((prev) => ({
+      ...prev,
+      pricePerBrick: Math.round((val / 1000) * 100) / 100,
+      pricePer1000: val,
+      pricePerTrolley: Math.round(val * 3),
+    }));
+  };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -1895,12 +1959,12 @@ function ProductModal({ product, onClose, onSave }: any) {
         initial={{ scale: 0.95, y: 20 }}
         animate={{ scale: 1, y: 0 }}
         exit={{ scale: 0.95, y: 20 }}
-        className="bg-white rounded-2xl shadow-2xl max-w-md w-full p-8"
+        className="bg-white rounded-2xl shadow-2xl max-w-lg w-full p-6 sm:p-8 max-h-[90vh] overflow-y-auto"
         onClick={(e) => e.stopPropagation()}
       >
         <div className="flex items-center justify-between mb-6">
           <h3 className="text-2xl font-bold text-gray-900">
-            {product ? 'Edit Product' : 'Create Product'}
+            {product ? 'Edit Brick Grade' : 'Create Brick Product'}
           </h3>
           <button
             onClick={onClose}
@@ -1910,83 +1974,144 @@ function ProductModal({ product, onClose, onSave }: any) {
           </button>
         </div>
 
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">Product Name</label>
-            <input
-              type="text"
-              required
-              value={formData.name}
-              onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-              className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
-              placeholder="First Class Bricks"
-            />
+        <form onSubmit={handleSubmit} className="space-y-4 text-xs sm:text-sm">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <div>
+              <label className="block text-xs font-semibold text-gray-700 mb-1">Product Name *</label>
+              <input
+                type="text"
+                required
+                value={formData.name}
+                onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500"
+                placeholder="First Class Bricks"
+              />
+            </div>
+            <div>
+              <label className="block text-xs font-semibold text-gray-700 mb-1">Local / Hindi Name</label>
+              <input
+                type="text"
+                value={formData.localName}
+                onChange={(e) => setFormData({ ...formData, localName: e.target.value })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500"
+                placeholder="Awwal / अव्वल"
+              />
+            </div>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+            <div>
+              <label className="block text-xs font-semibold text-gray-700 mb-1">Grade</label>
+              <select
+                value={formData.grade}
+                onChange={(e) => setFormData({ ...formData, grade: e.target.value })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500"
+              >
+                <option value="Grade 1">Grade 1 (Awwal)</option>
+                <option value="Grade 1.5">Grade 1.5 (Laal Peti)</option>
+                <option value="Grade 2">Grade 2 (Duyam)</option>
+                <option value="Grade 3">Grade 3 (Peela)</option>
+                <option value="Grade 4">Grade 4 (Chatka)</option>
+              </select>
+            </div>
+            <div>
+              <label className="block text-xs font-semibold text-gray-700 mb-1">Category</label>
+              <input
+                type="text"
+                value={formData.category}
+                onChange={(e) => setFormData({ ...formData, category: e.target.value })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500"
+                placeholder="Premium Quality"
+              />
+            </div>
+            <div>
+              <label className="block text-xs font-semibold text-gray-700 mb-1">Badge (Optional)</label>
+              <input
+                type="text"
+                value={formData.badge}
+                onChange={(e) => setFormData({ ...formData, badge: e.target.value })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500"
+                placeholder="BEST SELLER"
+              />
+            </div>
+          </div>
+
+          {/* Pricing Row with automatic sync */}
+          <div className="p-3 bg-orange-50 border border-orange-200 rounded-lg space-y-3">
+            <span className="text-xs font-bold text-orange-900 block">Pricing Management (Auto-Syncs)</span>
+            <div className="grid grid-cols-3 gap-2">
+              <div>
+                <label className="block text-[11px] font-semibold text-gray-700 mb-1">Per Brick (₹) *</label>
+                <input
+                  type="number"
+                  step="0.1"
+                  min="0"
+                  required
+                  value={formData.pricePerBrick}
+                  onChange={(e) => handlePricePerBrickChange(Number(e.target.value))}
+                  className="w-full px-2.5 py-1.5 bg-white border border-gray-300 rounded focus:ring-2 focus:ring-orange-500 font-bold"
+                />
+              </div>
+              <div>
+                <label className="block text-[11px] font-semibold text-gray-700 mb-1">Per 1,000 (₹)</label>
+                <input
+                  type="number"
+                  min="0"
+                  value={formData.pricePer1000}
+                  onChange={(e) => handlePricePer1000Change(Number(e.target.value))}
+                  className="w-full px-2.5 py-1.5 bg-white border border-gray-300 rounded focus:ring-2 focus:ring-orange-500"
+                />
+              </div>
+              <div>
+                <label className="block text-[11px] font-semibold text-gray-700 mb-1">Per Trolley (3k)</label>
+                <input
+                  type="number"
+                  min="0"
+                  value={formData.pricePerTrolley}
+                  onChange={(e) => setFormData({ ...formData, pricePerTrolley: Number(e.target.value) })}
+                  className="w-full px-2.5 py-1.5 bg-white border border-gray-300 rounded focus:ring-2 focus:ring-orange-500"
+                />
+              </div>
+            </div>
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">Product Type</label>
-            <input
-              type="text"
-              required
-              value={formData.type}
-              onChange={(e) => setFormData({ ...formData, type: e.target.value })}
-              className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
-              placeholder="Premium Quality"
+            <label className="block text-xs font-semibold text-gray-700 mb-1">Description</label>
+            <textarea
+              rows={2}
+              value={formData.description}
+              onChange={(e) => setFormData({ ...formData, description: e.target.value })}
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500"
+              placeholder="Product description for customer catalog..."
             />
           </div>
 
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">Price per 1000</label>
-            <input
-              type="number"
-              required
-              min="0"
-              value={formData.pricePer1000}
-              onChange={(e) => setFormData({ ...formData, pricePer1000: Number(e.target.value) })}
-              className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
-              placeholder="8500"
-            />
-          </div>
-
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">Price per Trolley</label>
-            <input
-              type="number"
-              required
-              min="0"
-              value={formData.pricePerTrolley}
-              onChange={(e) => setFormData({ ...formData, pricePerTrolley: Number(e.target.value) })}
-              className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
-              placeholder="25500"
-            />
-          </div>
-
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-3 pt-1">
             <input
               type="checkbox"
               id="availability"
               checked={formData.availability}
               onChange={(e) => setFormData({ ...formData, availability: e.target.checked })}
-              className="w-5 h-5 text-orange-600 rounded focus:ring-2 focus:ring-orange-500"
+              className="w-4 h-4 text-orange-600 rounded focus:ring-2 focus:ring-orange-500"
             />
-            <label htmlFor="availability" className="text-sm font-medium text-gray-700">
-              Product Available
+            <label htmlFor="availability" className="text-xs font-medium text-gray-700 cursor-pointer">
+              Product Active &amp; Available in Public Catalogue
             </label>
           </div>
 
-          <div className="flex gap-3 pt-4">
+          <div className="flex gap-3 pt-3">
             <button
               type="button"
               onClick={onClose}
-              className="flex-1 px-6 py-3 border border-gray-300 text-gray-700 rounded-lg font-semibold hover:bg-gray-50 transition-colors"
+              className="flex-1 px-4 py-2.5 border border-gray-300 text-gray-700 rounded-lg font-semibold hover:bg-gray-50 transition-colors"
             >
               Cancel
             </button>
             <button
               type="submit"
-              className="flex-1 px-6 py-3 bg-gradient-to-r from-orange-600 to-orange-700 text-white rounded-lg font-semibold hover:from-orange-700 hover:to-orange-800 transition-all shadow-lg"
+              className="flex-1 px-4 py-2.5 bg-gradient-to-r from-orange-600 to-orange-700 text-white rounded-lg font-semibold hover:from-orange-700 hover:to-orange-800 transition-all shadow-md"
             >
-              {product ? 'Update' : 'Create'}
+              {product ? 'Update Grade' : 'Create Product'}
             </button>
           </div>
         </form>
@@ -1995,16 +2120,44 @@ function ProductModal({ product, onClose, onSave }: any) {
   );
 }
 
-// Inventory Modal Component
+// Inventory Modal Component supporting all 5 brick grades
 function InventoryModal({ inventory, onClose, onSave }: any) {
-  const [formData, setFormData] = useState({
-    totalBricks: inventory?.totalBricks || 0,
-    availableTrolleys: inventory?.availableTrolleys || 0,
-  });
+  const initialItems = inventory?.items && inventory.items.length > 0 ? inventory.items : [
+    { grade: 'Grade 1', productName: 'First Class Bricks', localName: 'Awwal / अव्वल', availableQuantity: 50000, stockStatus: 'In Stock', internalRemarks: 'Kiln yard active' },
+    { grade: 'Grade 1.5', productName: 'Standard Bricks', localName: 'Laal Peti / लाल पेटी', availableQuantity: 30000, stockStatus: 'In Stock', internalRemarks: 'Chamber 2' },
+    { grade: 'Grade 2', productName: 'Second Class Bricks', localName: 'Duyam / दुयम', availableQuantity: 25000, stockStatus: 'In Stock', internalRemarks: 'Cooling zone' },
+    { grade: 'Grade 3', productName: 'Third Class Bricks', localName: 'Peela Eent / पीला', availableQuantity: 15000, stockStatus: 'In Stock', internalRemarks: 'Foundation filling' },
+    { grade: 'Grade 4', productName: 'Fourth Class Bricks', localName: 'Chatka Eent / छटका', availableQuantity: 20000, stockStatus: 'In Stock', internalRemarks: 'Hard vitrified' },
+  ];
+
+  const [items, setItems] = useState<any[]>(initialItems);
+
+  const totalBricks = items.reduce((sum, item) => sum + (Number(item.availableQuantity) || 0), 0);
+  const availableTrolleys = Math.floor(totalBricks / 3000);
+
+  const handleQuantityChange = (index: number, val: number) => {
+    setItems((prev) => {
+      const copy = [...prev];
+      copy[index] = { ...copy[index], availableQuantity: val };
+      return copy;
+    });
+  };
+
+  const handleStatusChange = (index: number, status: string) => {
+    setItems((prev) => {
+      const copy = [...prev];
+      copy[index] = { ...copy[index], stockStatus: status };
+      return copy;
+    });
+  };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    onSave(formData);
+    onSave({
+      totalBricks,
+      availableTrolleys,
+      items,
+    });
   };
 
   return (
@@ -2019,11 +2172,14 @@ function InventoryModal({ inventory, onClose, onSave }: any) {
         initial={{ scale: 0.95, y: 20 }}
         animate={{ scale: 1, y: 0 }}
         exit={{ scale: 0.95, y: 20 }}
-        className="bg-white rounded-2xl shadow-2xl max-w-md w-full p-8"
+        className="bg-white rounded-2xl shadow-2xl max-w-xl w-full p-6 sm:p-8 max-h-[92vh] overflow-y-auto"
         onClick={(e) => e.stopPropagation()}
       >
-        <div className="flex items-center justify-between mb-6">
-          <h3 className="text-2xl font-bold text-gray-900">Update Inventory</h3>
+        <div className="flex items-center justify-between mb-5">
+          <div>
+            <h3 className="text-2xl font-bold text-gray-900">Manage Kiln Stock</h3>
+            <p className="text-xs text-gray-500 mt-0.5">Adjust available inventory for each brick grade</p>
+          </div>
           <button
             onClick={onClose}
             className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
@@ -2032,46 +2188,70 @@ function InventoryModal({ inventory, onClose, onSave }: any) {
           </button>
         </div>
 
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">Total Bricks</label>
-            <input
-              type="number"
-              required
-              min="0"
-              value={formData.totalBricks}
-              onChange={(e) => setFormData({ ...formData, totalBricks: Number(e.target.value) })}
-              className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
-              placeholder="100000"
-            />
+        <form onSubmit={handleSubmit} className="space-y-4 text-xs sm:text-sm">
+          <div className="space-y-3">
+            {items.map((item, index) => (
+              <div key={item.grade} className="p-3 bg-gray-50 border border-gray-200 rounded-lg space-y-2">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <span className="font-bold text-gray-900 text-sm">{item.grade}: {item.productName}</span>
+                    <span className="text-xs text-orange-700 font-semibold block">{item.localName}</span>
+                  </div>
+                  <select
+                    value={item.stockStatus}
+                    onChange={(e) => handleStatusChange(index, e.target.value)}
+                    className="px-2.5 py-1 text-xs border border-gray-300 rounded bg-white font-medium"
+                  >
+                    <option value="In Stock">In Stock</option>
+                    <option value="Limited Stock">Limited Stock</option>
+                    <option value="Out of Stock">Out of Stock</option>
+                    <option value="Made to Order">Made to Order</option>
+                  </select>
+                </div>
+                <div className="flex items-center gap-3">
+                  <div className="flex-1">
+                    <label className="block text-[11px] text-gray-600 mb-1">Available Count (Bricks)</label>
+                    <input
+                      type="number"
+                      min="0"
+                      value={item.availableQuantity}
+                      onChange={(e) => handleQuantityChange(index, Number(e.target.value))}
+                      className="w-full px-3 py-1.5 bg-white border border-gray-300 rounded font-mono font-bold"
+                    />
+                  </div>
+                  <div className="text-right text-xs text-gray-500 pt-4">
+                    ≈ {Math.floor((Number(item.availableQuantity) || 0) / 3000)} trolleys
+                  </div>
+                </div>
+              </div>
+            ))}
           </div>
 
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">Available Trolleys</label>
-            <input
-              type="number"
-              required
-              min="0"
-              value={formData.availableTrolleys}
-              onChange={(e) => setFormData({ ...formData, availableTrolleys: Number(e.target.value) })}
-              className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
-              placeholder="50"
-            />
+          {/* Computed Totals */}
+          <div className="p-4 bg-orange-50 border border-orange-200 rounded-lg flex items-center justify-between text-sm">
+            <div>
+              <span className="text-xs text-orange-900 font-semibold uppercase block">Total Kiln Inventory</span>
+              <span className="text-lg font-bold font-mono text-orange-700">{totalBricks.toLocaleString('en-IN')} Bricks</span>
+            </div>
+            <div className="text-right">
+              <span className="text-xs text-orange-900 font-semibold uppercase block">Available Trolleys</span>
+              <span className="text-lg font-bold font-mono text-orange-700">{availableTrolleys} Trolley Loads</span>
+            </div>
           </div>
 
-          <div className="flex gap-3 pt-4">
+          <div className="flex gap-3 pt-3">
             <button
               type="button"
               onClick={onClose}
-              className="flex-1 px-6 py-3 border border-gray-300 text-gray-700 rounded-lg font-semibold hover:bg-gray-50 transition-colors"
+              className="flex-1 px-5 py-2.5 border border-gray-300 text-gray-700 rounded-lg font-semibold hover:bg-gray-50 transition-colors text-sm"
             >
               Cancel
             </button>
             <button
               type="submit"
-              className="flex-1 px-6 py-3 bg-gradient-to-r from-orange-600 to-orange-700 text-white rounded-lg font-semibold hover:from-orange-700 hover:to-orange-800 transition-all shadow-lg"
+              className="flex-1 px-5 py-2.5 bg-gradient-to-r from-orange-600 to-orange-700 text-white rounded-lg font-semibold hover:from-orange-700 hover:to-orange-800 transition-all shadow-md text-sm"
             >
-              Update
+              Save Stock Levels
             </button>
           </div>
         </form>

@@ -1,22 +1,26 @@
 import { z } from 'zod';
-
 import { API } from './api/client';
 
 export const smartOrderSchema = z.object({
-  brickType: z.enum(['Avval', 'Second', 'Rora']),
-  usagePurpose: z.enum(['House', 'Boundary', 'Filling']),
+  brickType: z.string().min(1, 'Please select a brick grade'),
+  usagePurpose: z.string().default('House'),
   quantityUnit: z.enum(['bricks', 'trolleys']),
-  quantityValue: z.number().positive(),
-  deliveryArea: z.string().min(2),
+  quantityValue: z.number().positive('Quantity must be greater than zero'),
+  deliveryType: z.enum(['delivery', 'self_pickup']).default('delivery'),
+  deliveryArea: z.string().min(2, 'Delivery location or address is required'),
+  village: z.string().optional().or(z.literal('')),
+  district: z.string().optional().or(z.literal('')),
+  pincode: z.string().optional().or(z.literal('')),
   landmark: z.string().max(200).optional().or(z.literal('')),
-  distanceRange: z.enum(['0-10km', '10-25km', '25+km']),
-  requiredDeliveryDate: z.string().min(1),
-  urgency: z.enum(['immediate', 'flexible']),
-  name: z.string().min(2),
-  phoneNumber: z.string().min(10),
-  email: z.string().email(),
+  distanceRange: z.string().default('0-10km'),
+  requiredDeliveryDate: z.string().min(1, 'Delivery date is required'),
+  urgency: z.enum(['immediate', 'flexible']).default('flexible'),
+  name: z.string().min(2, 'Customer name is required'),
+  phoneNumber: z.string().min(10, 'Valid 10-digit mobile number required'),
+  email: z.string().email('Valid email address required'),
   whatsappNumber: z.string().min(10).optional().or(z.literal('')),
-  isWhatsappSame: z.boolean(),
+  isWhatsappSame: z.boolean().default(true),
+  customerInstructions: z.string().optional().or(z.literal('')),
 });
 
 export type SmartOrderPayload = z.infer<typeof smartOrderSchema>;
@@ -26,15 +30,22 @@ export interface SmartOrderResponse {
   message: string;
   data?: {
     order: any;
+    orderNumber?: string;
     leadPriority: 'hot' | 'warm' | 'normal';
-    stock: {
-      availableBricks: number;
-      requestedBricks: number;
-      limited: boolean;
+    product?: {
+      name: string;
+      localName?: string;
+      grade?: string;
+      pricePerBrick?: number;
+      pricePer1000?: number;
     };
-    estimate: {
-      min: number;
-      max: number;
+    estimate?: {
+      subtotal?: number;
+      min?: number;
+      max?: number;
+      pricePerBrick?: number;
+      quantityBricks?: number;
+      isIndicative?: boolean;
     };
     adminWhatsAppUrl: string;
   };

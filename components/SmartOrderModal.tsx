@@ -16,13 +16,16 @@ const SmartOrderForm = dynamic(() => import('./SmartOrderForm'), {
 
 interface SuccessScreenProps {
   onClose: () => void;
+  orderData?: any;
 }
 
-function SuccessScreen({ onClose }: SuccessScreenProps) {
-  const whatsappNumber = '918295669463';
-  const callNumber = '+919996669463';
+function SuccessScreen({ onClose, orderData }: SuccessScreenProps) {
+  const whatsappNumber = '919996669463';
+  const callNumber = '+919996694663';
+  const orderNumber = orderData?.orderNumber || orderData?.order?.orderNumber || 'Pending Confirmation';
+  
   const whatsappMessage = encodeURIComponent(
-    'Hello Hanuman Bhatta, I have submitted an order request online and would like to confirm pricing and delivery.'
+    `Hello Hanuman Bhatta Company, I have submitted an order enquiry online (Order Ref: ${orderNumber}) and would like to confirm final pricing and tractor-trolley delivery scheduling.`
   );
 
   return (
@@ -93,6 +96,7 @@ function SuccessScreen({ onClose }: SuccessScreenProps) {
 
 export default function SmartOrderModal() {
   const { isOpen, closeModal, showSuccessScreen, setShowSuccessScreen } = useOrderModal();
+  const [submittedOrderData, setSubmittedOrderData] = useState<any>(null);
   const modalRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -116,13 +120,13 @@ export default function SmartOrderModal() {
     <AnimatePresence>
       {isOpen && (
         <div
-          className="fixed inset-0 bg-black/60 z-50 flex items-center justify-center p-4 backdrop-blur-xs"
+          className="fixed inset-0 bg-black/60 z-50 flex items-center justify-center p-3 sm:p-4 backdrop-blur-xs"
           onClick={closeModal}
           aria-label="Order modal overlay"
         >
           <div
             ref={modalRef}
-            className="bg-white rounded border border-[#E2DDD5] shadow-2xl w-full max-h-[90vh] overflow-y-auto max-w-2xl"
+            className="bg-white rounded-sm border border-[#E2DDD5] shadow-2xl w-full max-h-[92vh] overflow-y-auto max-w-2xl"
             onClick={(e) => e.stopPropagation()}
             role="dialog"
             aria-modal="true"
@@ -131,8 +135,8 @@ export default function SmartOrderModal() {
             {/* Header */}
             <div className="sticky top-0 bg-[#F5F0E8] border-b border-[#E2DDD5] px-6 py-4 flex items-center justify-between z-10">
               <div>
-                <span className="text-[10px] font-mono tracking-widest uppercase text-terracotta block">
-                  Hanuman Bhatta Company • Direct Supply
+                <span className="text-[10px] font-mono tracking-widest uppercase text-[#B8402C] block font-semibold">
+                  Hanuman Bhatta Company • Direct Kiln Supply
                 </span>
                 <h2 id="modal-title" className="text-xl font-bold font-display text-[#242321]">
                   Kiln Brick Order Request
@@ -140,7 +144,7 @@ export default function SmartOrderModal() {
               </div>
               <button
                 onClick={closeModal}
-                className="p-1.5 rounded hover:bg-white text-[#736F67] hover:text-[#242321] transition-colors"
+                className="p-1.5 rounded-sm hover:bg-white text-[#736F67] hover:text-[#242321] transition-colors"
                 aria-label="Close dialog"
               >
                 <X size={20} />
@@ -148,11 +152,16 @@ export default function SmartOrderModal() {
             </div>
 
             {/* Content */}
-            <div className="p-6 md:p-8">
+            <div className="p-5 sm:p-6 md:p-8">
               {showSuccessScreen ? (
-                <SuccessScreen onClose={closeModal} />
+                <SuccessScreen onClose={closeModal} orderData={submittedOrderData} />
               ) : (
-                <SmartOrderForm onSubmitSuccess={() => setShowSuccessScreen(true)} />
+                <SmartOrderForm
+                  onSubmitSuccess={(data) => {
+                    setSubmittedOrderData(data);
+                    setShowSuccessScreen(true);
+                  }}
+                />
               )}
             </div>
           </div>

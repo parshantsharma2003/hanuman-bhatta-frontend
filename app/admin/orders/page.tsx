@@ -97,20 +97,35 @@ function Toast({ message, type, onClose }: any) {
   );
 }
 
-// Order Detail Panel
+// Order Detail Panel with Quotation Management
 function OrderDetailPanel({ order, onClose, onSave, onDelete, apiBaseUrl }: any) {
   const [editMode, setEditMode] = useState(false);
   const [formData, setFormData] = useState({
     status: order?.status || 'pending',
     notes: order?.notes || '',
+    quotedPricePerBrick: order?.quotedPricePerBrick || order?.pricePerBrickAtOrder || 9.0,
+    transportCharges: order?.transportCharges || 0,
+    discount: order?.discount || 0,
+    quotationStatus: order?.quotationStatus || 'none',
+    quotationNotes: order?.quotationNotes || '',
   });
   const [isLoading, setIsLoading] = useState(false);
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
 
+  const orderQuantity = order?.quantityBricks || order?.quantity || 0;
+  const currentSubtotal = Math.round(orderQuantity * Number(formData.quotedPricePerBrick));
+  const currentFinalQuotation = Math.max(0, currentSubtotal + Number(formData.transportCharges) - Number(formData.discount));
+
   const handleSave = async () => {
     setIsLoading(true);
     try {
-      await onSave(order._id, formData);
+      await onSave(order._id, {
+        ...formData,
+        quotedPricePerBrick: Number(formData.quotedPricePerBrick),
+        transportCharges: Number(formData.transportCharges),
+        discount: Number(formData.discount),
+        finalQuotation: currentFinalQuotation,
+      });
       setEditMode(false);
     } finally {
       setIsLoading(false);
@@ -134,14 +149,29 @@ function OrderDetailPanel({ order, onClose, onSave, onDelete, apiBaseUrl }: any)
     }
   };
 
-  const handleWhatsAppClick = () => {
-    const phoneNumber = order.phoneNumber || order.phone;
+  const handleSendQuotationWhatsApp = () => {
+    const phoneNumber = order.whatsappNumber || order.phoneNumber || order.phone;
     if (phoneNumber) {
       const cleanNumber = phoneNumber.replace(/[^0-9]/g, '');
-      const message = encodeURIComponent(
-        `Hi ${order.name || 'there'}! 👋\n\nWe received your order for ${order.quantityBricks || order.quantity} bricks (${order.brickType || order.product}).\n\nWe'll be in touch soon with an update!\n\n🧱 Eent Bhatta`
-      );
-      window.open(`https://wa.me/${cleanNumber}?text=${message}`, '_blank');
+      const orderRef = order.orderNumber || order._id?.slice(-6).toUpperCase();
+      const message =
+        `🧱 *Official Quotation — Hanuman Bhatta Company*\n` +
+        `Kiln Yard: Kahlpa, Gohana, Haryana | Contact: +91 99966 94663\n\n` +
+        `👤 Dear ${order.name || order.customerName || 'Customer'},\n` +
+        `Thank you for your enquiry (Ref: #${orderRef}). Here is your approved rate quotation:\n\n` +
+        `• Brick Grade: ${order.brickType || order.product || 'First Class'} (${order.grade || 'Grade 1'})\n` +
+        `• Quantity: ${orderQuantity.toLocaleString('en-IN')} Bricks\n` +
+        `• Approved Rate: ₹${Number(formData.quotedPricePerBrick).toFixed(2)} per brick\n` +
+        `• Product Subtotal: ₹${currentSubtotal.toLocaleString('en-IN')}\n` +
+        `• Transportation Charges: ₹${Number(formData.transportCharges).toLocaleString('en-IN')}\n` +
+        `• Discount Applied: -₹${Number(formData.discount).toLocaleString('en-IN')}\n` +
+        `━━━━━━━━━━━━━━━━━━━━\n` +
+        `💰 *FINAL PAYABLE: ₹${currentFinalQuotation.toLocaleString('en-IN')}*\n` +
+        `━━━━━━━━━━━━━━━━━━━━\n` +
+        `📍 Delivery Site: ${order.deliveryArea || order.address || 'Site Location'}\n\n` +
+        `Please reply with "CONFIRM" to schedule tractor-trolley loading from our Kahlpa yard.`;
+
+      window.open(`https://wa.me/${cleanNumber}?text=${encodeURIComponent(message)}`, '_blank');
     }
   };
 
@@ -162,9 +192,11 @@ function OrderDetailPanel({ order, onClose, onSave, onDelete, apiBaseUrl }: any)
         onClick={(e) => e.stopPropagation()}
       >
         {/* Header */}
-        <div className="sticky top-0 bg-gradient-to-r from-orange-50 to-orange-100 border-b border-orange-200 px-6 py-4 flex items-center justify-between">
+        <div className="sticky top-0 bg-gradient-to-r from-orange-50 to-orange-100 border-b border-orange-200 px-6 py-4 flex items-center justify-between z-10">
           <div>
-            <h2 className="text-2xl font-bold text-gray-900">Order #{order._id?.slice(-6).toUpperCase()}</h2>
+            <h2 className="text-2xl font-bold text-gray-900">
+              Order #{order.orderNumber || order._id?.slice(-6).toUpperCase()}
+            </h2>
             <p className="text-sm text-gray-600 mt-1">
               {new Date(order.createdAt).toLocaleDateString()} at {new Date(order.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
             </p>
@@ -194,196 +226,270 @@ function OrderDetailPanel({ order, onClose, onSave, onDelete, apiBaseUrl }: any)
                 <p className="text-gray-900 font-semibold mt-1">{order.phoneNumber || order.phone || 'N/A'}</p>
               </div>
               <div className="bg-gray-50 rounded-lg p-4">
-                <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide">Delivery Area</p>
+                <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide">Delivery Area & Village</p>
                 <div className="flex items-center gap-2 mt-1">
-                  <MapPin size={16} className="text-orange-600" />
-                  <p className="text-gray-900 font-semibold">{order.deliveryArea || order.address || 'N/A'}</p>
+                  <MapPin size={16} className="text-orange-600 flex-shrink-0" />
+                  <p className="text-gray-900 font-semibold">
+                    {order.deliveryArea || order.address || 'N/A'} {order.village ? `(${order.village})` : ''}
+                  </p>
                 </div>
               </div>
             </div>
           </section>
 
-          {/* Order Details */}
+          {/* Order Details & Pricing Snapshot */}
           <section>
             <h3 className="text-lg font-bold text-gray-900 mb-4 flex items-center gap-2">
-              <span className="text-xl">📦</span> Order Details
+              <span className="text-xl">📦</span> Product &amp; Order Details
             </h3>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
               <div className="bg-gradient-to-br from-orange-50 to-orange-100 rounded-lg p-4 border border-orange-200">
-                <p className="text-xs font-semibold text-orange-700 uppercase tracking-wide">Brick Type</p>
-                <p className="text-lg font-bold text-orange-900 mt-2">{order.brickType || order.product || 'N/A'}</p>
+                <p className="text-xs font-semibold text-orange-700 uppercase tracking-wide">Brick Grade</p>
+                <p className="text-lg font-bold text-orange-900 mt-1">{order.brickType || order.product || 'N/A'}</p>
+                <span className="text-xs text-orange-800 font-mono">{order.grade || 'Grade 1'}</span>
               </div>
               <div className="bg-blue-50 rounded-lg p-4 border border-blue-200">
                 <p className="text-xs font-semibold text-blue-700 uppercase tracking-wide">Quantity</p>
-                <p className="text-lg font-bold text-blue-900 mt-2">
-                  {order.quantityBricks || order.quantity || 0} bricks
+                <p className="text-lg font-bold text-blue-900 mt-1">
+                  {orderQuantity.toLocaleString('en-IN')} bricks
                 </p>
-                {order.quantityTrolleys && (
-                  <p className="text-sm text-blue-700 mt-1">(≈ {Number(order.quantityTrolleys).toFixed(1)} trolleys)</p>
-                )}
+                <p className="text-xs text-blue-700 mt-0.5">(≈ {(orderQuantity / 3000).toFixed(1)} trolleys)</p>
               </div>
-              <div className="bg-gray-50 rounded-lg p-4">
-                <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide">Usage Purpose</p>
-                <p className="text-gray-900 font-semibold mt-1 capitalize">{order.usagePurpose || 'N/A'}</p>
-              </div>
-              <div className="bg-gray-50 rounded-lg p-4">
-                <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide">Distance Range</p>
-                <p className="text-gray-900 font-semibold mt-1">{order.distanceRange || 'N/A'}</p>
-              </div>
-              <div className="bg-gray-50 rounded-lg p-4">
-                <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide">Urgency</p>
-                <p className="text-gray-900 font-semibold mt-1 capitalize">{order.urgency || 'N/A'}</p>
-              </div>
-              <div className="bg-gray-50 rounded-lg p-4">
-                <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide">Required Delivery Date</p>
-                <p className="text-gray-900 font-semibold mt-1">TBD</p>
+              <div className="bg-emerald-50 rounded-lg p-4 border border-emerald-200">
+                <p className="text-xs font-semibold text-emerald-700 uppercase tracking-wide">Indicative Subtotal</p>
+                <p className="text-lg font-bold text-emerald-900 mt-1">
+                  ₹{(order.estimatedSubtotal || order.totalPrice || (orderQuantity * 9.0)).toLocaleString('en-IN')}
+                </p>
+                <p className="text-xs text-emerald-700 mt-0.5">@ ₹{order.pricePerBrickAtOrder || 9.0}/brick</p>
               </div>
             </div>
           </section>
 
-          {/* Lead Priority */}
-          <section className="bg-gradient-to-r from-red-50 to-orange-50 rounded-lg p-4 border border-orange-200">
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-3">
-                <Flame size={24} className={order.leadPriority === 'hot' ? 'text-red-600' : order.leadPriority === 'warm' ? 'text-yellow-600' : 'text-gray-600'} />
-                <div>
-                  <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide">Lead Priority</p>
-                  <p className="text-2xl font-bold text-gray-900 mt-1 capitalize">{order.leadPriority || 'normal'}</p>
-                </div>
-              </div>
-              <div className={`px-4 py-2 rounded-full font-bold text-white ${
-                order.leadPriority === 'hot' ? 'bg-red-600' : order.leadPriority === 'warm' ? 'bg-yellow-600' : 'bg-gray-600'
-              }`}>
-                {order.leadPriority === 'hot' ? '🔥 HOT' : order.leadPriority === 'warm' ? '⚠️ WARM' : '○ NORMAL'}
-              </div>
+          {/* QUOTATION MANAGEMENT WORKFLOW */}
+          <section className="bg-gray-50 border border-gray-200 rounded-xl p-5 space-y-4">
+            <div className="flex items-center justify-between border-b border-gray-200 pb-3">
+              <h3 className="text-base font-bold text-gray-900 flex items-center gap-2">
+                <span className="text-lg">💼</span> Quotation Management
+              </h3>
+              <span className="text-xs font-mono uppercase px-2.5 py-1 bg-white border border-gray-300 rounded font-semibold text-orange-700">
+                Status: {order.status?.replace('_', ' ').toUpperCase()}
+              </span>
             </div>
-          </section>
 
-          {/* Status & Notes */}
-          <section>
-            <h3 className="text-lg font-bold text-gray-900 mb-4 flex items-center gap-2">
-              <span className="text-xl">⚙️</span> Admin Actions
-            </h3>
             {editMode ? (
               <div className="space-y-4">
-                <div>
-                  <label className="block text-sm font-semibold text-gray-700 mb-2">Order Status</label>
-                  <select
-                    value={formData.status}
-                    onChange={(e) => setFormData({ ...formData, status: e.target.value })}
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
-                  >
-                    <option value="pending">⏳ Pending</option>
-                    <option value="confirmed">✓ Confirmed</option>
-                    <option value="in_progress">→ In Progress</option>
-                    <option value="delivered">✓✓ Delivered</option>
-                    <option value="cancelled">✗ Cancelled</option>
-                  </select>
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                  <div>
+                    <label className="block text-xs font-semibold text-gray-700 mb-1">
+                      Approved Rate / Brick (₹)
+                    </label>
+                    <input
+                      type="number"
+                      step="0.1"
+                      value={formData.quotedPricePerBrick}
+                      onChange={(e) => setFormData({ ...formData, quotedPricePerBrick: Number(e.target.value) })}
+                      className="w-full px-3 py-2 bg-white border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 font-bold"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-xs font-semibold text-gray-700 mb-1">
+                      Transport Charges (₹)
+                    </label>
+                    <input
+                      type="number"
+                      value={formData.transportCharges}
+                      onChange={(e) => setFormData({ ...formData, transportCharges: Number(e.target.value) })}
+                      className="w-full px-3 py-2 bg-white border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500"
+                      placeholder="e.g. 2500"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-xs font-semibold text-gray-700 mb-1">
+                      Discount Applied (₹)
+                    </label>
+                    <input
+                      type="number"
+                      value={formData.discount}
+                      onChange={(e) => setFormData({ ...formData, discount: Number(e.target.value) })}
+                      className="w-full px-3 py-2 bg-white border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500"
+                      placeholder="e.g. 500"
+                    />
+                  </div>
                 </div>
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                  <div>
+                    <label className="block text-xs font-semibold text-gray-700 mb-1">
+                      Lifecycle Status
+                    </label>
+                    <select
+                      value={formData.status}
+                      onChange={(e) => setFormData({ ...formData, status: e.target.value })}
+                      className="w-full px-3 py-2 bg-white border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 font-medium"
+                    >
+                      <option value="pending">⏳ Pending Review</option>
+                      <option value="under_review">🔍 Under Review</option>
+                      <option value="quotation_prepared">📝 Quotation Prepared</option>
+                      <option value="quotation_sent">✉️ Quotation Sent to Customer</option>
+                      <option value="customer_approved">👍 Customer Approved</option>
+                      <option value="scheduled_for_dispatch">🚜 Scheduled for Dispatch</option>
+                      <option value="confirmed">✓ Confirmed Order</option>
+                      <option value="dispatched">🚚 Dispatched</option>
+                      <option value="delivered">✓✓ Delivered</option>
+                      <option value="cancelled">✗ Cancelled</option>
+                    </select>
+                  </div>
+                  <div>
+                    <label className="block text-xs font-semibold text-gray-700 mb-1">
+                      Quotation Notes
+                    </label>
+                    <input
+                      type="text"
+                      value={formData.quotationNotes}
+                      onChange={(e) => setFormData({ ...formData, quotationNotes: e.target.value })}
+                      placeholder="e.g. Special bulk discount negotiated by phone"
+                      className="w-full px-3 py-2 bg-white border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500"
+                    />
+                  </div>
+                </div>
+
                 <div>
-                  <label className="block text-sm font-semibold text-gray-700 mb-2">Internal Notes</label>
+                  <label className="block text-xs font-semibold text-gray-700 mb-1">Internal Notes</label>
                   <textarea
                     value={formData.notes}
                     onChange={(e) => setFormData({ ...formData, notes: e.target.value })}
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent resize-none"
-                    rows={4}
-                    placeholder="Add internal notes about this order..."
-                    maxLength={500}
+                    className="w-full px-3 py-2 bg-white border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 resize-none text-sm"
+                    rows={2}
+                    placeholder="Add internal dispatch notes..."
                   />
-                  <p className="text-xs text-gray-500 mt-1">{formData.notes.length}/500 characters</p>
                 </div>
-                <div className="flex gap-3">
+
+                {/* Live Computed Final Quotation Summary */}
+                <div className="p-3 bg-white border border-gray-300 rounded-lg flex items-center justify-between">
+                  <span className="font-semibold text-gray-700 text-sm">Calculated Final Quotation:</span>
+                  <span className="font-mono font-bold text-xl text-orange-600">
+                    ₹{currentFinalQuotation.toLocaleString('en-IN')}
+                  </span>
+                </div>
+
+                <div className="flex gap-3 pt-2">
                   <button
                     onClick={handleSave}
                     disabled={isLoading}
-                    className="flex-1 px-6 py-3 bg-green-600 text-white rounded-lg font-semibold hover:bg-green-700 disabled:opacity-50 transition-colors"
+                    className="flex-1 px-5 py-2.5 bg-orange-600 text-white rounded-lg font-semibold hover:bg-orange-700 disabled:opacity-50 transition-colors shadow-sm text-sm"
                   >
-                    {isLoading ? 'Saving...' : 'Save Changes'}
+                    {isLoading ? 'Saving...' : 'Save Quotation & Status'}
                   </button>
                   <button
                     onClick={() => setEditMode(false)}
-                    className="flex-1 px-6 py-3 border border-gray-300 text-gray-700 rounded-lg font-semibold hover:bg-gray-50 transition-colors"
+                    className="px-4 py-2.5 border border-gray-300 text-gray-700 rounded-lg font-semibold hover:bg-gray-100 transition-colors text-sm"
                   >
                     Cancel
                   </button>
                 </div>
               </div>
             ) : (
-              <div className="space-y-4">
-                <div className="bg-gray-50 rounded-lg p-4">
-                  <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide">Current Status</p>
-                  <div className="flex items-center gap-2 mt-2">
-                    {order.status === 'pending' && <Clock size={20} className="text-yellow-600" />}
-                    {order.status === 'confirmed' && <CheckCircle size={20} className="text-blue-600" />}
-                    {order.status === 'in_progress' && <TrendingUp size={20} className="text-indigo-600" />}
-                    {order.status === 'delivered' && <CheckCircle size={20} className="text-green-600" />}
-                    {order.status === 'cancelled' && <AlertCircle size={20} className="text-red-600" />}
-                    <p className="text-lg font-bold text-gray-900 capitalize">{order.status?.replace('_', ' ')}</p>
+              <div className="space-y-3">
+                <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 text-xs">
+                  <div className="bg-white p-3 rounded border border-gray-200">
+                    <span className="text-gray-500 block">Quoted Rate</span>
+                    <span className="font-bold text-gray-900 text-sm">
+                      ₹{order.quotedPricePerBrick || order.pricePerBrickAtOrder || 9.0} / brick
+                    </span>
+                  </div>
+                  <div className="bg-white p-3 rounded border border-gray-200">
+                    <span className="text-gray-500 block">Transport</span>
+                    <span className="font-bold text-gray-900 text-sm">
+                      ₹{(order.transportCharges || 0).toLocaleString('en-IN')}
+                    </span>
+                  </div>
+                  <div className="bg-white p-3 rounded border border-gray-200">
+                    <span className="text-gray-500 block">Discount</span>
+                    <span className="font-bold text-gray-900 text-sm">
+                      -₹{(order.discount || 0).toLocaleString('en-IN')}
+                    </span>
+                  </div>
+                  <div className="bg-orange-50 p-3 rounded border border-orange-200">
+                    <span className="text-orange-700 block">Final Quotation</span>
+                    <span className="font-bold text-orange-900 text-sm">
+                      ₹{(order.finalQuotation || order.totalPrice || currentSubtotal).toLocaleString('en-IN')}
+                    </span>
                   </div>
                 </div>
-                <div className="bg-gray-50 rounded-lg p-4">
-                  <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide">Notes</p>
-                  <p className="text-gray-900 mt-2 text-sm">{order.notes || 'No notes added yet'}</p>
+
+                {order.notes && (
+                  <p className="text-xs text-gray-600 bg-white p-3 rounded border border-gray-200">
+                    <strong>Notes:</strong> {order.notes}
+                  </p>
+                )}
+
+                <div className="flex gap-3 pt-2">
+                  <button
+                    onClick={() => setEditMode(true)}
+                    className="flex-1 px-4 py-2.5 bg-blue-600 text-white rounded-lg font-semibold hover:bg-blue-700 transition-colors flex items-center justify-center gap-2 text-sm shadow-sm"
+                  >
+                    <Edit2 size={16} /> Prepare / Edit Quotation
+                  </button>
+                  <button
+                    onClick={handleSendQuotationWhatsApp}
+                    className="flex-1 px-4 py-2.5 bg-emerald-600 text-white rounded-lg font-semibold hover:bg-emerald-700 transition-colors flex items-center justify-center gap-2 text-sm shadow-sm"
+                  >
+                    <MessageCircle size={16} /> Send Quotation via WhatsApp
+                  </button>
                 </div>
-                <button
-                  onClick={() => setEditMode(true)}
-                  className="w-full px-6 py-3 bg-blue-600 text-white rounded-lg font-semibold hover:bg-blue-700 transition-colors flex items-center justify-center gap-2"
-                >
-                  <Edit2 size={18} /> Update Status & Notes
-                </button>
               </div>
             )}
           </section>
 
-          {/* Quick Actions */}
+          {/* Quick Actions (Calling & Direct Chat) */}
           <section>
-            <h3 className="text-lg font-bold text-gray-900 mb-4 flex items-center gap-2">
-              <span className="text-xl">📞</span> Quick Actions
+            <h3 className="text-sm font-bold text-gray-700 mb-3 uppercase tracking-wider">
+              Quick Customer Contact
             </h3>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+            <div className="grid grid-cols-2 gap-3">
               <button
                 onClick={handleCallClick}
-                className="flex items-center justify-center gap-2 px-6 py-3 bg-green-100 text-green-700 rounded-lg font-semibold hover:bg-green-200 transition-colors"
+                className="flex items-center justify-center gap-2 px-4 py-2.5 bg-green-50 text-green-700 border border-green-200 rounded-lg font-semibold hover:bg-green-100 transition-colors text-sm"
               >
-                <Phone size={18} /> Call Customer
+                <Phone size={16} /> Call {order.phoneNumber || order.phone}
               </button>
               <button
-                onClick={handleWhatsAppClick}
-                className="flex items-center justify-center gap-2 px-6 py-3 bg-blue-100 text-blue-700 rounded-lg font-semibold hover:bg-blue-200 transition-colors"
+                onClick={handleSendQuotationWhatsApp}
+                className="flex items-center justify-center gap-2 px-4 py-2.5 bg-emerald-50 text-emerald-700 border border-emerald-200 rounded-lg font-semibold hover:bg-emerald-100 transition-colors text-sm"
               >
-                <MessageCircle size={18} /> WhatsApp
+                <MessageCircle size={16} /> Open WhatsApp Chat
               </button>
             </div>
           </section>
 
           {/* Delete Action */}
-          <section className="border-t border-gray-200 pt-6">
-            {!showDeleteConfirm ? (
-              <button
-                onClick={() => setShowDeleteConfirm(true)}
-                className="w-full px-6 py-3 bg-red-50 text-red-600 rounded-lg font-semibold hover:bg-red-100 transition-colors flex items-center justify-center gap-2"
-              >
-                <Trash2 size={18} /> Delete Order
-              </button>
-            ) : (
-              <div className="bg-red-50 border border-red-200 rounded-lg p-4 space-y-3">
-                <p className="text-red-900 font-semibold">Delete this order permanently?</p>
+          <section className="border-t border-gray-200 pt-4">
+            {showDeleteConfirm ? (
+              <div className="bg-red-50 p-4 rounded-lg space-y-3">
+                <p className="text-sm font-semibold text-red-900">Are you sure you want to permanently delete this order?</p>
                 <div className="flex gap-3">
                   <button
                     onClick={handleDelete}
                     disabled={isLoading}
-                    className="flex-1 px-6 py-2 bg-red-600 text-white rounded-lg font-semibold hover:bg-red-700 disabled:opacity-50 transition-colors"
+                    className="px-4 py-2 bg-red-600 text-white rounded font-semibold text-sm hover:bg-red-700 disabled:opacity-50"
                   >
-                    {isLoading ? 'Deleting...' : 'Delete'}
+                    {isLoading ? 'Deleting...' : 'Yes, Delete'}
                   </button>
                   <button
                     onClick={() => setShowDeleteConfirm(false)}
-                    className="flex-1 px-6 py-2 border border-red-300 text-red-700 rounded-lg font-semibold hover:bg-red-50 transition-colors"
+                    className="px-4 py-2 bg-gray-200 text-gray-800 rounded font-semibold text-sm hover:bg-gray-300"
                   >
                     Cancel
                   </button>
                 </div>
               </div>
+            ) : (
+              <button
+                onClick={() => setShowDeleteConfirm(true)}
+                className="text-xs text-red-600 hover:text-red-800 font-semibold"
+              >
+                Delete Order Record
+              </button>
             )}
           </section>
         </div>
@@ -729,9 +835,14 @@ export default function OrdersPage() {
               className="px-4 py-3 min-h-[44px] border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent bg-white"
             >
               <option value="all">All Statuses</option>
-              <option value="pending">⏳ Pending</option>
+              <option value="pending">⏳ Pending Review</option>
+              <option value="under_review">🔍 Under Review</option>
+              <option value="quotation_prepared">📝 Quotation Prepared</option>
+              <option value="quotation_sent">✉️ Quotation Sent</option>
+              <option value="customer_approved">👍 Customer Approved</option>
+              <option value="scheduled_for_dispatch">🚜 Scheduled for Dispatch</option>
               <option value="confirmed">✓ Confirmed</option>
-              <option value="in_progress">→ In Progress</option>
+              <option value="dispatched">🚚 Dispatched</option>
               <option value="delivered">✓✓ Delivered</option>
               <option value="cancelled">✗ Cancelled</option>
             </select>
@@ -741,10 +852,15 @@ export default function OrdersPage() {
               onChange={(e) => setFilterBrickType(e.target.value)}
               className="px-4 py-3 min-h-[44px] border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent bg-white"
             >
-              <option value="all">All Brick Types</option>
-              <option value="Avval">Avval</option>
-              <option value="Second">Second</option>
-              <option value="Rora">Rora</option>
+              <option value="all">All Brick Grades</option>
+              <option value="First Class Bricks">Grade 1: First Class (Awwal)</option>
+              <option value="Standard Bricks">Grade 1.5: Standard (Laal Peti)</option>
+              <option value="Second Class Bricks">Grade 2: Second Class (Duyam)</option>
+              <option value="Third Class Bricks">Grade 3: Third Class (Peela)</option>
+              <option value="Fourth Class Bricks">Grade 4: Fourth Class (Chatka)</option>
+              <option value="Avval">Legacy: Avval</option>
+              <option value="Second">Legacy: Second</option>
+              <option value="Rora">Legacy: Rora</option>
             </select>
 
             <select
@@ -777,9 +893,14 @@ export default function OrdersPage() {
                 className="px-4 py-3 min-h-[44px] border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent bg-white"
               >
                 <option value="all">All Statuses</option>
-                <option value="pending">⏳ Pending</option>
+                <option value="pending">⏳ Pending Review</option>
+                <option value="under_review">🔍 Under Review</option>
+                <option value="quotation_prepared">📝 Quotation Prepared</option>
+                <option value="quotation_sent">✉️ Quotation Sent</option>
+                <option value="customer_approved">👍 Customer Approved</option>
+                <option value="scheduled_for_dispatch">🚜 Scheduled for Dispatch</option>
                 <option value="confirmed">✓ Confirmed</option>
-                <option value="in_progress">→ In Progress</option>
+                <option value="dispatched">🚚 Dispatched</option>
                 <option value="delivered">✓✓ Delivered</option>
                 <option value="cancelled">✗ Cancelled</option>
               </select>
@@ -789,10 +910,15 @@ export default function OrdersPage() {
                 onChange={(e) => setFilterBrickType(e.target.value)}
                 className="px-4 py-3 min-h-[44px] border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent bg-white"
               >
-                <option value="all">All Brick Types</option>
-                <option value="Avval">Avval</option>
-                <option value="Second">Second</option>
-                <option value="Rora">Rora</option>
+                <option value="all">All Brick Grades</option>
+                <option value="First Class Bricks">Grade 1: First Class (Awwal)</option>
+                <option value="Standard Bricks">Grade 1.5: Standard (Laal Peti)</option>
+                <option value="Second Class Bricks">Grade 2: Second Class (Duyam)</option>
+                <option value="Third Class Bricks">Grade 3: Third Class (Peela)</option>
+                <option value="Fourth Class Bricks">Grade 4: Fourth Class (Chatka)</option>
+                <option value="Avval">Legacy: Avval</option>
+                <option value="Second">Legacy: Second</option>
+                <option value="Rora">Legacy: Rora</option>
               </select>
 
               <select
