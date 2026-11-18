@@ -76,20 +76,24 @@ export default function JsonLd() {
       },
       {
         '@type': 'Offer',
+        price: '8.00',
+        priceCurrency: 'INR',
         itemOffered: {
           '@type': 'Product',
-          name: 'Second-Class Red Clay Bricks (दोयम ईंट)',
+          name: 'Second Class Bricks (Duyam / 2 Number Eent / दुयम)',
           description:
-            'Reliable Grade-2 construction bricks for internal partition walls, boundary walls, and plastered masonry.',
+            'Reliable Grade-2 construction bricks (Duyam / 2 Number Eent / दुयम) at 8 rupee per brick (₹8,000 per 1,000 bricks) for internal partition walls, boundary walls, and plastered masonry.',
         },
       },
       {
         '@type': 'Offer',
+        price: '9.00',
+        priceCurrency: 'INR',
         itemOffered: {
           '@type': 'Product',
-          name: 'Brick Bats / Rora (रोड़ा ईंट)',
+          name: 'Premium Bricks',
           description:
-            'Crushed brick aggregates for heavy-duty sub-base flooring, foundation beds, and soak pits.',
+            'High-strength premium kiln-fired red clay bricks at 9 rupee per brick (₹9,000 per 1,000 bricks) with 10.5+ N/mm² compressive strength for load-bearing walls and exterior structures.',
         },
       },
     ],

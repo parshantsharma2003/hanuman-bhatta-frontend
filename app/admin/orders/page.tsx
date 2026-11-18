@@ -854,8 +854,9 @@ export default function OrdersPage() {
             >
               <option value="all">All Brick Grades</option>
               <option value="First Class Bricks">Grade 1: First Class (Awwal)</option>
+              <option value="Premium Bricks">Premium Bricks (₹9/brick)</option>
               <option value="Standard Bricks">Grade 1.5: Standard (Laal Peti)</option>
-              <option value="Second Class Bricks">Grade 2: Second Class (Duyam)</option>
+              <option value="Second Class Bricks">Grade 2: Second Class (Duyam / 2 Number Eent / दुयम)</option>
               <option value="Third Class Bricks">Grade 3: Third Class (Peela)</option>
               <option value="Fourth Class Bricks">Grade 4: Fourth Class (Chatka)</option>
               <option value="Avval">Legacy: Avval</option>
@@ -912,8 +913,9 @@ export default function OrdersPage() {
               >
                 <option value="all">All Brick Grades</option>
                 <option value="First Class Bricks">Grade 1: First Class (Awwal)</option>
+                <option value="Premium Bricks">Premium Bricks (₹9/brick)</option>
                 <option value="Standard Bricks">Grade 1.5: Standard (Laal Peti)</option>
-                <option value="Second Class Bricks">Grade 2: Second Class (Duyam)</option>
+                <option value="Second Class Bricks">Grade 2: Second Class (Duyam / 2 Number Eent / दुयम)</option>
                 <option value="Third Class Bricks">Grade 3: Third Class (Peela)</option>
                 <option value="Fourth Class Bricks">Grade 4: Fourth Class (Chatka)</option>
                 <option value="Avval">Legacy: Avval</option>

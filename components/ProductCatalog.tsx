@@ -44,7 +44,7 @@ export const BRICK_COLLECTION: BrickGrade[] = [
   {
     id: 'grade-1-awwal',
     number: '01',
-    name: 'First Class Bricks',
+    name: 'First Class / Premium Bricks',
     hindiName: 'अव्वल / आवल (Awwal)',
     gradeBadge: 'Grade 1',
     badge: 'BEST SELLER',
@@ -106,7 +106,7 @@ export const BRICK_COLLECTION: BrickGrade[] = [
     id: 'grade-2-duyam',
     number: '03',
     name: 'Second Class Bricks',
-    hindiName: 'दुयम / 2 नंबर ईंट (Duyam)',
+    hindiName: 'Duyam / 2 Number Eent / दुयम',
     gradeBadge: 'Grade 2',
     badge: 'ECONOMICAL',
     pricePerBrick: 8.0,

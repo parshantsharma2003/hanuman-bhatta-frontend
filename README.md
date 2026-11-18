@@ -32,7 +32,7 @@ A professional, modern website for Hanuman Bhatta, a premium red clay brick manu
 ### 🔄 Planned Features
 - **Our Process Section**: Horizontal scroll showing Molding → Drying → Firing
 - **Live Inventory Ticker**: Real-time stock updates
-- **Product Catalog**: Grid showing First Class, Second Class, and Brick Bats with pricing
+- **Product Catalog**: Grid showing First Class, Second Class (Duyam / 2 Number Eent / दुयम), and Premium Bricks with pricing
 - **Contact Form**: WhatsApp integration
 - **Google Maps**: Location embed
 

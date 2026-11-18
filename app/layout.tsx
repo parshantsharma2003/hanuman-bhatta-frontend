@@ -37,12 +37,12 @@ export const metadata: Metadata = {
     
     // Hindi & Regional Terms
     'ईंट भट्टा', 'ईंट भट्टा गोहाना', 'हनुमान भट्टा कंपनी', 'लाल ईंट', 'अव्वल ईंट',
-    'दोयम ईंट', 'मिट्टी की ईंट', 'भट्टा', 'eent bhatta', 'laal eent', 'avval eent',
-    'doyam eent', 'rora', 'brick bats',
+    'दोयम ईंट', 'दुयम ईंट', '2 नंबर ईंट', 'मिट्टी की ईंट', 'भट्टा', 'eent bhatta', 'laal eent', 'avval eent',
+    'doyam eent', 'duyam eent', '2 number eent', 'premium bricks',
     
     // Product & Intent Terms
     'red clay bricks', 'clay bricks for house construction', 'first class bricks',
-    'second class bricks', 'brick trolley price Gohana', 'bulk brick orders Haryana',
+    'second class bricks', 'premium bricks', 'brick trolley price Gohana', 'bulk brick orders Haryana',
     'brick calculator', 'building material supplier Gohana', 'brick supplier Haryana'
   ],
   

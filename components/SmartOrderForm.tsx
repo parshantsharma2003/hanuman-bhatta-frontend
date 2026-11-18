@@ -42,8 +42,8 @@ export interface BrickSelectionOption {
 const DEFAULT_BRICK_OPTIONS: BrickSelectionOption[] = [
   {
     id: 'awwal',
-    name: 'First Class Bricks',
-    localName: 'Awwal / अव्वल',
+    name: 'First Class / Premium Bricks',
+    localName: 'Awwal / अव्वल (Premium)',
     grade: 'Grade 1',
     badge: 'BEST SELLER',
     pricePerBrick: 9.0,
@@ -69,7 +69,7 @@ const DEFAULT_BRICK_OPTIONS: BrickSelectionOption[] = [
   {
     id: 'duyam',
     name: 'Second Class Bricks',
-    localName: 'Duyam / दुयम',
+    localName: 'Duyam / 2 Number Eent / दुयम',
     grade: 'Grade 2',
     badge: 'ECONOMICAL',
     pricePerBrick: 8.0,

@@ -95,7 +95,7 @@ Create and add these images to `/public` folder:
 
 Current keywords target:
 - **Hindi/Local**: eent bhatta, ईंट भट्टा, laal eent, mitti ki eent
-- **Product Types**: first class bricks, second class bricks, brick bats, rora
+- **Product Types**: first class bricks, second class bricks (Duyam / 2 Number Eent / दुयम), premium bricks, standard bricks (laal peti)
 - **Business Terms**: brick supplier, manufacturer, kiln, factory
 - **Location**: Add your city/region specific keywords as needed
 - **Construction**: building materials, wall construction, masonry

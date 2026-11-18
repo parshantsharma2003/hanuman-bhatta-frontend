@@ -1307,9 +1307,9 @@ function InventoryView({ inventory, onUpdateInventory, onSaveInventory }: any) {
   const defaultGradeItems = [
     { grade: 'Grade 1', productName: 'First Class Bricks', localName: 'Awwal / अव्वल', availableQuantity: 50000, stockStatus: 'In Stock', internalRemarks: 'Kiln yard active' },
     { grade: 'Grade 1.5', productName: 'Standard Bricks', localName: 'Laal Peti / लाल पेटी', availableQuantity: 30000, stockStatus: 'In Stock', internalRemarks: 'Chamber 2 fired' },
-    { grade: 'Grade 2', productName: 'Second Class Bricks', localName: 'Duyam / दुयम', availableQuantity: 25000, stockStatus: 'In Stock', internalRemarks: 'Cooling zone' },
+    { grade: 'Grade 2', productName: 'Second Class Bricks', localName: 'Duyam / 2 Number Eent / दुयम', availableQuantity: 25000, stockStatus: 'In Stock', internalRemarks: 'Cooling zone' },
     { grade: 'Grade 3', productName: 'Third Class Bricks', localName: 'Peela Eent / पीला', availableQuantity: 15000, stockStatus: 'In Stock', internalRemarks: 'Foundation filling' },
-    { grade: 'Grade 4', productName: 'Fourth Class Bricks', localName: 'Chatka Eent / छटका', availableQuantity: 20000, stockStatus: 'In Stock', internalRemarks: 'Hard clinker bats' },
+    { grade: 'Grade 4', productName: 'Fourth Class Bricks', localName: 'Chatka Eent / छटका', availableQuantity: 20000, stockStatus: 'In Stock', internalRemarks: 'Hard vitrified pieces' },
   ];
 
   const gradeItems = inventory?.items && inventory.items.length > 0 ? inventory.items : defaultGradeItems;
@@ -2007,9 +2007,9 @@ function ProductModal({ product, onClose, onSave }: any) {
                 onChange={(e) => setFormData({ ...formData, grade: e.target.value })}
                 className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500"
               >
-                <option value="Grade 1">Grade 1 (Awwal)</option>
+                <option value="Grade 1">Grade 1 (Awwal / Premium)</option>
                 <option value="Grade 1.5">Grade 1.5 (Laal Peti)</option>
-                <option value="Grade 2">Grade 2 (Duyam)</option>
+                <option value="Grade 2">Grade 2 (Duyam / 2 Number Eent / दुयम)</option>
                 <option value="Grade 3">Grade 3 (Peela)</option>
                 <option value="Grade 4">Grade 4 (Chatka)</option>
               </select>
@@ -2125,9 +2125,9 @@ function InventoryModal({ inventory, onClose, onSave }: any) {
   const initialItems = inventory?.items && inventory.items.length > 0 ? inventory.items : [
     { grade: 'Grade 1', productName: 'First Class Bricks', localName: 'Awwal / अव्वल', availableQuantity: 50000, stockStatus: 'In Stock', internalRemarks: 'Kiln yard active' },
     { grade: 'Grade 1.5', productName: 'Standard Bricks', localName: 'Laal Peti / लाल पेटी', availableQuantity: 30000, stockStatus: 'In Stock', internalRemarks: 'Chamber 2' },
-    { grade: 'Grade 2', productName: 'Second Class Bricks', localName: 'Duyam / दुयम', availableQuantity: 25000, stockStatus: 'In Stock', internalRemarks: 'Cooling zone' },
+    { grade: 'Grade 2', productName: 'Second Class Bricks', localName: 'Duyam / 2 Number Eent / दुयम', availableQuantity: 25000, stockStatus: 'In Stock', internalRemarks: 'Cooling zone' },
     { grade: 'Grade 3', productName: 'Third Class Bricks', localName: 'Peela Eent / पीला', availableQuantity: 15000, stockStatus: 'In Stock', internalRemarks: 'Foundation filling' },
-    { grade: 'Grade 4', productName: 'Fourth Class Bricks', localName: 'Chatka Eent / छटका', availableQuantity: 20000, stockStatus: 'In Stock', internalRemarks: 'Hard vitrified' },
+    { grade: 'Grade 4', productName: 'Fourth Class Bricks', localName: 'Chatka Eent / छटका', availableQuantity: 20000, stockStatus: 'In Stock', internalRemarks: 'Hard vitrified pieces' },
   ];
 
   const [items, setItems] = useState<any[]>(initialItems);

@@ -20,7 +20,7 @@ export const FAQ_DATA: FaqItem[] = [
   {
     question: 'What types and grades of red clay bricks are available?',
     answer:
-      'We manufacture three primary grades of red clay bricks: 1) First-Class Bricks (अव्वल ईंट) with 10.5+ N/mm² compressive strength, uniform color, and sharp edges for primary load-bearing walls; 2) Second-Class Bricks (दोयम ईंट) with 7.5+ N/mm² strength for internal partition walls and plastered masonry; and 3) Brick Bats / Rora (रोड़ा) for flooring sub-bases, road foundational layers, and soak pits.',
+      'We manufacture premium grades of kiln-fired red clay bricks: 1) First-Class Bricks (अव्वल ईंट / Awwal) with 10.5+ N/mm² compressive strength for primary load-bearing walls; 2) Second Class Bricks (Duyam / 2 Number Eent / दुयम) at 8 rupee per brick (₹8,000 per 1,000 bricks) for internal partition walls and general masonry; and 3) Premium Bricks at 9 rupee per brick (₹9,000 per 1,000 bricks) for high-strength architectural construction and load-bearing structures.',
     category: 'Products',
   },
   {

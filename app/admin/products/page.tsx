@@ -71,7 +71,7 @@ const USAGE_TAG_OPTIONS = [
   'Garden Walls',
 ];
 
-const QUALITY_GRADES = ['Grade 1 (Awwal)', 'Grade 1.5 (Laal Peti)', 'Grade 2 (Duyam)', 'Grade 3 (Peela)', 'Grade 4 (Chatka)'] as const;
+const QUALITY_GRADES = ['Grade 1 (Awwal / Premium)', 'Grade 1.5 (Laal Peti)', 'Grade 2 (Duyam / 2 Number Eent / दुयम)', 'Grade 3 (Peela)', 'Grade 4 (Chatka)'] as const;
 
 const apiBaseUrl = getApiBaseUrl(process.env.NEXT_PUBLIC_API_URL);
 
