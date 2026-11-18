@@ -105,9 +105,9 @@ const STAGES: ManufacturingStage[] = [
       'Manual chamber loading by experienced kiln stacking crews',
     ],
     visualType: 'photo',
-    imageSrc: '/images/process-kiln.jpg',
-    imageAlt: 'Bull’s trench kiln chamber mound and brick loading area at Hanuman Bhatta Company, Kahlpa',
-    photoCaption: 'Actual Kahlpa Kiln Chamber Mound & Brick Stacks Ready for Trench Loading',
+    imageSrc: '/images/process-loading.jpg',
+    imageAlt: 'Experienced kiln stacking crew packing and loading raw dried bricks into the Bull’s trench chamber at Hanuman Bhatta Company, Kahlpa',
+    photoCaption: 'Actual Kahlpa Kiln Trench · Chamber Stacking & Loading of Dried Raw Bricks (कच्ची ईंट भराई)',
   },
   {
     number: '06',
