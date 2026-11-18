@@ -122,9 +122,9 @@ const STAGES: ManufacturingStage[] = [
       '24/7 kiln masters supervising continuous fire progression',
     ],
     visualType: 'photo',
-    imageSrc: '/images/process-firing.jpg',
-    imageAlt: 'Active firing chimney with Hanuman Bhatta lettering and smoke during coal baking at Kahlpa kiln',
-    photoCaption: 'Actual Hanuman Bhatta Chimney & Active High-Heat Coal Firing Chamber (1000°C)',
+    imageSrc: '/images/process-coal-firing.jpg',
+    imageAlt: 'Continuous coal feeding into kiln roof firing holes during high-temperature baking at Hanuman Bhatta Company, Kahlpa',
+    photoCaption: 'Actual Kahlpa Kiln Top · High-GCV Coal Feeding through Trench Firing Lids (कोयला पकाई)',
   },
   {
     number: '07',
