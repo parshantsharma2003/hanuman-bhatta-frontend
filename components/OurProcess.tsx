@@ -36,9 +36,10 @@ const STAGES: ManufacturingStage[] = [
       'Screened to remove stones, roots, and organic matter',
       'Natural balance of silica and alumina for long-term brick density',
     ],
-    visualType: 'pending_photo',
-    pendingPhotoLabel: 'Facility Photo: Soil Extraction & Quality Selection',
-    pendingPhotoSpecs: 'Field photograph of alluvial clay extraction along the Kahlpa trench, showing raw soil screening before transfer to the mixing area.',
+    visualType: 'photo',
+    imageSrc: '/images/process-soil.jpg',
+    imageAlt: 'Best quality red clay and alluvial soil selection mounds at Hanuman Bhatta Company, Kahlpa',
+    photoCaption: 'Actual Kahlpa Kiln Yard · High-Quality Alluvial Clay Selection Mounds',
   },
   {
     number: '02',
