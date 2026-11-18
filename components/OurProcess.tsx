@@ -70,9 +70,10 @@ const STAGES: ManufacturingStage[] = [
       'Clean 90-degree edges and deep frog indent for mortar bonding',
       'Standardized dimensions checked during wet molding',
     ],
-    visualType: 'dual_method',
-    pendingPhotoLabel: 'Facility Photos: Machine Extrusion & Hand Molding',
-    pendingPhotoSpecs: 'Dual documentary photos: 1) Automated brick-forming machine in operation, and 2) Artisan hand-molding with traditional precision steel molds.',
+    visualType: 'photo',
+    imageSrc: '/images/process-molding.jpg',
+    imageAlt: 'Skilled artisans hand-molding raw red clay bricks with steel and wooden molds at Hanuman Bhatta Company, Kahlpa',
+    photoCaption: 'Actual Kahlpa Yard · Skilled Hand-Molding & Stacking of Raw Bricks (कच्ची ईंट)',
   },
   {
     number: '04',
