@@ -156,9 +156,9 @@ const STAGES: ManufacturingStage[] = [
       'Direct on-site unloading across Gohana, Sonipat, Rohtak & Jind',
     ],
     visualType: 'photo',
-    imageSrc: '/images/process-tractor.jpg',
-    imageAlt: 'Blue tractor-trolley dispatch unit at Hanuman Bhatta Company kiln yard in Kahlpa',
-    photoCaption: 'Actual Delivery Fleet: Dedicated Tractor-Trolley Transit to Construction Sites',
+    imageSrc: '/images/process-delivery.png',
+    imageAlt: 'Loaded tractor-trolley carrying standard 3,000 red clay bricks ready for dispatch at Hanuman Bhatta Company, Kahlpa',
+    photoCaption: 'Actual Kahlpa Kiln Yard · Tractor-Trolley Loaded with 3,000 Bricks for Construction Site Dispatch (ट्रैक्टर-ट्रॉली सप्लाई)',
   },
 ];
 
