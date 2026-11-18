@@ -44,8 +44,8 @@ export const BRICK_COLLECTION: BrickGrade[] = [
   {
     id: 'grade-1-awwal',
     number: '01',
-    name: 'First Class / Premium Bricks',
-    hindiName: 'अव्वल / आवल (Awwal)',
+    name: 'Premium Bricks',
+    hindiName: 'Premium / अव्वल (Awwal)',
     gradeBadge: 'Grade 1',
     badge: 'BEST SELLER',
     pricePerBrick: 9.0,
@@ -71,7 +71,7 @@ export const BRICK_COLLECTION: BrickGrade[] = [
       'Exposed architectural brickwork and exterior facades',
     ],
     positionNote: 'Flagship structural grade for heavy construction and long-term durability.',
-    image: '/images/brick-texture.jpg',
+    image: '/images/premium-brick.jpg',
     featured: true,
   },
   {
@@ -241,6 +241,7 @@ export default function ProductCatalog() {
           soundWhenStruck: match.soundDescription || local.soundWhenStruck,
           strengthLevel: match.strengthLevel || local.strengthLevel,
           badge: match.badge || local.badge,
+          image: (match.images && match.images[0]) || match.imageUrl || local.image,
         };
       }
       return local;
@@ -448,23 +449,28 @@ export default function ProductCatalog() {
             {/* Right 5 Cols: Authentic High-Resolution Photography */}
             <div className="lg:col-span-5 bg-[#FAF8F5] p-6 sm:p-8 flex flex-col justify-between">
               <div>
-                <div className="relative aspect-[4/3] sm:aspect-[16/11] lg:aspect-[4/3] w-full rounded-xs overflow-hidden border border-[#D1C7B6] bg-[#242321] group shadow-inner">
+                <div className="relative aspect-[4/3] sm:aspect-[16/11] lg:aspect-[4/3] w-full rounded-xs overflow-hidden border border-[#D1C7B6] bg-white group shadow-xs">
                   <Image
-                    src="/images/brick-texture.jpg"
-                    alt="Authentic First Class Red Clay Bricks (अव्वल ईंट) at Hanuman Bhatta Company, Kahlpa, Gohana"
+                    src={flagshipBrick.image || "/images/premium-brick.jpg"}
+                    alt="Authentic Premium Red Clay Bricks (हनुमान ईंट) at Hanuman Bhatta Company, Kahlpa, Gohana"
                     fill
                     sizes="(max-width: 768px) 100vw, 42vw"
-                    className="object-cover transition-transform duration-700 group-hover:scale-105"
+                    className="object-contain p-2 sm:p-3 transition-transform duration-700 group-hover:scale-105"
                     priority
                   />
-                  <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/85 via-black/40 to-transparent p-3.5 text-white">
-                    <span className="text-[10px] font-mono uppercase tracking-wider text-white/80 block">
-                      Genuine Kiln Inspection • Kahlpa Yard
-                    </span>
-                    <span className="text-xs font-semibold block">
-                      First Class Bricks (अव्वल / आवल)
-                    </span>
+                  {/* Discreet Kiln Tags */}
+                  <div className="absolute top-2.5 left-2.5 bg-[#242321]/80 backdrop-blur-xs text-white text-[10px] font-mono px-2 py-0.5 rounded-xs tracking-wider uppercase">
+                    Kahlpa Yard
                   </div>
+                  <div className="absolute top-2.5 right-2.5 bg-[#B8402C] text-white text-[10px] font-mono font-bold px-2 py-0.5 rounded-xs tracking-wider uppercase">
+                    {flagshipBrick.gradeBadge}
+                  </div>
+                </div>
+
+                {/* Sub-label identifying the genuine brick */}
+                <div className="mt-2.5 flex items-center justify-between text-[11px] font-mono px-0.5">
+                  <span className="text-[#736F67]">Genuine Product Specimen</span>
+                  <span className="text-[#B8402C] font-semibold">{flagshipBrick.name} ({flagshipBrick.hindiName})</span>
                 </div>
 
                 {/* Quality Notes */}
