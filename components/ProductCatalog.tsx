@@ -131,22 +131,22 @@ export default function ProductCatalog() {
   return (
     <section
       id="products"
-      className="py-20 md:py-28 bg-[#F5F0E8] border-b border-[#E2DDD5] scroll-mt-18"
+      className="pt-10 sm:pt-12 md:pt-14 pb-20 md:pb-28 bg-[#F5F0E8] border-b border-[#E2DDD5] scroll-mt-18"
       aria-label="Product Catalog and Technical Datasheets"
     >
       <div className="container-custom">
         
-        {/* Section Header */}
-        <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-6 mb-12">
+        {/* Section Header: Refined Editorial Typography & Tight Transition */}
+        <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-6 mb-8 sm:mb-10">
           <div className="max-w-2xl">
-            <span className="text-xs font-semibold tracking-widest uppercase text-[#B8402C] mb-3 block">
-              Specifications &amp; Wholesale Pricing
+            <span className="text-[11px] sm:text-xs font-mono font-semibold tracking-widest uppercase text-[#B8402C] mb-2 block">
+              KILN SPECIFICATIONS &amp; GRADES
             </span>
-            <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold font-display text-[#242321] tracking-tight">
+            <h2 className="text-2xl sm:text-4xl lg:text-[2.65rem] font-bold font-display text-[#242321] tracking-tight leading-[1.12]">
               Kiln Brick Grades &amp; Technical Datasheet
             </h2>
-            <p className="mt-3 text-base text-[#57544E] leading-relaxed">
-              Standardized IS:1077 red clay bricks slow-fired at our Kahlpa kiln yard. Available in 3,000-brick tractor-trolley dispatches across Gohana, Sonipat, Rohtak, and Jind.
+            <p className="mt-2.5 text-sm sm:text-base text-[#57544E] leading-relaxed max-w-2xl font-sans">
+              Explore our red clay brick grades, dimensions and technical specifications. Contact us directly for current wholesale pricing and bulk orders.
             </p>
           </div>
 

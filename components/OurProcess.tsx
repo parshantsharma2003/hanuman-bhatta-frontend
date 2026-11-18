@@ -3,7 +3,7 @@
 import React, { useState } from 'react';
 import Image from 'next/image';
 import { motion } from 'framer-motion';
-import { ArrowRight, Camera, Check, ShieldCheck, Truck, Layers, Flame, Sun, Droplets, Mountain } from 'lucide-react';
+import { ArrowRight, Camera, Check, ShieldCheck, Truck, Layers, Flame, Sun, Droplets, Mountain, PhoneCall } from 'lucide-react';
 import { trackMetric } from '@/lib/analytics';
 import { useOrderModal } from '@/lib/orderModalContext';
 
@@ -178,7 +178,7 @@ export default function OurProcess() {
   return (
     <section
       id="process"
-      className="py-20 md:py-28 bg-[#F5F0E8] border-b border-[#E2DDD5] scroll-mt-20"
+      className="pt-16 pb-12 sm:pt-20 sm:pb-14 md:pt-24 md:pb-16 bg-[#F5F0E8] border-b border-[#E2DDD5] scroll-mt-20"
       aria-label="Manufacturing Process and Journey"
     >
       <div className="container-custom">
@@ -434,41 +434,53 @@ export default function OurProcess() {
 
         </div>
 
-        {/* Final Conversion Section Banner */}
-        <div className="mt-20 sm:mt-28 bg-[#191817] text-white border border-[#31302C] rounded-[3px] p-8 sm:p-12 md:p-14 relative overflow-hidden shadow-2xl">
-          {/* Subtle architectural background texture */}
-          <div className="absolute inset-0 brick-pattern opacity-10 pointer-events-none" />
+        {/* Natural Transition Divider between Stage 08 Delivery Photo & Dispatch Section */}
+        <div className="w-full h-px bg-[#D1C7B6] mt-12 mb-8 sm:mt-14 sm:mb-10" />
 
-          <div className="relative z-10 max-w-3xl">
-            <span className="text-xs font-mono tracking-widest uppercase text-[#B8402C] font-semibold mb-3 block">
-              DIRECT DISPATCH FROM YARD
-            </span>
+        {/* Editorial Delivery Dispatch Section */}
+        <div className="bg-[#191817] text-white border border-[#31302C] rounded-[2px] p-6 sm:p-8 lg:p-10 shadow-xl">
+          <div className="grid grid-cols-1 lg:grid-cols-12 items-center gap-6 lg:gap-10">
+            
+            {/* Left Column: Dispatch Narrative & Location */}
+            <div className="lg:col-span-8 space-y-2.5">
+              <span className="text-[11px] sm:text-xs font-mono tracking-widest uppercase text-[#B8402C] font-semibold block">
+                DIRECT FROM OUR KAHLPA KILN YARD
+              </span>
 
-            <h3 className="text-3xl sm:text-4xl md:text-5xl font-bold font-display text-white tracking-tight leading-tight">
-              From Our Kiln to Your Construction Site
-            </h3>
+              <h3 className="text-2xl sm:text-3xl lg:text-[2rem] font-bold font-display text-white tracking-tight leading-snug">
+                From Our Kiln to Your Construction Site.
+              </h3>
 
-            <p className="mt-4 text-base sm:text-lg text-[#BCB7AD] leading-relaxed">
-              Carefully manufactured red clay bricks, supplied directly to customers through tractor-trolley delivery.
-            </p>
+              <p className="text-sm sm:text-base text-[#BCB7AD] leading-relaxed max-w-2xl font-sans">
+                Quality red clay bricks, manufactured locally and supplied directly to your construction site through tractor-trolley delivery.
+              </p>
 
-            <div className="mt-8 flex flex-col sm:flex-row items-stretch sm:items-center gap-4">
+              <p className="text-xs font-mono text-[#8E8980] pt-1">
+                Kahlpa, Gohana, Haryana • Established 2010
+              </p>
+            </div>
+
+            {/* Right Column: Refined Actions */}
+            <div className="lg:col-span-4 flex flex-col sm:flex-row lg:flex-col items-stretch sm:items-center lg:items-end justify-center gap-3 pt-2 lg:pt-0">
               <button
                 onClick={handleOrderClick}
-                className="inline-flex items-center justify-center gap-2.5 bg-[#B8402C] hover:bg-[#8E2E1D] text-white font-medium px-8 py-4 rounded transition-colors text-base shadow-xs min-h-[48px] focus:outline-none focus-visible:ring-2 focus-visible:ring-[#B8402C]"
-                aria-label="Request your brick order from Hanuman Bhatta Company"
+                className="inline-flex items-center justify-center gap-2 bg-[#B8402C] hover:bg-[#8E2E1D] text-white font-medium px-6 py-3 rounded-[2px] transition-colors text-sm sm:text-base shadow-xs min-h-[44px] sm:min-h-[48px] focus:outline-none focus-visible:ring-2 focus-visible:ring-[#B8402C] w-full sm:w-auto lg:w-full"
+                aria-label="Request a brick order from Hanuman Bhatta Company"
               >
-                <span>Request Your Brick Order</span>
+                <span>Request a Brick Order</span>
                 <ArrowRight className="w-4 h-4" />
               </button>
 
               <a
-                href="tel:+919996669463"
-                className="inline-flex items-center justify-center gap-2 border border-[#42403B] hover:border-[#B8402C] hover:text-white text-[#D8D4CC] font-medium px-6 py-4 rounded transition-colors text-base min-h-[48px]"
+                href="tel:+919996694663"
+                className="inline-flex items-center justify-center gap-2 text-xs sm:text-sm font-mono text-[#D8D4CC] hover:text-white transition-colors py-1.5 px-2 text-center"
+                aria-label="Call dispatch directly at +91 99966 94663"
               >
-                Call Dispatch: +91 99966 69463
+                <PhoneCall className="w-3.5 h-3.5 text-[#B8402C]" />
+                <span>Call: +91 99966 94663</span>
               </a>
             </div>
+
           </div>
         </div>
 

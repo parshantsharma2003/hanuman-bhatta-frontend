@@ -1,22 +1,47 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { ArrowUp, MessageCircle, PhoneCall } from 'lucide-react';
 import TrackableButton from './TrackableButton';
 
 const WHATSAPP_NUMBER = '918295669463';
-const CALL_NUMBER = '+919996669463';
+const CALL_NUMBER = '+919996694663';
 
 export default function FloatingActions() {
   const [showBackToTop, setShowBackToTop] = useState(false);
+  const [isScrolledDown, setIsScrolledDown] = useState(false);
+  const lastScrollY = useRef(0);
+  const scrollTimeout = useRef<NodeJS.Timeout | null>(null);
 
   useEffect(() => {
     const handleScroll = () => {
-      setShowBackToTop(window.scrollY > 400);
+      const currentScrollY = window.scrollY;
+      setShowBackToTop(currentScrollY > 400);
+
+      // On mobile/touch: when actively scrolling down to read content,
+      // tuck the bar away so it never covers product headings, section text, or CTA buttons.
+      // As soon as the user scrolls up or pauses scrolling, immediately reveal it.
+      if (currentScrollY > lastScrollY.current && currentScrollY > 120) {
+        setIsScrolledDown(true);
+      } else {
+        setIsScrolledDown(false);
+      }
+
+      lastScrollY.current = currentScrollY;
+
+      if (scrollTimeout.current) {
+        clearTimeout(scrollTimeout.current);
+      }
+      scrollTimeout.current = setTimeout(() => {
+        setIsScrolledDown(false); // Reveal when user stops scrolling
+      }, 650);
     };
 
     window.addEventListener('scroll', handleScroll, { passive: true });
-    return () => window.removeEventListener('scroll', handleScroll);
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+      if (scrollTimeout.current) clearTimeout(scrollTimeout.current);
+    };
   }, []);
 
   const scrollToTop = () => {
@@ -33,7 +58,11 @@ export default function FloatingActions() {
   return (
     <aside
       aria-label="Direct Kiln Contact & Navigation"
-      className="fixed right-3 sm:right-6 z-50 flex items-center gap-2 pointer-events-auto transition-all duration-200"
+      className={`fixed right-3 sm:right-6 z-40 flex items-center gap-2 pointer-events-auto transition-all duration-300 ease-out ${
+        isScrolledDown
+          ? 'translate-y-24 opacity-0 pointer-events-none'
+          : 'translate-y-0 opacity-100'
+      }`}
       style={{ bottom: 'calc(1rem + env(safe-area-inset-bottom, 0px))' }}
     >
       {/* Back to Top Button */}
@@ -55,8 +84,8 @@ export default function FloatingActions() {
           as="a"
           metricType="call_click"
           href={`tel:${CALL_NUMBER}`}
-          className="flex items-center gap-1.5 sm:gap-2 text-white hover:text-[#B8402C] px-3 sm:px-4 py-2 sm:py-2.5 min-h-[44px] sm:min-h-[48px] text-xs font-mono font-medium transition-colors"
-          ariaLabel="Call Hanuman Bhatta Company (+91 99966 69463)"
+          className="flex items-center gap-1.5 sm:gap-2 text-white hover:text-[#B8402C] px-3 sm:px-4 py-2 sm:py-2.5 min-h-[44px] text-xs font-mono font-medium transition-colors"
+          ariaLabel="Call Hanuman Bhatta Company (+91 99966 94663)"
         >
           <PhoneCall className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-[#B8402C]" />
           <span className="font-sans text-[11px] sm:text-xs">Call Kiln</span>
@@ -71,7 +100,7 @@ export default function FloatingActions() {
           href={`https://wa.me/${WHATSAPP_NUMBER}?text=${whatsappMessage}`}
           target="_blank"
           rel="noopener noreferrer"
-          className="flex items-center gap-1.5 sm:gap-2 text-white hover:text-emerald-400 px-3 sm:px-4 py-2 sm:py-2.5 min-h-[44px] sm:min-h-[48px] text-xs font-mono font-medium transition-colors"
+          className="flex items-center gap-1.5 sm:gap-2 text-white hover:text-emerald-400 px-3 sm:px-4 py-2 sm:py-2.5 min-h-[44px] text-xs font-mono font-medium transition-colors"
           ariaLabel="Chat with Hanuman Bhatta on WhatsApp (+91 82956 69463)"
         >
           <MessageCircle className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-emerald-500" />
