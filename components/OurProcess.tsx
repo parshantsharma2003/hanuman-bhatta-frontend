@@ -53,9 +53,10 @@ const STAGES: ManufacturingStage[] = [
       'Thorough pug-mill churning for homogeneous plasticity',
       'Lump-free workable mud (गारा) ready for precise molding',
     ],
-    visualType: 'pending_photo',
-    pendingPhotoLabel: 'Facility Photo: Sweet Water Mud Preparation (गारा)',
-    pendingPhotoSpecs: 'Photograph of pug-mill mixing with sweet water, showing prepared homogeneous mud ready for raw molding.',
+    visualType: 'photo',
+    imageSrc: '/images/process-mixing.jpg',
+    imageAlt: 'Preparation of smooth workable clay mud (गारा) using sweet water at Hanuman Bhatta Company, Kahlpa',
+    photoCaption: 'Actual Kahlpa Yard · Soil & Sweet Water Mixing to Prepare Workable Mud (गारा)',
   },
   {
     number: '03',
