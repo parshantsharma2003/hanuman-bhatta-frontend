@@ -139,9 +139,9 @@ const STAGES: ManufacturingStage[] = [
       'Organized open yard inventory ready for immediate transport',
     ],
     visualType: 'photo',
-    imageSrc: '/images/brick-texture.jpg',
-    imageAlt: 'Finished Grade-1 kiln-fired red clay bricks stacked in open yard at Hanuman Bhatta Company',
-    photoCaption: 'Actual Fired Red Clay Masonry Batch with Metallic Ring & Uniform Dimensions',
+    imageSrc: '/images/process-stockyard.jpg',
+    imageAlt: 'Vast open stock yard with organized stacks of finished kiln-fired red clay bricks at Hanuman Bhatta Company, Kahlpa',
+    photoCaption: 'Actual Kahlpa Stock Yard · Vast Stacks of Finished Fired Red Clay Bricks Ready for Dispatch',
   },
   {
     number: '08',
